@@ -12,19 +12,19 @@ export function buildTextMap(fileData: [string, string][]): TextMap {
   return textMap
 }
 
-function addTextToTextMap(text: string, locale: string, textMap: TextMap): void {
+export function addTextToTextMap(text: string, locale: string, textMap: TextMap): void {
   const entries = (text.match(/([^\r\n]+)/g) || []).map(line => line.split('='))
 
+  const localeMap = textMap.get(locale) || new Map()
   for(const [ key, value ] of entries) {
-    const localeMap = textMap.get(key) || new Map()
-    localeMap.set(locale, value)
-
-    textMap.set(key, localeMap)
+    localeMap.set(key, value)
   }
+
+  textMap.set(locale, localeMap)
 }
 
-function localeFromFilePath(filePath: string): string {
-  const match = filePath.match(/\/(.*).stormdata\//)
+export function localeFromFilePath(filePath: string): string {
+  const match = filePath.match(/\/(.{4}).stormdata\//)
 
-  return match ? match[1] : 'enus'
+  return (!match || match[1] === 'base') ? 'enus' : match[1]
 }
