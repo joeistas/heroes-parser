@@ -1,0 +1,29 @@
+{
+  "name": "hots-parser",
+  "version": "1.0.0",
+  "description": "Parse Heroes of the Storm game data into JSON",
+  "main": "index.js",
+  "author": "Joe Istas <joe.istas@istastech.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "casclib": "^1.0.0",
+    "xml2js": "^0.4.19"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.2",
+    "@types/mocha": "^5.0.0",
+    "@types/sinon-chai": "^2.7.29",
+    "@types/xml2js": "^0.4.2",
+    "chai": "^4.1.2",
+    "mocha": "^5.0.5",
+    "rimraf": "^2.6.2",
+    "sinon": "^4.4.9",
+    "sinon-chai": "^3.0.0"
+  },
+  "scripts": {
+    "clean": "rimraf -r ./dist",
+    "test": "npm run-script build && mocha \"dist/test/**/*.spec.js\"",
+    "build": "npm run-script clean && tsc"
+  }
+}

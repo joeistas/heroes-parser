@@ -1,0 +1,2 @@
+--recursive
+--require dist/test/common.js
