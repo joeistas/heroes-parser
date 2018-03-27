@@ -1,3 +1,5 @@
+import { ELEMENT_ATTRIBUTE_KEY } from "./element"
+
 export type ElementTypeMap = Map<string, any[]>
 export type ElementMap = Map<string, ElementTypeMap>
 
@@ -8,9 +10,9 @@ export function buildElementMap(catalogs: any[]): ElementMap {
   return elementMap
 }
 
-function addCatalogToElementMap(catalog: any, elementMap: ElementMap): void {
+export function addCatalogToElementMap(catalog: any, elementMap: ElementMap): void {
   for(const elementName of Object.keys(catalog)) {
-    if(elementName === '$') {
+    if(elementName === ELEMENT_ATTRIBUTE_KEY) {
       continue
     }
 
