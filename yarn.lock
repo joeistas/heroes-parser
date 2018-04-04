@@ -17,8 +17,8 @@
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-5.0.0.tgz#a3014921991066193f6c8e47290d4d598dfd19e6"
 
 "@types/node@*":
-  version "9.6.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.0.tgz#d3480ee666df9784b1001a1872a2f6ccefb6c2d7"
+  version "9.6.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.1.tgz#e2d374ef15b315b48e7efc308fa1a7cd51faa06c"
 
 "@types/sinon-chai@^2.7.29":
   version "2.7.29"
@@ -57,8 +57,8 @@ browser-stdout@1.3.1:
   resolved "https://registry.yarnpkg.com/browser-stdout/-/browser-stdout-1.3.1.tgz#baa559ee14ced73452229bad7326467c61fabd60"
 
 casclib@^1.0.0:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/casclib/-/casclib-1.0.2.tgz#dde72f5fc0d51dadec59b61ef4ab4f776631b10d"
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/casclib/-/casclib-1.0.3.tgz#49847811073e94c6a7861792b2d6efe75e79ccf5"
   dependencies:
     node-addon-api "^1.1.0"
 
@@ -255,8 +255,8 @@ sinon-chai@^3.0.0:
   resolved "https://registry.yarnpkg.com/sinon-chai/-/sinon-chai-3.0.0.tgz#d5cbd70fa71031edd96b528e0eed4038fcc99f29"
 
 sinon@^4.4.9:
-  version "4.4.9"
-  resolved "https://registry.yarnpkg.com/sinon/-/sinon-4.4.9.tgz#0792a2a5171eb0cf242edacb0eba3898b8b4297f"
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-4.5.0.tgz#427ae312a337d3c516804ce2754e8c0d5028cb04"
   dependencies:
     "@sinonjs/formatio" "^2.0.0"
     diff "^3.1.0"

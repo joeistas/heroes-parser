@@ -4,14 +4,16 @@ import { filterKeysFromObject } from './utils'
 
 export const ATTRIBUTE_BLACKLIST: string[] = [ 'default' ]
 export const ELEMENT_ATTRIBUTE_KEY: string = '$'
+export const ELEMENT_NAME_KEY: string = '$elementName'
 
 export type ElementMerger = (parentElements: any[], childElements: any[], mergedAttributes: any) => any[]
-export type ElementProcessor = (element: any, containingElement: any, storageHandle: any, parseData: ParseData) => Promise<any>
+export type ElementProcessor = (element: any, containingElement: any, parseData: ParseData) => any
 export type ElementFormatter = (element: any) => any
 
 export interface ElementFunctions {
   merge?: ElementMerger
   process?: ElementProcessor
+  postProcess?: ElementProcessor
   format?: ElementFormatter
 }
 
@@ -33,6 +35,10 @@ export function getElementId(element: any) {
   return getElementAttributes(element).id
 }
 
+export function getElementName(element: any) {
+  return element[ELEMENT_NAME_KEY]
+}
+
 export function getElement(elementId: string, elementName: string, elementMap: ElementMap) {
   const elements = elementMap.get(elementName)
   if(!elements) {
@@ -42,11 +48,18 @@ export function getElement(elementId: string, elementName: string, elementMap: E
   return elements.get(elementId) || []
 }
 
+export function findElementNameForId(elementNames: string[], elementId: string, elementMap: ElementMap): string {
+  return elementNames.find(name => getElement(elementId, name, elementMap).length > 0)
+}
+
 export function copyElement(element: any): any {
-  const copy = { [ELEMENT_ATTRIBUTE_KEY]: Object.assign({}, element[ELEMENT_ATTRIBUTE_KEY]) }
+  const copy = {
+    [ELEMENT_ATTRIBUTE_KEY]: Object.assign({}, element[ELEMENT_ATTRIBUTE_KEY]),
+    [ELEMENT_NAME_KEY]: getElementName(element),
+  }
 
   for(const key of Object.keys(element)) {
-    if(key === ELEMENT_ATTRIBUTE_KEY) {
+    if([ELEMENT_ATTRIBUTE_KEY, ELEMENT_NAME_KEY].includes(key)) {
       continue
     }
 
@@ -82,10 +95,10 @@ export function reduceElements(elements: any[], parseData: ParseData) {
 
 export function mergeElements(parent: any, child: any, parseData: ParseData) {
   const elementSet = new Set([ ...Object.keys(parent), ...Object.keys(child) ])
-  const mergedElement: any = { [ELEMENT_ATTRIBUTE_KEY]: mergeAttributes(parent, child) }
+  const mergedElement: any = { [ELEMENT_ATTRIBUTE_KEY]: mergeAttributes(parent, child), [ELEMENT_NAME_KEY]: getElementName(child) }
 
   for(const elementName of elementSet) {
-    if(elementName === ELEMENT_ATTRIBUTE_KEY) {
+    if([ELEMENT_ATTRIBUTE_KEY, ELEMENT_NAME_KEY].includes(elementName)) {
       continue
     }
 
@@ -97,21 +110,51 @@ export function mergeElements(parent: any, child: any, parseData: ParseData) {
   return mergedElement
 }
 
-export async function parseElement(element: any, containingElement: any, elementName: string, storageHandle: any, parseData: ParseData) {
+export function hasIdBeenSeen(element: any, idsSeen: Set<string>) {
+  return idsSeen.has(getElementId(element))
+}
+
+export function addSeenId(element: any, idsSeen: Set<string>) {
+  const elementId = getElementId(element)
+  if(elementId) {
+    idsSeen.add(elementId)
+  }
+}
+
+export function processElement(element: any, containingElement: any, elementName: string, parseData: ParseData) {
   element = mergeWithParent(element, elementName, parseData)
+  element[ELEMENT_NAME_KEY] = elementName
 
   const processFunc = getElementFunction(elementName, parseData.functions, 'process') as ElementProcessor
-  element = processFunc ? await processFunc(element, containingElement, storageHandle, parseData) : element
+  return processFunc ? processFunc(element, containingElement, parseData) : element
+}
 
-  const processedElement: any = { [ELEMENT_ATTRIBUTE_KEY]: mergeAttributes({}, element) }
-
+export function processInnerElements(element: any, containingElement: any, elementName: string, parseData: ParseData, idsSeen: Set<string>) {
   for(const name of Object.keys(element)) {
-    if(name === ELEMENT_ATTRIBUTE_KEY) {
+    if([ELEMENT_ATTRIBUTE_KEY, ELEMENT_NAME_KEY].includes(name)) {
       continue
     }
 
-    processedElement[name] = await Promise.all(element[name].map((e: any) => parseElement(e, element, name, storageHandle, parseData)))
+    element[name] = element[name].map((innerElement: any) => parseElement(innerElement, element, name, parseData, new Set(idsSeen)))
   }
 
-  return processedElement
+  return element
+}
+
+export function parseElement(element: any, containingElement: any, elementName: string, parseData: ParseData, idsSeen: Set<string> = new Set()) {
+  const elementId = getElementId(element)
+  if(hasIdBeenSeen(element, idsSeen)) {
+    return element
+  }
+
+  addSeenId(element, idsSeen)
+
+  elementName = getElementName(element) || elementName
+  element = copyElement(element)
+
+  const processedElement = processElement(element, containingElement, elementName, parseData)
+  element = hasIdBeenSeen(processedElement, idsSeen) ? element : processedElement
+  addSeenId(element, idsSeen)
+
+  return processInnerElements(element, containingElement, elementName, parseData, idsSeen)
 }

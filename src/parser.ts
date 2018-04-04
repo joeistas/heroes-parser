@@ -1,57 +1,58 @@
 import * as casclib from 'casclib'
+import * as util from 'util'
 
-import { ElementFunctionsMap, parseElement } from './element'
+import { ELEMENT_ATTRIBUTE_KEY, ElementFunctionsMap, parseElement, getElementAttributes, reduceElements } from './element'
 import { ElementMap, buildElementMap } from './element-map'
 import { TextMap, buildTextMap } from './text'
 import { findFiles, readFiles, xml2Json } from './files'
+import { ParseOptions, buildParseOptions } from './parse-options'
+import { DEFAULT_FUNCTIONS } from './default-functions'
+import { AssetFindCache } from './processors/asset'
 
 export interface ParseData {
   functions: ElementFunctionsMap
   elements: ElementMap
+  assetfindCache: AssetFindCache
+  assets: string[]
   text: TextMap
   options: ParseOptions
 }
 
-export interface ParseOptions {
-  xmlSearchPatterns: string[]
-  textSearchPatterns: string[]
-  locales: string[]
-  functions: ElementFunctionsMap
+export async function parse(installPath: string, options: Partial<ParseOptions> = {}, elementFunctions: ElementFunctionsMap = DEFAULT_FUNCTIONS): Promise<any[]> {
+  const storageHandle = await casclib.openStorage(installPath)
+  const parseOptions = buildParseOptions(options)
+  const parseData = await buildParseData(parseOptions, elementFunctions, storageHandle)
+
+  const rootElements = parseData.elements.get(parseOptions.rootElementName) || new Map()
+  const processedElements = []
+  for(const elements of rootElements.values()) {
+    const element = reduceElements(elements, parseData)
+
+    const attributes = getElementAttributes(element)
+    if(attributes.default == '1') {
+      continue
+    }
+
+    processedElements.push(await parseElement(element, null, parseOptions.rootElementName, parseData))
+  }
+
+  casclib.closeStorage(storageHandle)
+
+  return processedElements
 }
 
-export function parse(installPath: string, options: ParseOptions): Promise<any> {
-  return casclib.openStorage(installPath)
-    .then(storageHandle => {
-      return buildParseData(options, storageHandle)
-        .then(async parseData => {
-          const heroElements = parseData.elements.get('CHero') || new Map()
-          const processedHeroes = []
-          for(const heroes of heroElements.values()) {
-            for(const hero of heroes) {
-              if(hero.$ && hero.$.default === '1') {
-                continue
-              }
-              processedHeroes.push(await parseElement(hero, null, 'CHero', storageHandle, parseData))
-            }
-          }
-
-          console.log(processedHeroes.find(h => h.$.id === 'Abathur').TalentTreeArray)
-          console.log(processedHeroes.length)
-          casclib.closeStorage(storageHandle)
-        })
-    })
-    .catch(error => console.log(error))
-}
-
-async function buildParseData(options: ParseOptions, storageHandle: any): Promise<ParseData> {
+async function buildParseData(options: ParseOptions, elementFunctions: ElementFunctionsMap, storageHandle: any): Promise<ParseData> {
   const elementMap = await fetchElements(options, storageHandle)
   const textMap = await fetchText(options, storageHandle)
+  const assets = await fetchAssetFilePaths(options, storageHandle)
 
   return {
-    functions: options.functions,
+    functions: elementFunctions,
     elements: elementMap,
+    assetfindCache: new Map(),
     text: textMap,
-    options: options
+    assets,
+    options,
   }
 }
 
@@ -69,4 +70,8 @@ function fetchText(options: ParseOptions, storageHandle: any): Promise<TextMap> 
     .then(filePaths => readFiles(filePaths, storageHandle))
     .then(buffers => buffers.map(([ fileName, buffer ]) => [ fileName, buffer.toString('utf8') ] as [ string, string ]))
     .then(fileData => buildTextMap(fileData))
+}
+
+function fetchAssetFilePaths(options: ParseOptions, storageHandle: any): Promise<string[]> {
+  return findFiles(options.assetSearchPatterns, storageHandle)
 }

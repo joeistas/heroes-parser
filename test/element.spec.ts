@@ -108,7 +108,7 @@ describe("copyElement", function() {
 })
 
 describe("mergeWithParent", function() {
-  const parseData = {
+  const parseData: any = {
     elements: new Map([
       ['hero', new Map([
         ['', [ { [ELEMENT_ATTRIBUTE_KEY]: { tier: '1' }, testElement: [ {} ] } as any ] ],
@@ -121,7 +121,7 @@ describe("mergeWithParent", function() {
         "merge": (parentElements: any[], childElements: any[]) => parentElements.concat(childElements)
       },
     },
-    options: { xmlSearchPatterns: [] as any[], textSearchPatterns: [] as any[], functions: {}, locales: [] as any[] }
+    options: {}
   }
 
   it("should merge the parent and child attributes", function() {
@@ -194,7 +194,7 @@ describe("mergeAttributes", function() {
 })
 
 describe("reduceElements", function() {
-  const parseData = {
+  const parseData: any = {
     elements: new Map(),
     text: new Map(),
     functions: {
@@ -202,7 +202,7 @@ describe("reduceElements", function() {
         "merge": (parentElements: any[], childElements: any[]) => parentElements.concat(childElements)
       },
     },
-    options: { xmlSearchPatterns: [] as any[], textSearchPatterns: [] as any[], functions: {}, locales: [] as any[] }
+    options: {}
   }
 
   it("should reduce a list of elements to a single element", function() {
@@ -221,7 +221,7 @@ describe("reduceElements", function() {
 })
 
 describe("mergeElements", function() {
-  const parseData = {
+  const parseData: any = {
     elements: new Map(),
     text: new Map(),
     functions: {
@@ -229,7 +229,7 @@ describe("mergeElements", function() {
         "merge": (parentElements: any[], childElements: any[]) => parentElements.concat(childElements)
       },
     },
-    options: { xmlSearchPatterns: [] as any[], textSearchPatterns: [] as any[], functions: {}, locales: [] as any[] }
+    options: {}
   }
 
   it("should return an object with the parent and child elements merged", function() {
@@ -293,7 +293,7 @@ describe("parseElement", function() {
         },
         'testElement': {
           "process": (element: any): any => element
-        }
+        },
       },
       options: { xmlSearchPatterns: [] as any[], textSearchPatterns: [] as any[], functions: {}, locales: [] as any[] }
     }
@@ -302,32 +302,29 @@ describe("parseElement", function() {
   it("should merge the element with it's parent elements", function() {
     const element = { [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', value: 'thing' }, testElement: [ {} ] }
 
-    return parseElement(element, null, 'hero', {}, this.parseData)
-      .then(parsedElement => {
-        expect(parsedElement).to.eql({
-          [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '1', value: 'thing' },
-          testElement: [ { [ELEMENT_ATTRIBUTE_KEY]: {} }, { [ELEMENT_ATTRIBUTE_KEY]: {} } ]
-        })
-      })
+    const parsedElement = parseElement(element, null, 'hero', this.parseData)
+
+    expect(parsedElement).to.eql({
+      [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '1', value: 'thing' },
+      testElement: [ { [ELEMENT_ATTRIBUTE_KEY]: {} }, { [ELEMENT_ATTRIBUTE_KEY]: {} } ]
+    })
   })
 
   it("should call the 'process' function on the element", function() {
     const element = { [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', value: 'thing' }, testElement: [ {} ] }
 
     const processSpy = spy(this.parseData.functions.hero, 'process')
-    return parseElement(element, null, 'hero', {}, this.parseData)
-      .then(parsedElement => {
-        expect(processSpy).to.have.been.called
-      })
+    const parsedElement = parseElement(element, null, 'hero', this.parseData)
+
+    expect(processSpy).to.have.been.called
   })
 
   it("should call process on all of the elements inner elements", function() {
     const element = { [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', value: 'thing' }, testElement: [ {} ] }
 
     const processSpy = spy(this.parseData.functions.testElement, 'process')
-    return parseElement(element, null, 'hero', {}, this.parseData)
-      .then(parsedElement => {
-        expect(processSpy).to.have.been.calledTwice
-      })
+    const parsedElement =  parseElement(element, null, 'hero', this.parseData)
+
+    expect(processSpy).to.have.been.calledTwice
   })
 })
