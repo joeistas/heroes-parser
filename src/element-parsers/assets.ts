@@ -4,26 +4,14 @@ import {
   ELEMENT_ATTRIBUTE_KEY,
   getElementAttributes,
   copyElement,
-  ElementProcessor
+  ElementParser
 } from '../element'
 import { ParseData } from '../parser'
 
 export type AssetFindCache = Map<string, string[]>
 
-function hasFileExtension(assetValue: string): boolean {
-  return assetValue.search(/\..*$/) !== -1
-}
-
-function isFullPath(assetValue: string): boolean {
-  return assetValue.startsWith("mods/") && hasFileExtension(assetValue)
-}
-
 function isValidAsset(assetValue: string): boolean {
   return assetValue && typeof assetValue === 'string' && assetValue != ''
-}
-
-function buildAssetSearchPattern(assetValue: string): string {
-  return 'mods/heroes.stormmod/*.stormassets/*' + assetValue + (hasFileExtension(assetValue) ? '' : '*')
 }
 
 function setAssetValue(element: any, attribute: string, assetValue: string, parseData: ParseData): any {
@@ -31,23 +19,19 @@ function setAssetValue(element: any, attribute: string, assetValue: string, pars
   return element
 }
 
-export function processAsset(attribute: string = 'value'): ElementProcessor {
+export function processAsset(attribute: string = 'value'): ElementParser {
   return (element: any, containingElement: any, parseData: ParseData): any => {
-    const assetValue = getElementAttributes(element)[attribute]
+    let assetValue = getElementAttributes(element)[attribute]
     if(!isValidAsset(assetValue)) {
       return element
     }
 
-    if(isFullPath(assetValue)) {
-      element[ELEMENT_ATTRIBUTE_KEY][attribute] = [ assetValue ]
-      return element
-    }
-
+    assetValue = assetValue.replace(/\\/g, "/").toLowerCase()
     if(parseData.assetfindCache.has(assetValue)) {
       return setAssetValue(element, attribute, assetValue, parseData)
     }
 
-    const results = parseData.assets.filter(filePath => !!filePath.match(assetValue))
+    const results = parseData.assets.filter(filePath => !!filePath.toLowerCase().match(assetValue))
     parseData.assetfindCache.set(assetValue, results)
 
     return setAssetValue(element, attribute, assetValue, parseData)

@@ -5,7 +5,9 @@ export interface ParseOptions {
   locales: string[]
   rootElementName: string
   saveSourceFiles: boolean
-  sourceOutputPath: string | null
+  saveJSON: boolean
+  archiveSourceFiles: boolean
+  archiveJSON: boolean
   outputPath: string | null
   elementBlacklist: string[]
   logLevel: "none" | "standard" | "verbose"
@@ -18,16 +20,20 @@ export const DEFAULT_PARSE_OPTIONS: ParseOptions = {
     "mods/heromods/*.stormmod/base.stormdata/GameData/*.xml",
   ],
   textSearchPatterns: [
+    "mods/core.stormmod/*.stormdata/LocalizedData/*.txt",
     "mods/heroesdata.stormmod/*/LocalizedData/*.txt",
     "mods/heromods/*/LocalizedData/*.txt",
   ],
   assetSearchPatterns: [
-    "mods/heroes.stormmod/*.stormassets/*"
+    "mods/core.stormmod/*.stormassets/*",
+    "mods/heroes.stormmod/*.stormassets/*",
   ],
   locales: [] as string[],
   rootElementName: 'CHero',
-  saveSourceFiles: true,
-  sourceOutputPath: null,
+  archiveSourceFiles: true,
+  saveSourceFiles: false,
+  archiveJSON: true,
+  saveJSON: false,
   outputPath: null,
   elementBlacklist: [
     'Model',

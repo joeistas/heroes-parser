@@ -6,15 +6,19 @@ export const ATTRIBUTE_BLACKLIST: string[] = [ 'default' ]
 export const ELEMENT_ATTRIBUTE_KEY: string = '$'
 export const ELEMENT_NAME_KEY: string = '$elementName'
 
-export type ElementMerger = (parentElements: any[], childElements: any[], mergedAttributes: any) => any[]
-export type ElementProcessor = (element: any, containingElement: any, parseData: ParseData) => any
-export type ElementFormatter = (element: any) => any
+export type ElementMerger = (parentElements: any[], childElements: any[], mergedAttributes: any, parseData: ParseData) => any[]
+export type ElementParser = (element: any, outerElement: any, parseData: ParseData) => any
+export type ElementFormatter = (formattedElement: any, element: any) => any
+export type ElementKeyFormatter = (key: string) => string
+export type ElementArrayFormatter = (elements: any[]) => any
 
 export interface ElementFunctions {
   merge?: ElementMerger
-  process?: ElementProcessor
-  postProcess?: ElementProcessor
-  format?: ElementFormatter
+  preParse?: ElementParser
+  postParse?: ElementParser
+  formatElement?: ElementFormatter
+  formatKey?: ElementKeyFormatter
+  formatArray?: ElementArrayFormatter
 }
 
 export type ElementFunctionsMap = { [elementName: string]: ElementFunctions }
@@ -78,7 +82,7 @@ export function mergeWithParent(element: any, elementName: string, parseData: Pa
   let parent = reduceElements(getElement(parentId, elementName, parseData.elements), parseData)
   parent = mergeWithParent(parent, elementName, parseData)
 
-  return mergeElements(parent, element, parseData)
+  return mergeElements(parent, element, parseData, ATTRIBUTE_BLACKLIST.concat('parent'))
 }
 
 export function mergeAttributes(parent: any, child: any, filters: string[] = ATTRIBUTE_BLACKLIST) {
@@ -93,9 +97,12 @@ export function reduceElements(elements: any[], parseData: ParseData) {
   return elements.reduce((result, e) => mergeElements(result, e, parseData), {})
 }
 
-export function mergeElements(parent: any, child: any, parseData: ParseData) {
+export function mergeElements(parent: any, child: any, parseData: ParseData, attributeFilters: string[] = ATTRIBUTE_BLACKLIST) {
   const elementSet = new Set([ ...Object.keys(parent), ...Object.keys(child) ])
-  const mergedElement: any = { [ELEMENT_ATTRIBUTE_KEY]: mergeAttributes(parent, child), [ELEMENT_NAME_KEY]: getElementName(child) }
+  const mergedElement: any = {
+    [ELEMENT_ATTRIBUTE_KEY]: mergeAttributes(parent, child, attributeFilters),
+    [ELEMENT_NAME_KEY]: getElementName(child)
+  }
 
   for(const elementName of elementSet) {
     if([ELEMENT_ATTRIBUTE_KEY, ELEMENT_NAME_KEY].includes(elementName)) {
@@ -104,57 +111,8 @@ export function mergeElements(parent: any, child: any, parseData: ParseData) {
 
     const func = getElementFunction(elementName, parseData.functions, 'merge') as ElementMerger
     if(func) {
-      mergedElement[elementName] = func(parent[elementName] || [], child[elementName] || [], getElementAttributes(mergedElement))
+      mergedElement[elementName] = func(parent[elementName] || [], child[elementName] || [], getElementAttributes(mergedElement), parseData)
     }
   }
   return mergedElement
-}
-
-export function hasIdBeenSeen(element: any, idsSeen: Set<string>) {
-  return idsSeen.has(getElementId(element))
-}
-
-export function addSeenId(element: any, idsSeen: Set<string>) {
-  const elementId = getElementId(element)
-  if(elementId) {
-    idsSeen.add(elementId)
-  }
-}
-
-export function processElement(element: any, containingElement: any, elementName: string, parseData: ParseData) {
-  element = mergeWithParent(element, elementName, parseData)
-  element[ELEMENT_NAME_KEY] = elementName
-
-  const processFunc = getElementFunction(elementName, parseData.functions, 'process') as ElementProcessor
-  return processFunc ? processFunc(element, containingElement, parseData) : element
-}
-
-export function processInnerElements(element: any, containingElement: any, elementName: string, parseData: ParseData, idsSeen: Set<string>) {
-  for(const name of Object.keys(element)) {
-    if([ELEMENT_ATTRIBUTE_KEY, ELEMENT_NAME_KEY].includes(name)) {
-      continue
-    }
-
-    element[name] = element[name].map((innerElement: any) => parseElement(innerElement, element, name, parseData, new Set(idsSeen)))
-  }
-
-  return element
-}
-
-export function parseElement(element: any, containingElement: any, elementName: string, parseData: ParseData, idsSeen: Set<string> = new Set()) {
-  const elementId = getElementId(element)
-  if(hasIdBeenSeen(element, idsSeen)) {
-    return element
-  }
-
-  addSeenId(element, idsSeen)
-
-  elementName = getElementName(element) || elementName
-  element = copyElement(element)
-
-  const processedElement = processElement(element, containingElement, elementName, parseData)
-  element = hasIdBeenSeen(processedElement, idsSeen) ? element : processedElement
-  addSeenId(element, idsSeen)
-
-  return processInnerElements(element, containingElement, elementName, parseData, idsSeen)
 }

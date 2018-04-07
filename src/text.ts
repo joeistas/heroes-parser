@@ -15,16 +15,15 @@ export function buildTextMap(fileData: [string, string][]): TextMap {
 export function addTextToTextMap(text: string, locale: string, textMap: TextMap): void {
   const entries = (text.match(/([^\r\n]+)/g) || []).map(line => line.split('='))
 
-  const localeMap = textMap.get(locale) || new Map()
   for(const [ key, value ] of entries) {
-    localeMap.set(key, value)
+    const localeMap = textMap.get(key) || new Map()
+    localeMap.set(locale, value)
+    textMap.set(key, localeMap)
   }
-
-  textMap.set(locale, localeMap)
 }
 
 export function localeFromFilePath(filePath: string): string {
   const match = filePath.match(/\/(.{4}).stormdata\//)
 
-  return (!match || match[1] === 'base') ? 'enus' : match[1]
+  return !match ? 'base' : match[1]
 }
