@@ -1,9 +1,12 @@
+const LINE_REGEXP = /([^\r\n]+)/g
+// const KEY_VALUE_REGEXP = /([^=]*)=(.*)/
+const KEY_VALUE_REGEXP = /(.*?)=(.*)/
+
 export type LocaleTextMap = Map<string, string>
 export type TextMap = Map<string, LocaleTextMap>
 
 export function buildTextMap(fileData: [string, string][]): TextMap {
   const textMap: TextMap = new Map()
-
   for(const [ filePath, text ] of fileData) {
     const locale = localeFromFilePath(filePath)
     addTextToTextMap(text, locale, textMap)
@@ -13,9 +16,21 @@ export function buildTextMap(fileData: [string, string][]): TextMap {
 }
 
 export function addTextToTextMap(text: string, locale: string, textMap: TextMap): void {
-  const entries = (text.match(/([^\r\n]+)/g) || []).map(line => line.split('='))
+  const lineRegExp = new RegExp(LINE_REGEXP)
+  let lineMatch
+  while((lineMatch = lineRegExp.exec(text)) !== null) {
+    const line = lineMatch[1]
+    if(!line || line === '') {
+      continue
+    }
 
-  for(const [ key, value ] of entries) {
+    const match = KEY_VALUE_REGEXP.exec(line)
+    if(!match) {
+      continue
+    }
+
+    const [ key, value ] = [ match[1], match[2] ]
+
     const localeMap = textMap.get(key) || new Map()
     localeMap.set(locale, value)
     textMap.set(key, localeMap)

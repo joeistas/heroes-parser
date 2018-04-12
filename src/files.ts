@@ -1,4 +1,5 @@
 import * as path from 'path'
+import { EOL } from 'os'
 import { writeFile, createWriteStream } from 'fs'
 import * as mkdirp from 'mkdirp'
 import * as casclib from 'casclib'
@@ -7,11 +8,13 @@ import * as JSZip from 'jszip'
 
 import { getElementAttributes } from './element'
 import { ParseOptions } from './parse-options'
+import { LOGGER } from './parser'
 
 export async function readFiles(files: string[], storageHandle: any): Promise<[ string, Buffer ][]> {
   const fileData: [ string, Buffer ][] = []
   for(const filePath of files) {
-    fileData.push([ filePath, await casclib.readFile(storageHandle, filePath) ])
+    const data = await casclib.readFile(storageHandle, filePath)
+    fileData.push([ filePath, removeNullValuesFromBuffer(data) ])
   }
 
   return fileData
@@ -21,6 +24,14 @@ export function findFiles(searchPatterns: string[], storageHandle: any): Promise
   return Promise.all(searchPatterns.map(pattern => casclib.findFiles(storageHandle, pattern)))
     .then(results => results.reduce((combined, findResults) => combined.concat(findResults), []))
     .then(results => results.map(result => result.fullName))
+}
+
+function removeNullValuesFromBuffer(buffer: Buffer): Buffer {
+  return buffer.slice(0, buffer.indexOf(0))
+}
+
+export function bufferToString(buffer: Buffer): string {
+  return buffer.toString('utf8')
 }
 
 function formatFilePath(baseDir: string, filePath: string): string {
@@ -82,24 +93,37 @@ export async function saveJSON(elements: any[], storageInfo: casclib.StorageInfo
 
   if(options.archiveJSON) {
     const archiveName = buildArchiveName(`HOTS-${ elementName }-data`, storageInfo)
-    await saveFilesToArchive(outputPath(options), buildArchiveName('HOTS-hero-data', storageInfo), json)
+    const outputDir = outputPath(options)
+    LOGGER.info(`Saving json to archive ${ archiveName } at ${ outputDir }`)
+    await saveFilesToArchive(outputDir, archiveName, json)
   }
   else {
-    await saveFilesToDisk(path.join(outputPath(options), storageInfo.gameBuild.toString()), json)
+    const outputDir = path.join(outputPath(options), storageInfo.gameBuild.toString())
+    LOGGER.info(`Saving json files in directory ${ outputDir }`)
+    await saveFilesToDisk(outputDir, json)
   }
 }
 
-export async function saveSourceFiles(fileData: [ string, Buffer ][], storageInfo: casclib.StorageInfo, options: ParseOptions) {
+export async function saveSourceFiles(fileData: [ string, string | Buffer ][], storageInfo: casclib.StorageInfo, options: ParseOptions) {
   if(!options.saveSourceFiles) {
     return
   }
 
   if(options.archiveSourceFiles) {
-    await saveFilesToArchive(outputPath(options), buildArchiveName('HOTS-source-data', storageInfo), fileData)
+    const archiveName = buildArchiveName('HOTS-source-data', storageInfo)
+    const outputDir = outputPath(options)
+    LOGGER.info(`Saving source files to archive ${ archiveName } at ${ outputDir }`)
+    await saveFilesToArchive(outputDir, archiveName, fileData)
   }
   else {
-    await saveFilesToDisk(path.join(outputPath(options), storageInfo.gameBuild.toString()), fileData)
+    const outputDir = path.join(outputPath(options), storageInfo.gameBuild.toString())
+    LOGGER.info(`Saving source files in directory ${ outputDir }`)
+    await saveFilesToDisk(outputDir, fileData)
   }
+}
+
+export function buildAssetListFileData(assetList: string[]): [ string, string ] {
+  return [ 'asset-list.txt', assetList.join(EOL) ]
 }
 
 function outputPath(options: ParseOptions): string {

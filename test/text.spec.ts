@@ -33,6 +33,13 @@ describe("addTextToTextMap", function() {
     expect(enus.get('another')).to.equal('entry')
     expect(enus.get('last')).to.equal('something')
   })
+
+  it("should return the correct key and text when a '=' character is in the text", function() {
+    const text = "thing=fish\r\nanother=entry thing=fish\r\nlast=something"
+    const textMap = new Map()
+
+    expect.fail()
+  })
 })
 
 describe("localeFromFilePath", function() {

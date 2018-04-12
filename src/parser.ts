@@ -4,11 +4,18 @@ import * as casclib from 'casclib'
 import { ELEMENT_ATTRIBUTE_KEY, ElementFunctionsMap, getElementAttributes, reduceElements } from './element'
 import { ElementMap, buildElementMap } from './element-map'
 import { TextMap, buildTextMap } from './text'
-import { findFiles, readFiles, xml2Json, saveJSON, saveSourceFiles } from './files'
+import { findFiles, readFiles, xml2Json, saveJSON, saveSourceFiles, bufferToString, buildAssetListFileData } from './files'
 import { ParseOptions, buildParseOptions } from './parse-options'
-import { DEFAULT_FUNCTIONS } from './default-functions'
 import { AssetFindCache, parseElement } from './element-parsers'
-import { formatElement } from './format'
+import { formatElement } from './formatters'
+
+export interface Logger {
+  info: (...args: any[]) => void
+  debug: (...args: any[]) => void
+  error: (...args: any[]) => void
+  group: (level?: 'info' | 'debug') => void
+  groupEnd: (level?: 'info' | 'debug') => void
+}
 
 export interface ParseData {
   storageInfo: casclib.StorageInfo
@@ -20,44 +27,87 @@ export interface ParseData {
   options: ParseOptions
 }
 
-export async function parse(installPath: string, options: Partial<ParseOptions> = {}, elementFunctions: ElementFunctionsMap = DEFAULT_FUNCTIONS): Promise<any[]> {
+export let LOGGER: Logger
+
+export async function parse(installPath: string, options: Partial<ParseOptions> = {}): Promise<any[]> {
   const storageHandle = await casclib.openStorage(installPath)
+
   const parseOptions = buildParseOptions(options)
-  const parseData = await buildParseData(parseOptions, elementFunctions, storageHandle)
+  LOGGER = buildLogger(parseOptions)
 
-  const rootElements = parseData.elements.get(parseOptions.rootElementName) || new Map()
-  const processedElements = []
-  for(const elements of rootElements.values()) {
-    let element = reduceElements(elements, parseData)
-
-    const attributes = getElementAttributes(element)
-    if(attributes.default == '1' || !attributes.id) {
-      continue
-    }
-
-    element = parseElement(element, null, parseOptions.rootElementName, parseData)
-    processedElements.push(formatElement(element, null, parseData))
+  let parseData: ParseData
+  try {
+    parseData = await buildParseData(parseOptions, storageHandle)
+  }
+  catch(error) {
+    LOGGER.error(error)
+    return
+  }
+  finally {
+    casclib.closeStorage(storageHandle)
   }
 
-  casclib.closeStorage(storageHandle)
+  LOGGER.info(`Building JSON for ${ parseOptions.rootElementName } elements.`)
+  const rootElements = parseData.elements.get(parseOptions.rootElementName) || new Map()
+  const processedElements: any[] = []
+
+  const elementList = [ ...rootElements.values() ].map(elements => reduceElements(elements, parseData))
+    .filter(element => {
+      const attributes = getElementAttributes(element)
+      return attributes.default != '1' && !!attributes.id
+    })
+
+  const elementCount = elementList.length
+
+  elementList.forEach((element, index) => {
+    const attributes = getElementAttributes(element)
+
+    LOGGER.info(`Building JSON for ${ attributes.id } ${ index }/${ elementCount }`)
+    LOGGER.group('info')
+
+    LOGGER.info(`Parsing ${ attributes.id }`)
+    element = parseElement(element, null, parseOptions.rootElementName, parseData)
+
+    LOGGER.info(`Formatting ${ attributes.id }`)
+    processedElements.push(formatElement(element, null, parseData))
+    LOGGER.groupEnd('info')
+  })
 
   saveJSON(processedElements, parseData.storageInfo, parseData.options)
+
+  LOGGER.info("Parsing Complete!")
 
   return processedElements
 }
 
-async function buildParseData(options: ParseOptions, elementFunctions: ElementFunctionsMap, storageHandle: any): Promise<ParseData> {
+async function buildParseData(options: ParseOptions, storageHandle: any): Promise<ParseData> {
   const storageInfo = casclib.getStorageInfo(storageHandle)
 
   const [ sourceXML, sourceText ] = await fetchSourceFiles(options, storageHandle)
-  saveSourceFiles(sourceXML.concat(sourceText), storageInfo, options)
 
-  const elementMap = await fetchElements(sourceXML)
-  const textMap = fetchText(sourceText)
+  LOGGER.info("Loading asset file list...")
   const assets = await fetchAssetFilePaths(options, storageHandle)
+  LOGGER.info("Asset file list loaded.")
+
+  await saveSourceFiles(
+    [
+      ...sourceXML,
+      ...sourceText,
+      buildAssetListFileData(assets),
+    ],
+    storageInfo,
+    options
+  )
+
+  LOGGER.info("Building element map...")
+  const elementMap = await fetchElements(sourceXML)
+  LOGGER.info("Element map built.")
+  LOGGER.info("Building text map...")
+  const textMap = fetchText(sourceText)
+  LOGGER.info("Text map built.")
 
   return {
-    functions: elementFunctions,
+    functions: options.elementFunctions,
     elements: elementMap,
     assetfindCache: new Map(),
     text: textMap,
@@ -67,18 +117,44 @@ async function buildParseData(options: ParseOptions, elementFunctions: ElementFu
   }
 }
 
+function buildLogger(options: ParseOptions): Logger {
+  return {
+    info: options.logLevel === 'none' ? () => null : options.console.info,
+    debug: options.logLevel !== 'debug' ? () => null : options.console.debug,
+    error: options.console.error,
+    group: (level: string = 'debug'): void => {
+      if(options.logLevel === 'none' || (options.logLevel === 'info' && level === 'debug')) {
+        return
+      }
+
+      options.console.group()
+    },
+    groupEnd: (level: string = 'debug'): void => {
+      if(options.logLevel === 'none' || (options.logLevel === 'info' && level === 'debug')) {
+        return
+      }
+
+      options.console.groupEnd()
+    },
+  }
+}
+
 async function fetchSourceFiles(options: ParseOptions, storageHandle: any) {
+  LOGGER.info("Loading XML files...")
   const sourceXML = await findFiles(options.xmlSearchPatterns, storageHandle)
     .then(filePaths => readFiles(filePaths, storageHandle))
 
+  LOGGER.info("XML files loaded")
+  LOGGER.info("Loading text files...")
   const sourceText = await findFiles(options.textSearchPatterns, storageHandle)
     .then(filePaths => readFiles(filePaths, storageHandle))
+  LOGGER.info("Text files loaded")
 
   return [ sourceXML, sourceText ]
 }
 
 function fetchElements(fileData: [string, Buffer][]): Promise<ElementMap> {
-  const fileText = fileData.map(([ fileName, buffer ]) => buffer.toString('utf8'))
+  const fileText = fileData.map(([ fileName, buffer ]) => bufferToString(buffer))
 
   return Promise.all(fileText.map(xml2Json))
     .then(data => data.map((fileData: any) => fileData.Catalog))
@@ -86,7 +162,7 @@ function fetchElements(fileData: [string, Buffer][]): Promise<ElementMap> {
 }
 
 function fetchText(fileData: [string, Buffer][]): TextMap {
-  const fileText = fileData.map(([ fileName, buffer ]) => [ fileName, buffer.toString('utf8') ] as [ string, string ])
+  const fileText = fileData.map(([ fileName, buffer ]) => [ fileName, bufferToString(buffer) ] as [ string, string ])
   return buildTextMap(fileText)
 }
 

@@ -13,6 +13,10 @@ export function attributeValueReplacement(attribute: string = 'value'): ElementP
     const values = mergeAttributes(containingElement, element)
 
     const value = getElementAttributes(element)[attribute]
+    if(!value) {
+      return element
+    }
+
     const match = REPLACEMENT_REGEXP.exec(value)
     if(!match) {
       return element
@@ -27,6 +31,10 @@ export function attributeValueReplacement(attribute: string = 'value'): ElementP
 export function replaceWithLocaleText(attribute: string = 'value'): ElementParser {
   return (element: any, containingElement: any, parseData: ParseData): any => {
     const elementAttributes = getElementAttributes(element)
+    if(!elementAttributes[attribute]) {
+      return element
+    }
+
     const localeText = parseData.text.get(elementAttributes[attribute])
     let textObject = {}
     if(localeText) {

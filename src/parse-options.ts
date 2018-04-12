@@ -1,16 +1,20 @@
+import { Console } from 'console'
+import { ElementFunctions } from './element'
+import { DETAILED_FUNCTIONS } from './element-functions/detailed'
+
 export interface ParseOptions {
   xmlSearchPatterns: string[]
   textSearchPatterns: string[]
   assetSearchPatterns: string[]
-  locales: string[]
   rootElementName: string
+  elementFunctions: { [elementName: string]: ElementFunctions }
   saveSourceFiles: boolean
   saveJSON: boolean
   archiveSourceFiles: boolean
   archiveJSON: boolean
   outputPath: string | null
-  elementBlacklist: string[]
-  logLevel: "none" | "standard" | "verbose"
+  logLevel: 'none' | 'info' | 'debug'
+  console: Console
 }
 
 export const DEFAULT_PARSE_OPTIONS: ParseOptions = {
@@ -28,29 +32,15 @@ export const DEFAULT_PARSE_OPTIONS: ParseOptions = {
     "mods/core.stormmod/*.stormassets/*",
     "mods/heroes.stormmod/*.stormassets/*",
   ],
-  locales: [] as string[],
   rootElementName: 'CHero',
+  elementFunctions: DETAILED_FUNCTIONS,
   archiveSourceFiles: true,
   saveSourceFiles: false,
   archiveJSON: true,
   saveJSON: false,
   outputPath: null,
-  elementBlacklist: [
-    'Model',
-    'HeroSelectCutsceneFile',
-    'ScoreScreenCutsceneFile',
-    'MiniPortraitCutsceneFile',
-    'PreviewCutsceneFile',
-    'TileCutsceneFile',
-    'HomeScreenCutsceneFile',
-    'InGameUnitStatusCutsceneFile',
-    'DraftCutsceneFile',
-    'DraftPickCutsceneFile',
-    'EndOfMatchCutsceneFile',
-    'LootChestRewardCutsceneFile',
-    'ProgressionLootChestReward',
-  ] as string[],
-  logLevel: "standard"
+  logLevel: 'info',
+  console: console
 }
 
 export function buildParseOptions(options: Partial<ParseOptions>): ParseOptions {

@@ -1,4 +1,6 @@
 import {
+  ELEMENT_NAME_KEY,
+  ELEMENT_ATTRIBUTE_KEY,
   ElementMerger,
   getElementAttributes,
   getElement,
@@ -19,17 +21,22 @@ export function addAttribute(name: string, value: string, override: boolean = fa
   }
 }
 
-export function addInnerElement(elementNameOrFilter: string | ElementNameFilter, attribute: string = 'value'): ElementParser {
+export function addInnerElement(attribute: string, key: string, innerAttribute: string = 'value', innerName?: string): ElementParser {
   return (element: any, containingElement: any, parseData: ParseData): any => {
     const attributes = getElementAttributes(element)
-    const elementNames = typeof elementNameOrFilter === 'string' ? [ elementNameOrFilter ] : elementNameOrFilter(parseData)
+    if(!attributes[attribute]) {
+      return element
+    }
 
-    const elementName = findElementNameForId(elementNames, attributes[attribute], parseData.elements)
-    const innerElement = reduceElements(getElement(attributes[attribute], elementName, parseData.elements), parseData)
+    innerName = innerName || key
 
-    const innerElements = element[elementName] || []
-    const mergeFunction = getElementFunction(elementName, parseData.functions, "merge") as ElementMerger
-    element[elementName] = mergeFunction ?
+    const innerElement = {
+      [ELEMENT_ATTRIBUTE_KEY]: { [innerAttribute]: attributes[attribute] },
+      [ELEMENT_NAME_KEY]: innerName
+    }
+    const innerElements = element[key] || []
+    const mergeFunction = getElementFunction(innerName, parseData.functions, "merge") as ElementMerger
+    element[key] = mergeFunction ?
       mergeFunction(innerElements, [ innerElement ], getElementAttributes(element), parseData) :
       [ ...innerElements, innerElement ]
 

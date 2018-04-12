@@ -13,6 +13,7 @@ import {
 } from '../element'
 import { ParseData } from '../parser'
 import { ElementNameFilter } from './filters'
+import { LOGGER } from '../parser'
 
 export * from './add'
 export * from './assets'
@@ -20,7 +21,7 @@ export * from './filters'
 export * from './merge'
 export * from './text'
 
-export function joinParsers(...processors: ElementParser[]) {
+export function join(...processors: ElementParser[]) {
   return (element: any, containingElement: any, parseData: ParseData): any => {
     return processors.reduce((e, processor) => processor(e, containingElement, parseData), element)
   }
@@ -63,7 +64,6 @@ export function postParseElement(element: any, outerElement: any, elementName: s
 }
 
 export function parseElement(element: any, outerElement: any, elementName: string, parseData: ParseData, idsSeen: Set<string> = new Set()) {
-  const elementId = getElementId(element)
   if(hasIdBeenSeen(element, idsSeen)) {
     return element
   }
@@ -73,11 +73,16 @@ export function parseElement(element: any, outerElement: any, elementName: strin
   elementName = getElementName(element) || elementName
   element = copyElement(element)
 
+  const elementId = getElementId(element)
+  LOGGER.debug(`Preparsing elementName: ${ elementName } id: ${ elementId }`)
   const parsedElement = preParseElement(element, outerElement, elementName, parseData)
+
   element = hasIdBeenSeen(parsedElement, idsSeen) ? element : parsedElement
   addSeenId(element, idsSeen)
 
+  LOGGER.debug(`Preparsing inner elements of elementName: ${ elementName } id: ${ elementId }`)
   element = parseInnerElements(element, outerElement, elementName, parseData, idsSeen)
 
+  LOGGER.debug(`Postparsing elementName: ${ elementName } id: ${ elementId }`)
   return postParseElement(element, outerElement, elementName, parseData)
 }
