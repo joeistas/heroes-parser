@@ -4,9 +4,9 @@ import {
   ELEMENT_ATTRIBUTE_KEY,
   getElementAttributes,
   copyElement,
-  ElementParser
 } from '../element'
 import { ParseData } from '../parser'
+import { ElementParser } from './'
 
 export type AssetFindCache = Map<string, string[]>
 

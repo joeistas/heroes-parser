@@ -1,7 +1,4 @@
 import {
-  ElementFormatter,
-  ElementKeyFormatter,
-  ElementArrayFormatter,
   ELEMENT_NAME_KEY,
   ELEMENT_ATTRIBUTE_KEY,
   getElementAttributes,
@@ -12,6 +9,10 @@ import {
 import { ParseData } from '../parser'
 import { defaultKeyFormatter } from './key-formatters'
 import { LOGGER } from '../parser'
+
+export type ElementFormatter = (formattedElement: any, element: any) => any
+export type ElementKeyFormatter = (key: string) => string
+export type ElementArrayFormatter = (elements: any[]) => any
 
 export function formatElement(element: any, outerElement: any, parseData: ParseData): any {
   const formattedElement: any = {}

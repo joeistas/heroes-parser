@@ -6,7 +6,8 @@ import { ElementMap, buildElementMap } from './element-map'
 import { TextMap, buildTextMap } from './text'
 import { findFiles, readFiles, xml2Json, saveJSON, saveSourceFiles, bufferToString, buildAssetListFileData } from './files'
 import { ParseOptions, buildParseOptions } from './parse-options'
-import { AssetFindCache, parseElement } from './element-parsers'
+import { parseElement } from './parsers'
+import { AssetFindCache } from './parsers/asset-parsers'
 import { formatElement } from './formatters'
 
 export interface Logger {
@@ -62,7 +63,7 @@ export async function parse(installPath: string, options: Partial<ParseOptions> 
   elementList.forEach((element, index) => {
     const attributes = getElementAttributes(element)
 
-    LOGGER.info(`Building JSON for ${ attributes.id } ${ index }/${ elementCount }`)
+    LOGGER.info(`Building JSON for ${ attributes.id } ${ index + 1 }/${ elementCount }`)
     LOGGER.group('info')
 
     LOGGER.info(`Parsing ${ attributes.id }`)

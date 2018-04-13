@@ -1,27 +1,22 @@
-import { ELEMENT_ATTRIBUTE_KEY, ElementFunctions, ElementParser, getElementAttributes } from '../element'
+import { ELEMENT_ATTRIBUTE_KEY, ElementFunctions, getElementAttributes } from '../element'
 import { ParseData } from '../parser'
-import {
-  processAsset,
-  mergeElement,
-  replaceWithLocaleText,
-  addAttribute,
-  addInnerElement,
-  join,
-  attributeValueReplacement,
-  inList,
-  startsWith,
-} from '../element-parsers'
+import * as parsers from '../parsers'
+import * as addParsers from '../parsers/add-parsers'
+import * as assetParsers from '../parsers/asset-parsers'
+import * as mergeParsers from '../parsers/merge-parsers'
+import * as textParsers from '../parsers/text-parsers'
+import * as elementNameFilters from '../parsers/element-name-filters'
 import * as arrayFormatters from '../formatters/array-formatters'
 import * as elementFormatters from '../formatters/element-formatters'
 import * as keyFormatters from '../formatters/key-formatters'
 import { defaultMerge, singleElement } from '../merge'
 import * as functionTemplates from './function-templates'
 
-const ABIL_TYPE_FILTER = startsWith("CAbil")
-const EFFECT_TYPE_FILTER = startsWith('CEffect')
-const BEHAVIOR_TYPE_FILTER = startsWith('CBehavior')
-const VALIDATOR_TYPE_FILTER = startsWith("CValidator")
-const KINETIC_TYPE_FILTER = startsWith("CKinetic")
+const ABIL_TYPE_FILTER = elementNameFilters.startsWith("CAbil")
+const EFFECT_TYPE_FILTER = elementNameFilters.startsWith('CEffect')
+const BEHAVIOR_TYPE_FILTER = elementNameFilters.startsWith('CBehavior')
+const VALIDATOR_TYPE_FILTER = elementNameFilters.startsWith("CValidator")
+const KINETIC_TYPE_FILTER = elementNameFilters.startsWith("CKinetic")
 
 export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   'default': {
@@ -45,30 +40,30 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "AlertTooltip": functionTemplates.localeText(),
   "Alignment": functionTemplates.singleValue(),
   "AmmoUnit": {
-    preParse: join(attributeValueReplacement(), mergeElement('CUnit')),
+    preParse: parsers.join(textParsers.attributeValueReplacement(), mergeParsers.mergeElement('CUnit')),
   },
   "Amount": functionTemplates.singleNumberValue(),
   "AmountScoreArray": {
-    preParse: addInnerElement('Validator', 'Validator'),
+    preParse: addParsers.addInnerElement('Validator', 'Validator'),
     formatKey: keyFormatters.join(
       keyFormatters.defaultKeyFormatter,
       keyFormatters.pluralizeKey,
     )
   },
   "AreaArray": {
-    preParse: mergeElement(EFFECT_TYPE_FILTER, 'Effect'),
+    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER, 'Effect'),
     formatKey: keyFormatters.join(
       keyFormatters.defaultKeyFormatter,
       keyFormatters.pluralizeKey,
     ),
   },
   "Around": {
-    preParse: mergeElement(EFFECT_TYPE_FILTER, 'Effect'),
+    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER, 'Effect'),
   },
   "AttributeId": functionTemplates.removeFromOutput,
   "Behavior": {
     merge: singleElement,
-    preParse: join(attributeValueReplacement(), mergeElement(BEHAVIOR_TYPE_FILTER)),
+    preParse: parsers.join(textParsers.attributeValueReplacement(), mergeParsers.mergeElement(BEHAVIOR_TYPE_FILTER)),
     formatArray: arrayFormatters.firstValue,
   },
   "BehaviorCategories": functionTemplates.flags(),
@@ -77,13 +72,13 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "BehaviorLink": functionTemplates.singleValue(),
   "BuffFlags": functionTemplates.flags(),
   "CaseArray": {
-    preParse: join(
-      addInnerElement('Validator', 'Validator'),
-      addInnerElement('Effect', 'Effect'),
+    preParse: parsers.join(
+      addParsers.addInnerElement('Validator', 'Validator'),
+      addParsers.addInnerElement('Effect', 'Effect'),
     )
   },
   "CaseDefault": {
-    preParse: mergeElement(EFFECT_TYPE_FILTER),
+    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
   },
   "Catalog": functionTemplates.singleValue(),
   "CatalogModifications": {
@@ -105,32 +100,32 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     formatArray: arrayFormatters.reduceToSingleObject(),
   },
   'CmdButtonArray': {
-    preParse: mergeElement("CButton", "DefaultButtonFace")
+    preParse: mergeParsers.mergeElement("CButton", "DefaultButtonFace")
   },
   "CollectionCategory": functionTemplates.singleValue(),
   "CombineArray": {
     // formatElement: elementFormatters.valueFromAttribute(),
-    preParse: mergeElement(VALIDATOR_TYPE_FILTER),
+    preParse: mergeParsers.mergeElement(VALIDATOR_TYPE_FILTER),
   },
   "Compare": functionTemplates.singleValue(),
   "Count": functionTemplates.singleBooleanValue(),
   "CountEffect": {
-    preParse: mergeElement(EFFECT_TYPE_FILTER),
+    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
   },
   "CritValidator": {
-    preParse: mergeElement(VALIDATOR_TYPE_FILTER),
+    preParse: mergeParsers.mergeElement(VALIDATOR_TYPE_FILTER),
   },
   'CSkin': {
-    preParse: join(
-      // addAttribute("AdditionalSearchText", "Skin/AdditionalSearchText/##id##"),
-      // attributeValueReplacement("AdditionalSearchText"),
-      // replaceWithLocaleText("AdditionalSearchText"),
-      addAttribute("Name", "Skin/Name/##id##"),
-      attributeValueReplacement("Name"),
-      replaceWithLocaleText("Name"),
-      // addAttribute("SortName", "Skin/SortName/##id##"),
-      // attributeValueReplacement("SortName"),
-      // replaceWithLocaleText("SortName"),
+    preParse: parsers.join(
+      // addParsers.addAttribute("AdditionalSearchText", "Skin/AdditionalSearchText/##id##"),
+      // textParsers.attributeValueReplacement("AdditionalSearchText"),
+      // textParsers.replaceWithLocaleText("AdditionalSearchText"),
+      addParsers.addAttribute("Name", "Skin/Name/##id##"),
+      textParsers.attributeValueReplacement("Name"),
+      textParsers.replaceWithLocaleText("Name"),
+      // addParsers.addAttribute("SortName", "Skin/SortName/##id##"),
+      // textParsers.attributeValueReplacement("SortName"),
+      // textParsers.replaceWithLocaleText("SortName"),
     ),
   },
   "CTalent": {
@@ -155,11 +150,11 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "DurationBonusMax": functionTemplates.singleNumberValue(),
   "DurationBonusMin": functionTemplates.singleNumberValue(),
   'Effect': {
-    preParse: mergeElement(EFFECT_TYPE_FILTER),
+    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
     formatKey: keyFormatters.join(keyFormatters.defaultKeyFormatter, keyFormatters.pluralizeKey),
   },
   'EffectArray': {
-    preParse: mergeElement(EFFECT_TYPE_FILTER),
+    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
     formatKey: keyFormatters.join(keyFormatters.defaultKeyFormatter, keyFormatters.pluralizeKey),
   },
   "EventName": functionTemplates.singleValue(),
@@ -167,7 +162,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "ExcludeCasterUnit": functionTemplates.singleValue(),
   "ExcludeOriginPlayer": functionTemplates.singleValue(),
   'Face': {
-    preParse: join(attributeValueReplacement(), mergeElement("CButton")),
+    preParse: parsers.join(textParsers.attributeValueReplacement(), mergeParsers.mergeElement("CButton")),
     formatKey: (key: string) => 'button',
   },
   "FeatureArray": {
@@ -196,22 +191,22 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     )
   },
   'FinalEffect': {
-    preParse: mergeElement(EFFECT_TYPE_FILTER),
+    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
   },
   "Find": functionTemplates.singleBooleanValue(),
   "Flags": functionTemplates.flags(true),
   'HeroAbilArray': {
-    preParse: join(
-      attributeValueReplacement('Abil'),
-      attributeValueReplacement('Button'),
-      mergeElement(ABIL_TYPE_FILTER, 'Abil'),
-      addInnerElement('CButton', "Button")
+    preParse: parsers.join(
+      textParsers.attributeValueReplacement('Abil'),
+      textParsers.attributeValueReplacement('Button'),
+      mergeParsers.mergeElement(ABIL_TYPE_FILTER, 'Abil'),
+      addParsers.addInnerElement('CButton', "Button")
     )
   },
   "HeroSelectCutsceneFile": functionTemplates.removeFromOutput,
   "HomeScreenCutsceneFile": functionTemplates.removeFromOutput,
   "Hotkey": {
-    preParse: attributeValueReplacement(),
+    preParse: textParsers.attributeValueReplacement(),
     formatElement: elementFormatters.join(
       elementFormatters.valueFromAttribute(),
       elementFormatters.removeIfEmptyObject,
@@ -220,26 +215,26 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   },
   "HotkeyAlias": {
     ...functionTemplates.singleValue(),
-    preParse: attributeValueReplacement(),
+    preParse: textParsers.attributeValueReplacement(),
   },
   "HyperlinkId": functionTemplates.removeFromOutput,
   'Icon': functionTemplates.singleAsset(),
   "ImpactEffect": {
-    preParse: mergeElement(EFFECT_TYPE_FILTER),
+    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
   },
   "ImpactLocation": {
-    preParse: addInnerElement('Effect', 'Effect'),
+    preParse: addParsers.addInnerElement('Effect', 'Effect'),
     formatArray: arrayFormatters.firstValue
   },
   "IncreaseEvents": {
-    preParse: mergeElement(EFFECT_TYPE_FILTER, 'Effect'),
+    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER, 'Effect'),
   },
   "InfoFlags": functionTemplates.flags(),
   "InfoIcon": functionTemplates.singleAsset(),
   'InfoText': functionTemplates.localeText(),
   "InGameUnitStatusCutsceneFile": functionTemplates.removeFromOutput,
   'InitialEffect': {
-    preParse: mergeElement(EFFECT_TYPE_FILTER),
+    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
     formatKey: keyFormatters.join(keyFormatters.defaultKeyFormatter, keyFormatters.pluralizeKey),
   },
   "KillCredit": functionTemplates.singleValue(),
@@ -269,14 +264,14 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   },
   "KindSplash": functionTemplates.singleValue(),
   "Kinetic": {
-    preParse: mergeElement(KINETIC_TYPE_FILTER),
+    preParse: mergeParsers.mergeElement(KINETIC_TYPE_FILTER),
   },
   "LaunchEffect": {
-    preParse: mergeElement(EFFECT_TYPE_FILTER),
+    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
   },
   "LaunchLocation": {
     merge: singleElement,
-    preParse: addInnerElement('Effect', 'Effect'),
+    preParse: addParsers.addInnerElement('Effect', 'Effect'),
   },
   "LeechScore": functionTemplates.singleValue(),
   "LevelScalingArray": {
@@ -332,10 +327,10 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "OrderArray": functionTemplates.removeFromOutput,
   "PeriodCount": functionTemplates.singleNumberValue(),
   "PeriodicEffect": {
-    preParse: mergeElement(EFFECT_TYPE_FILTER),
+    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
   },
   "PeriodicEffectArray": {
-    preParse: mergeElement(EFFECT_TYPE_FILTER),
+    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
     formatKey: keyFormatters.join(keyFormatters.defaultKeyFormatter, keyFormatters.pluralizeKey)
   },
   "PeriodicPeriod": functionTemplates.singleNumberValue(),
@@ -343,7 +338,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "Player": functionTemplates.singleValue(),
   "Portrait": functionTemplates.singleAsset(),
   "PrepEffect": {
-    preParse: mergeElement(EFFECT_TYPE_FILTER),
+    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
   },
   "PreviewCutsceneFile": functionTemplates.removeFromOutput,
   "ProductId": functionTemplates.removeFromOutput,
@@ -384,19 +379,19 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   'ShowInUI': functionTemplates.singleBooleanValue('value', 'True', 'False'),
   'SimpleDisplayText': functionTemplates.localeText(),
   'SkinArray': {
-    preParse: mergeElement('CSkin'),
+    preParse: mergeParsers.mergeElement('CSkin'),
     formatKey: keyFormatters.join(keyFormatters.defaultKeyFormatter, keyFormatters.pluralizeKey),
   },
   "SpawnEffect": {
-    preParse: mergeElement(EFFECT_TYPE_FILTER, 'Effect'),
+    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER, 'Effect'),
   },
   "SpawnUnit": {
-    preParse: mergeElement('CUnit'),
+    preParse: mergeParsers.mergeElement('CUnit'),
   },
   "splashHistory": functionTemplates.singleValue(),
   'SortName': functionTemplates.localeText(),
   'SourceButtonFace': {
-    preParse: mergeElement("CButton"),
+    preParse: mergeParsers.mergeElement("CButton"),
   },
   "TalentAIBuildsArray": {
     formatKey: (key: string) => 'AIBuilds',
@@ -404,22 +399,22 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   },
   'TalentsArray': functionTemplates.arrayOfSingleValues(),
   'TalentTreeArray': {
-    preParse: mergeElement("CTalent", 'Talent'),
+    preParse: mergeParsers.mergeElement("CTalent", 'Talent'),
   },
   "TeleportEffect": {
-    preParse: mergeElement(EFFECT_TYPE_FILTER),
+    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
   },
   "TileCutsceneFile": functionTemplates.removeFromOutput,
   "TimeScaleSource": functionTemplates.singleValue(),
   "TokenId": {
-    preParse: join(attributeValueReplacement(), mergeElement("CBehaviorTokenCounter")),
+    preParse: parsers.join(textParsers.attributeValueReplacement(), mergeParsers.mergeElement("CBehaviorTokenCounter")),
   },
   "Tooltip": functionTemplates.localeText(),
   "TooltipAppender": {
-    preParse: join(
-      replaceWithLocaleText('Text'),
-      addInnerElement('Validator', 'Validator'),
-      addInnerElement('CButton', 'Face')
+    preParse: parsers.join(
+      textParsers.replaceWithLocaleText('Text'),
+      addParsers.addInnerElement('Validator', 'Validator'),
+      addParsers.addInnerElement('CButton', 'Face')
     )
   },
   "TooltipFlags": functionTemplates.flags(),
@@ -428,16 +423,16 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "Type": functionTemplates.singleValue(),
   "UnifiedMoveSpeedFactor": functionTemplates.singleNumberValue(),
   'Unit': {
-    preParse: join(
-      attributeValueReplacement(),
-      mergeElement("CUnit")
+    preParse: parsers.join(
+      textParsers.attributeValueReplacement(),
+      mergeParsers.mergeElement("CUnit")
     )
   },
   'Universe': functionTemplates.singleValue(),
   'UniverseIcon': functionTemplates.singleAsset(),
   "UseHotkeyLabel": functionTemplates.singleBooleanValue(),
   "ValidatorArray": {
-    preParse: join(attributeValueReplacement(), mergeElement(VALIDATOR_TYPE_FILTER)),
+    preParse: parsers.join(textParsers.attributeValueReplacement(), mergeParsers.mergeElement(VALIDATOR_TYPE_FILTER)),
   },
   "Value": {
     ...functionTemplates.singleValue(),
@@ -448,7 +443,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     )
   },
   'VariationArray': {
-    preParse: mergeElement('CSkin'),
+    preParse: mergeParsers.mergeElement('CSkin'),
     formatKey: keyFormatters.join(keyFormatters.defaultKeyFormatter, keyFormatters.pluralizeKey),
   },
   'VariationIcon': functionTemplates.singleAsset(),
@@ -462,7 +457,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     formatElement: elementFormatters.valueFromAttribute(),
   },
   'VoiceLineArray': {
-    preParse: attributeValueReplacement(),
+    preParse: textParsers.attributeValueReplacement(),
     formatKey: keyFormatters.join(keyFormatters.defaultKeyFormatter, keyFormatters.pluralizeKey),
     formatElement: elementFormatters.valueFromAttribute(),
   },
@@ -470,7 +465,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "WhichPlayer": functionTemplates.singleValue(),
   "WhichUnit": {
     merge: singleElement,
-    preParse: mergeElement(EFFECT_TYPE_FILTER, 'Effect'),
+    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER, 'Effect'),
     formatElement: elementFormatters.valueFromAttribute(),
     formatArray: arrayFormatters.firstValue,
   },

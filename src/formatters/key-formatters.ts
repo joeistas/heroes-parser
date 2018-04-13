@@ -3,7 +3,7 @@ import * as pluralize from 'pluralize'
 import {
   ElementFormatter,
   ElementKeyFormatter,
-} from '../element'
+} from './'
 
 export const defaultKeyFormatter: ElementKeyFormatter = join(
   removeArrayFromKey,

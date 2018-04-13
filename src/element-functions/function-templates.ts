@@ -1,6 +1,10 @@
 import { ParseData } from '../parser'
 import { ElementFunctions } from '../element'
-import * as elementParsers from '../element-parsers'
+import * as parsers from '../parsers'
+import * as addParsers from '../parsers/add-parsers'
+import * as assetParsers from '../parsers/asset-parsers'
+import * as mergeParsers from '../parsers/merge-parsers'
+import * as textParsers from '../parsers/text-parsers'
 import * as arrayFormatters from '../formatters/array-formatters'
 import * as elementFormatters from '../formatters/element-formatters'
 import * as keyFormatters from '../formatters/key-formatters'
@@ -68,9 +72,9 @@ export function flags(
 
 export function localeText(attribute: string = 'value'): ElementFunctions {
   return {
-    preParse: elementParsers.join(
-      elementParsers.attributeValueReplacement(attribute),
-      elementParsers.replaceWithLocaleText(attribute)),
+    preParse: parsers.join(
+      textParsers.attributeValueReplacement(attribute),
+      textParsers.replaceWithLocaleText(attribute)),
     formatElement: elementFormatters.valueFromAttribute(attribute),
     formatArray: arrayFormatters.firstValue,
   }
@@ -97,9 +101,9 @@ export function localeTextToSingleObject(keyAttribute: string = 'index', valueAt
 export function singleAsset(attribute: string = 'value'): ElementFunctions {
   return {
     merge: elementMergers.singleElement,
-    preParse: elementParsers.join(
-      elementParsers.attributeValueReplacement(),
-      elementParsers.processAsset()
+    preParse: parsers.join(
+      textParsers.attributeValueReplacement(),
+      assetParsers.processAsset()
     ),
     formatElement: elementFormatters.valueFromAttribute(attribute),
   }
@@ -107,9 +111,9 @@ export function singleAsset(attribute: string = 'value'): ElementFunctions {
 
 export function assetArray(attribute: string = 'value'): ElementFunctions {
   return {
-    preParse: elementParsers.join(
-      elementParsers.attributeValueReplacement(),
-      elementParsers.processAsset()
+    preParse: parsers.join(
+      textParsers.attributeValueReplacement(),
+      assetParsers.processAsset()
     ),
     formatElement: elementFormatters.valueFromAttribute(attribute),
   }

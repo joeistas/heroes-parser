@@ -5,11 +5,10 @@ import {
   findElementNameForId,
   reduceElements,
   mergeElements,
-  ElementParser
 } from '../element'
 import { ParseData } from '../parser'
-import { ElementNameFilter } from './filters'
-import { preParseElement } from './'
+import { ElementNameFilter } from './element-name-filters'
+import { preParseElement, ElementParser } from './'
 
 export function mergeElement(elementNameOrFilter: string | ElementNameFilter, attribute: string = 'value'): ElementParser {
   return (element: any, containingElement: any, parseData: ParseData): any => {

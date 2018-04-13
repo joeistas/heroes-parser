@@ -1,16 +1,13 @@
 import { ElementMap } from './element-map'
 import { ParseData } from './parser'
 import { filterKeysFromObject } from './utils'
+import { ElementParser } from './parsers'
+import { ElementMerger } from './merge'
+import { ElementKeyFormatter, ElementFormatter, ElementArrayFormatter } from './formatters'
 
 export const ATTRIBUTE_BLACKLIST: string[] = [ 'default' ]
 export const ELEMENT_ATTRIBUTE_KEY: string = '$'
 export const ELEMENT_NAME_KEY: string = '$elementName'
-
-export type ElementMerger = (parentElements: any[], childElements: any[], mergedAttributes: any, parseData: ParseData) => any[]
-export type ElementParser = (element: any, outerElement: any, parseData: ParseData) => any
-export type ElementFormatter = (formattedElement: any, element: any) => any
-export type ElementKeyFormatter = (key: string) => string
-export type ElementArrayFormatter = (elements: any[]) => any
 
 export interface ElementFunctions {
   merge?: ElementMerger

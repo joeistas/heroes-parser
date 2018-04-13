@@ -2,9 +2,9 @@ import {
   ELEMENT_ATTRIBUTE_KEY,
   getElementAttributes,
   mergeAttributes,
-  ElementParser
 } from '../element'
 import { ParseData } from '../parser'
+import { ElementParser } from './'
 
 const REPLACEMENT_REGEXP = /(##([^#]+)##)/
 

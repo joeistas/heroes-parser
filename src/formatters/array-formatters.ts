@@ -1,4 +1,4 @@
-import { ElementArrayFormatter } from '../element'
+import { ElementArrayFormatter } from './'
 
 export type ElementArrayConditional = (elements: any[]) => boolean
 
@@ -15,7 +15,7 @@ export function join(...formatters: ElementArrayFormatter[]): ElementArrayFormat
   }
 }
 
-export function removeArray(): null {
+export function removeArray(elements: any[]): null {
   return null
 }
 

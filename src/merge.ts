@@ -1,6 +1,8 @@
 import { ELEMENT_ATTRIBUTE_KEY, mergeElements, reduceElements } from './element'
 import { ParseData} from './parser'
 
+export type ElementMerger = (parentElements: any[], childElements: any[], mergedAttributes: any, parseData: ParseData) => any[]
+
 export function defaultMerge(parentElements: any[], childElements: any[], mergedAttributes: any, parseData: ParseData): any[] {
   const elements = [ ...parentElements, ...childElements ]
   const indexedElements = elements.filter(e => e[ELEMENT_ATTRIBUTE_KEY] && !!e[ELEMENT_ATTRIBUTE_KEY].index)

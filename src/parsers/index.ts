@@ -2,7 +2,6 @@ import * as casclib from 'casclib'
 
 import { ElementMap } from '../element-map'
 import {
-  ElementParser,
   ELEMENT_ATTRIBUTE_KEY,
   ELEMENT_NAME_KEY,
   getElementId,
@@ -12,14 +11,10 @@ import {
   mergeWithParent,
 } from '../element'
 import { ParseData } from '../parser'
-import { ElementNameFilter } from './filters'
+import { ElementNameFilter } from './element-name-filters'
 import { LOGGER } from '../parser'
 
-export * from './add'
-export * from './assets'
-export * from './filters'
-export * from './merge'
-export * from './text'
+export type ElementParser = (element: any, outerElement: any, parseData: ParseData) => any
 
 export function join(...processors: ElementParser[]) {
   return (element: any, containingElement: any, parseData: ParseData): any => {

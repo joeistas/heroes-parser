@@ -1,16 +1,16 @@
 import {
   ELEMENT_NAME_KEY,
   ELEMENT_ATTRIBUTE_KEY,
-  ElementMerger,
   getElementAttributes,
   getElement,
   getElementFunction,
   findElementNameForId,
   reduceElements,
-  ElementParser
 } from '../element'
 import { ParseData } from '../parser'
-import { ElementNameFilter } from './filters'
+import { ElementNameFilter } from './element-name-filters'
+import { ElementParser } from './'
+import { ElementMerger } from '../merge'
 
 export function addAttribute(name: string, value: string, override: boolean = false) {
   return (element: any, containingElement: any, parseData: ParseData): any => {

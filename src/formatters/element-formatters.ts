@@ -1,7 +1,7 @@
 import {
   ElementFormatter,
   ElementKeyFormatter,
-} from '../element'
+} from './'
 
 export type ElementConditional = (formattedElement: any, element: any) => boolean
 
