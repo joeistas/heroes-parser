@@ -11,22 +11,30 @@ export async function parse(options: Partial<ParseOptions> = {}): Promise<any[]>
   buildLogger(parseOptions)
   const parseData = await buildParseData(parseOptions)
 
-  LOGGER.info(`Building JSON for ${ parseOptions.rootElementName } elements.`)
-  const rootElements = parseData.elements.get(parseOptions.rootElementName) || new Map()
-  const processedElements: any[] = []
+  LOGGER.info(`Building JSON for ${ parseOptions.rootElementName } ${ parseOptions.parseElementName } elements.`)
+  const rootElementMap = parseData.elements.get(parseOptions.rootElementName) || new Map()
+  const rootElements = [ ...rootElementMap.values() ]
 
-  const elementList = [ ...rootElements.values() ].map(elements => reduceElements(elements, parseData))
-    .filter(element => {
-      const attributes = getElementAttributes(element)
-      return attributes.default != '1' && !!attributes.id
-    })
+  let elementList: any[]
+  if(options.parseElementName && options.parseElementName !== options.rootElementName) {
+    const rootElemment = reduceElements(rootElements, parseData)
+    elementList = rootElemment[options.parseElementName]
+  }
+  else {
+    elementList = rootElements.map(elements => reduceElements(elements, parseData))
+      .filter(element => {
+        const attributes = getElementAttributes(element)
+        return attributes.default != '1' && !!attributes.id
+      })
+  }
+  const processedElements: any[] = []
 
   const elementCount = elementList.length
 
   elementList.forEach((element, index) => {
     const attributes = getElementAttributes(element)
 
-    LOGGER.info(`Building JSON for ${ attributes.id } ${ index + 1 }/${ elementCount }`)
+    LOGGER.info(`Building JSON for ${ attributes.id || attributes.value } ${ index + 1 }/${ elementCount }`)
     LOGGER.group('info')
 
     LOGGER.info(`Parsing ${ attributes.id }`)

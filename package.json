@@ -1,11 +1,14 @@
 {
-  "name": "hots-parser",
+  "name": "heroes-parser",
   "version": "1.0.0",
   "description": "Parse Heroes of the Storm game data into JSON",
   "main": "index.js",
   "author": "Joe Istas <joe.istas@istastech.com>",
   "license": "MIT",
   "private": false,
+  "bin": {
+    "heroes-parser": "./dist/bin/parser"
+  },
   "dependencies": {
     "casclib": "^1.0.0",
     "commander": "^2.15.1",

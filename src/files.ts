@@ -73,8 +73,7 @@ export async function saveJSON(elements: any[], buildNumber: number, options: Pa
     return
   }
 
-  let elementName = options.rootElementName.startsWith('C') ? options.rootElementName.substring(1) : options.rootElementName
-  elementName = elementName.split(/(?=[A-Z])/g).join('-').toLowerCase()
+  const elementName = formatElementName(options)
 
   const json = elements.map(element => {
     return [
@@ -82,7 +81,6 @@ export async function saveJSON(elements: any[], buildNumber: number, options: Pa
       JSON.stringify(element, null, 4)
     ] as [ string, string ]
   })
-
 
   if(options.archiveJSON) {
     const archiveName = buildArchiveName(`HOTS-${ elementName }-data`, buildNumber)
@@ -137,4 +135,11 @@ export function xml2Json(fileXml: string): Promise<any> {
       resolve(json)
     })
   })
+}
+
+function formatElementName(options: ParseOptions) {
+  let elementName = options.parseElementName ? options.parseElementName : options.rootElementName
+  elementName = elementName.startsWith('C') ? options.rootElementName.substring(1) : options.rootElementName
+  elementName = elementName.replace('Array', '')
+  return elementName.split(/(?=[A-Z])/g).join('-').toLowerCase()
 }

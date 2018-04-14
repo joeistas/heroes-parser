@@ -1,5 +1,5 @@
 import { ELEMENT_ATTRIBUTE_KEY, ElementFunctions, getElementAttributes } from '../element'
-import { ParseData } from '../parser'
+import { ParseData } from '../parse-data'
 import * as parsers from '../parsers'
 import * as addParsers from '../parsers/add-parsers'
 import * as assetParsers from '../parsers/asset-parsers'
@@ -202,6 +202,9 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
       mergeParsers.mergeElement(ABIL_TYPE_FILTER, 'Abil'),
       addParsers.addInnerElement('CButton', "Button")
     )
+  },
+  "HeroArray": {
+    preParse: mergeParsers.mergeElement('CHero')
   },
   "HeroSelectCutsceneFile": functionTemplates.removeFromOutput,
   "HomeScreenCutsceneFile": functionTemplates.removeFromOutput,

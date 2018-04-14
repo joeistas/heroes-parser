@@ -44,7 +44,7 @@ interface SourceData {
 
 export async function buildParseData(options: ParseOptions): Promise<ParseData> {
   let sourceData: SourceData
-  if(options.sorceCASCStorage) {
+  if(options.sourceCASCStorage) {
     sourceData = await loadFromCASC(options)
 
     await saveSourceFiles(
