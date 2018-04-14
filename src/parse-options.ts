@@ -5,6 +5,7 @@ import { DETAILED_FUNCTIONS } from './element-functions/detailed'
 export interface ParseOptions {
   sourceDir: string | null
   sorceCASCStorage: boolean
+  buildNumber: number | null,
   xmlSearchPatterns: string[]
   textSearchPatterns: string[]
   assetSearchPatterns: string[]
@@ -22,6 +23,7 @@ export interface ParseOptions {
 export const DEFAULT_PARSE_OPTIONS: ParseOptions = {
   sourceDir: null,
   sorceCASCStorage: true,
+  buildNumber: null,
   xmlSearchPatterns: [
     "mods/core.stormmod/base.stormdata/GameData/*Data.xml",
     "mods/heroesdata.stormmod/base.stormdata/GameData/*Data.xml",

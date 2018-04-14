@@ -1,5 +1,5 @@
 import { ELEMENT_ATTRIBUTE_KEY, mergeElements, reduceElements } from './element'
-import { ParseData} from './parser'
+import { ParseData } from './parse-data'
 
 export type ElementMerger = (parentElements: any[], childElements: any[], mergedAttributes: any, parseData: ParseData) => any[]
 

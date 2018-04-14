@@ -1,5 +1,4 @@
-const LINE_REGEXP = /([^\r\n]+)/g
-// const KEY_VALUE_REGEXP = /([^=]*)=(.*)/
+export const LINE_REGEXP = /([^\r\n]+)/g
 const KEY_VALUE_REGEXP = /(.*?)=(.*)/
 
 export type LocaleTextMap = Map<string, string>
