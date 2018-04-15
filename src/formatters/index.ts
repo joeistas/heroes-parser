@@ -6,9 +6,9 @@ import {
   getElementName,
   getElementId,
 } from '../element'
-import { ParseData } from '../parser'
+import { ParseData } from '../parse-data'
 import { defaultKeyFormatter } from './key-formatters'
-import { LOGGER } from '../parser'
+import { LOGGER } from '../logger'
 
 export type ElementFormatter = (formattedElement: any, element: any) => any
 export type ElementKeyFormatter = (key: string) => string

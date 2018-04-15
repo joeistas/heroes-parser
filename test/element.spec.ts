@@ -3,6 +3,7 @@ import { spy } from 'sinon'
 
 import {
   ELEMENT_ATTRIBUTE_KEY,
+  ELEMENT_NAME_KEY,
   getElementFunction,
   getElementAttributes,
   getElementId,
@@ -13,7 +14,7 @@ import {
   mergeWithParent,
   reduceElements,
 } from '../src/element'
-import { ElementMap } from '../src//element-map'
+import { ElementMap } from '../src/element-map'
 
 describe("getElementFunction", function() {
   const functions = {
@@ -91,7 +92,11 @@ describe("getElement", function() {
 })
 
 describe("copyElement", function() {
-  const element = { [ELEMENT_ATTRIBUTE_KEY]: { id: 'test' }, childElements: [ {}, {} ]}
+  const element = {
+    [ELEMENT_ATTRIBUTE_KEY]: { id: 'test' },
+    [ELEMENT_NAME_KEY]: 'testName',
+    childElements: [ {}, {} ],
+  }
 
   it("should a new object equal to the original", function() {
     expect(copyElement(element)).to.eql(element)
@@ -110,8 +115,26 @@ describe("mergeWithParent", function() {
   const parseData: any = {
     elements: new Map([
       ['hero', new Map([
-        ['', [ { [ELEMENT_ATTRIBUTE_KEY]: { tier: '1' }, testElement: [ {} ] } as any ] ],
-        ['test', [ { [ELEMENT_ATTRIBUTE_KEY]: { tier: '5', value: 'text', id: 'test' }, testElement2: [ {} ] } as any ] ]
+        [
+          '',
+          [
+            {
+              [ELEMENT_ATTRIBUTE_KEY]: { tier: '1' },
+              [ELEMENT_NAME_KEY]: 'hero',
+              testElement: [ {} ]
+            } as any
+          ]
+        ],
+        [
+          'test',
+          [
+            {
+              [ELEMENT_ATTRIBUTE_KEY]: { tier: '5', value: 'text', id: 'test' },
+              [ELEMENT_NAME_KEY]: 'test',
+              testElement2: [ {} ]
+            } as any
+          ]
+        ]
       ])]
     ]) as ElementMap,
     text: new Map(),
@@ -145,22 +168,32 @@ describe("mergeWithParent", function() {
   })
 
   it("should merge the child into the element of the same type in the 'id' in the 'parent' attribute", function() {
-    const element = { [ELEMENT_ATTRIBUTE_KEY]: { id: 'element', value: 'thing', parent: 'test' }, testElement: [ {} ] }
+    const element = {
+      [ELEMENT_ATTRIBUTE_KEY]: { id: 'element', value: 'thing', parent: 'test' },
+      [ELEMENT_NAME_KEY]: 'hero',
+      testElement: [ {} ]
+    }
 
     const merged = mergeWithParent(element, 'hero', parseData)
     expect(merged).to.eql({
-      [ELEMENT_ATTRIBUTE_KEY]: { id: 'element', tier: '5', value: 'thing', parent: 'test' },
+      [ELEMENT_ATTRIBUTE_KEY]: { id: 'element', tier: '5', value: 'thing' },
+      [ELEMENT_NAME_KEY]: 'hero',
       testElement: [ {},  {} ],
       testElement2: [ {} ],
     })
   })
 
   it("should merge the child with the element of the same type with an empty 'id' value", function() {
-    const element = { [ELEMENT_ATTRIBUTE_KEY]: { id: 'element', value: 'thing' }, testElement: [ {} ] }
+    const element = {
+      [ELEMENT_ATTRIBUTE_KEY]: { id: 'element', value: 'thing' },
+      [ELEMENT_NAME_KEY]: 'hero',
+      testElement: [ {} ]
+    }
 
     const merged = mergeWithParent(element, 'hero', parseData)
     expect(merged).to.eql({
       [ELEMENT_ATTRIBUTE_KEY]: { id: 'element', tier: '1', value: 'thing' },
+      [ELEMENT_NAME_KEY]: 'hero',
       testElement: [ {},  {} ],
     })
   })
@@ -206,13 +239,14 @@ describe("reduceElements", function() {
 
   it("should reduce a list of elements to a single element", function() {
     const elements = [
-      { [ELEMENT_ATTRIBUTE_KEY]: { tier: '1' }, testElement: [ {} ] },
-      { [ELEMENT_ATTRIBUTE_KEY]: { tier: '5', value: 'text', id: 'test' }, testElement2: [ {} ] },
+      { [ELEMENT_ATTRIBUTE_KEY]: { tier: '1' }, [ELEMENT_NAME_KEY]: 'test', testElement: [ {} ] },
+      { [ELEMENT_ATTRIBUTE_KEY]: { tier: '5', value: 'text', id: 'test' }, [ELEMENT_NAME_KEY]: 'test', testElement2: [ {} ] },
     ]
 
     const merged = reduceElements(elements, parseData)
     expect(merged).to.eql({
       [ELEMENT_ATTRIBUTE_KEY]: { tier: '5', value: 'text', id: 'test' },
+      [ELEMENT_NAME_KEY]: 'test',
       testElement: [ {} ],
       testElement2: [ {} ],
     })
@@ -232,16 +266,32 @@ describe("mergeElements", function() {
   }
 
   it("should return an object with the parent and child elements merged", function() {
-    const parent = { [ELEMENT_ATTRIBUTE_KEY]: { tier: '1' }, testElement: [ {}, {} ] }
-    const child = { [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '2' }, testElement2: [ {} ] }
+    const parent = {
+      [ELEMENT_ATTRIBUTE_KEY]: { tier: '1' },
+      [ELEMENT_NAME_KEY]: 'test',
+      testElement: [ {}, {} ]
+    }
+    const child = {
+      [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '2' },
+      [ELEMENT_NAME_KEY]: 'test',
+      testElement2: [ {} ]
+    }
 
     const merged = mergeElements(parent, child, parseData)
-    expect(merged).to.eql({ [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '2' }, testElement: [ {}, {} ], testElement2: [ {} ] })
+    expect(merged).to.eql({ [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '2' }, [ELEMENT_NAME_KEY]: 'test', testElement: [ {}, {} ], testElement2: [ {} ] })
   })
 
   it("should merge all inner elements of parent and child using each element types 'merge' function", function() {
-    const parent = { [ELEMENT_ATTRIBUTE_KEY]: { tier: '1' }, testElement: [ {}, {} ] }
-    const child = { [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '2' }, testElement2: [ {} ] }
+    const parent = {
+      [ELEMENT_ATTRIBUTE_KEY]: { tier: '1' },
+      [ELEMENT_NAME_KEY]: 'test',
+      testElement: [ {}, {} ]
+    }
+    const child = {
+      [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '2' },
+      [ELEMENT_NAME_KEY]: 'test',
+      testElement2: [ {} ]
+    }
 
     const mergeSpy = spy(parseData.functions.default, 'merge')
     mergeElements(parent, child, parseData)
@@ -249,26 +299,56 @@ describe("mergeElements", function() {
   })
 
   it("should add inner elements that only exist on the parent element", function() {
-    const parent = { [ELEMENT_ATTRIBUTE_KEY]: { tier: '1' }, testElement: [ {}, {} ] }
-    const child = { [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '2' } }
+    const parent = {
+      [ELEMENT_ATTRIBUTE_KEY]: { tier: '1' },
+      [ELEMENT_NAME_KEY]: 'test',
+      testElement: [ {}, {} ]
+    }
+    const child = {
+      [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '2' },
+      [ELEMENT_NAME_KEY]: 'test',
+    }
 
     const merged = mergeElements(parent, child, parseData)
-    expect(merged).to.eql({ [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '2' }, testElement: [ {}, {} ] })
+    expect(merged).to.eql({ [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '2' }, [ELEMENT_NAME_KEY]: 'test', testElement: [ {}, {} ] })
   })
 
   it("should add inner elements that only exist on the child element", function() {
-    const parent = { [ELEMENT_ATTRIBUTE_KEY]: { tier: '1' } }
-    const child = { [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '2' }, testElement: [ {}, {} ] }
+    const parent = {
+      [ELEMENT_ATTRIBUTE_KEY]: { tier: '1' },
+      [ELEMENT_NAME_KEY]: 'test',
+    }
+    const child = {
+      [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '2' },
+      [ELEMENT_NAME_KEY]: 'test',
+      testElement: [ {}, {} ],
+    }
 
     const merged = mergeElements(parent, child, parseData)
-    expect(merged).to.eql({ [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '2' }, testElement: [ {}, {} ] })
+    expect(merged).to.eql({
+      [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '2' },
+      [ELEMENT_NAME_KEY]: 'test',
+      testElement: [ {}, {} ],
+    })
   })
 
   it("should add inner elements that exists on both the parent and child elements", function() {
-    const parent = { [ELEMENT_ATTRIBUTE_KEY]: { tier: '1' }, testElement: [ {} ] }
-    const child = { [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '2' }, testElement: [ {}, {} ] }
+    const parent = {
+      [ELEMENT_ATTRIBUTE_KEY]: { tier: '1' },
+      [ELEMENT_NAME_KEY]: 'test',
+      testElement: [ {} ],
+    }
+    const child = {
+      [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '2' },
+      [ELEMENT_NAME_KEY]: 'test',
+      testElement: [ {}, {} ],
+    }
 
     const merged = mergeElements(parent, child, parseData)
-    expect(merged).to.eql({ [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '2' }, testElement: [ {}, {}, {} ] })
+    expect(merged).to.eql({
+      [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', tier: '2' },
+      [ELEMENT_NAME_KEY]: 'test',
+      testElement: [ {}, {}, {} ]
+    })
   })
 })

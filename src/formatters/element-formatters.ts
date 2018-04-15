@@ -50,11 +50,11 @@ export function some(...conditionals: ElementConditional[]) {
   }
 }
 
-export function removeFromOutput(): null {
+export function removeFromOutput(formattedElement: any, element: any): null {
   return null
 }
 
-export function passThrough(formattedElement: any) {
+export function passThrough(formattedElement: any, element: any) {
   return formattedElement
 }
 
@@ -124,7 +124,7 @@ export function parseFilterString(formattedElement: any, element: any) {
   const filters: any = {}
 
   const setFilter = (filter: string, value: boolean) => {
-    if(filter === '-') {
+    if(filter.length === 0 || filter === '-') {
       return
     }
 

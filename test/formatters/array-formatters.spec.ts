@@ -62,9 +62,9 @@ describe("Element array formatters", function() {
     })
 
     it("should call each formatter with the elements array and chain the results.", function() {
-      const formatter1 = sinon.spy()
-      const formatter2 = sinon.spy()
       const elements = [ {}, {} ]
+      const formatter1 = sinon.stub().returns(elements)
+      const formatter2 = sinon.spy()
 
       arrayFormatters.join(formatter1, formatter2)(elements)
       expect(formatter1).to.have.been.calledWith(elements)
@@ -119,7 +119,7 @@ describe("Element array formatters", function() {
         { another: 'value' },
       ]
 
-      expect(arrayFormatters.reduceToSingleObject()(elements)).to.equal({ test: 'value', thing: 'thing', another: 'value' })
+      expect(arrayFormatters.reduceToSingleObject()(elements)).to.eql({ test: 'value', thing: 'test', another: 'value' })
     })
 
     it("should return an object with the key 'mergeOntoOuterElement' set to 'true' if mergeOntoOuterElement is 'true'", function() {
@@ -128,7 +128,9 @@ describe("Element array formatters", function() {
         { another: 'value' },
       ]
 
-      expect(arrayFormatters.reduceToSingleObject(true)(elements)).to.have.key('mergeOntoOuterElement').and.is.true
+      const result = arrayFormatters.reduceToSingleObject(true)(elements)
+      expect(result).to.include.all.keys('mergeOntoOuterElement')
+      expect(result.mergeOntoOuterElement).to.be.true
     })
 
     it("should not return a object whit the key 'mergeOntoOuterElement' if mergeOntoOuterElement is 'false'", function () {
@@ -137,7 +139,7 @@ describe("Element array formatters", function() {
         { another: 'value' },
       ]
 
-      expect(arrayFormatters.reduceToSingleObject(false)(elements)).to.not.have.key('mergeOntoOuterElement')
+      expect(arrayFormatters.reduceToSingleObject(false)(elements)).to.not.include.keys('mergeOntoOuterElement')
     })
   })
 
@@ -154,7 +156,7 @@ describe("Element array formatters", function() {
         { last: true },
       ]
 
-      expect(arrayFormatters.firstValue(elements)).to.equal({ first: true })
+      expect(arrayFormatters.firstValue(elements)).to.eql({ first: true })
     })
   })
 
@@ -171,7 +173,7 @@ describe("Element array formatters", function() {
         { last: true },
       ]
 
-      expect(arrayFormatters.lastValue(elements)).to.equal({ first: true })
+      expect(arrayFormatters.lastValue(elements)).to.eql({ last: true })
     })
   })
 })
