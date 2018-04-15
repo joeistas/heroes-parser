@@ -38,8 +38,8 @@ export function formatElement(element: any, outerElement: any, parseData: ParseD
 
 
     LOGGER.debug(`Formatting array for key: ${ key }`)
-    const formatListFunction = getElementFunction(key, parseData.functions, 'formatArray') as ElementArrayFormatter
-    const formattedList = formatListFunction ? formatListFunction(innerElements) : innerElements
+    const formatArrayFunction = getElementFunction(key, parseData.functions, 'formatArray') as ElementArrayFormatter
+    const formattedList = formatArrayFunction ? formatArrayFunction(innerElements) : innerElements
     if(formattedList === null) {
       continue
     }
