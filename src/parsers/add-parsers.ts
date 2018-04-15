@@ -7,7 +7,7 @@ import {
   findElementNameForId,
   reduceElements,
 } from '../element'
-import { ParseData } from '../parser'
+import { ParseData } from '../parse-data'
 import { ElementNameFilter } from './element-name-filters'
 import { ElementParser } from './'
 import { ElementMerger } from '../merge'

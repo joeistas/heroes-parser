@@ -35,7 +35,8 @@
   },
   "scripts": {
     "clean": "rimraf -r ./dist",
-    "test": "mocha \"dist/**/*.spec.js\"",
-    "build": "npm run-script clean && tsc"
+    "test": "npm run-script build:test && mocha \"dist/**/*.spec.js\"",
+    "build": "npm run-script clean && tsc -p tsconfig.prod.json",
+    "build:test": "npm run-script clean && tsc -p tsconfig.test.json"
   }
 }

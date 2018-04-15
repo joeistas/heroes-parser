@@ -1,6 +1,6 @@
 import { ElementFunctions } from './element'
-import { parse, ParseData } from './parser'
-import { inspect } from 'util'
+import { parse } from './parser'
+import { ParseData } from "./parse-data"
 
-parse("/mnt/c/Program Files (x86)/Heroes of the Storm", { saveSourceFiles: true, saveJSON: true, archiveJSON: false, archiveSourceFiles: false })
+parse({ sourceDir: "/mnt/c/Program Files (x86)/Heroes of the Storm", saveSourceFiles: true, saveJSON: true, archiveJSON: false, archiveSourceFiles: false })
   .catch(e => console.log(e))

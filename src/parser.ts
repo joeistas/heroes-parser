@@ -4,7 +4,7 @@ import { ParseOptions, buildParseOptions } from './parse-options'
 import { parseElement } from './parsers'
 import { formatElement } from './formatters'
 import { LOGGER, buildLogger } from './logger'
-import { ParseData, buildParseData } from './parse-data'
+import { buildParseData } from './parse-data'
 
 export async function parse(options: Partial<ParseOptions> = {}): Promise<any[]> {
   const parseOptions = buildParseOptions(options)

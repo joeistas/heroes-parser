@@ -1,4 +1,4 @@
-import { ParseData } from '../parser'
+import { ParseData } from '../parse-data'
 import { ElementFunctions } from '../element'
 import * as parsers from '../parsers'
 import * as addParsers from '../parsers/add-parsers'

@@ -10,9 +10,9 @@ import {
   copyElement,
   mergeWithParent,
 } from '../element'
-import { ParseData } from '../parser'
+import { ParseData } from '../parse-data'
 import { ElementNameFilter } from './element-name-filters'
-import { LOGGER } from '../parser'
+import { LOGGER } from '../logger'
 
 export type ElementParser = (element: any, outerElement: any, parseData: ParseData) => any
 
@@ -62,8 +62,6 @@ export function parseElement(element: any, outerElement: any, elementName: strin
   if(hasIdBeenSeen(element, idsSeen)) {
     return element
   }
-
-  addSeenId(element, idsSeen)
 
   elementName = getElementName(element) || elementName
   element = copyElement(element)

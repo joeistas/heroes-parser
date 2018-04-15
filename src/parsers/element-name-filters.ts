@@ -1,4 +1,4 @@
-import { ParseData } from '../parser'
+import { ParseData } from '../parse-data'
 
 export type ElementNameFilter = (parseData: ParseData) => string[]
 

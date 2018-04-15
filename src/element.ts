@@ -1,5 +1,5 @@
 import { ElementMap } from './element-map'
-import { ParseData } from './parser'
+import { ParseData } from './parse-data'
 import { filterKeysFromObject } from './utils'
 import { ElementParser } from './parsers'
 import { ElementMerger } from './merge'

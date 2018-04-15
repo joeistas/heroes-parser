@@ -3,7 +3,7 @@ import {
   getElementAttributes,
   mergeAttributes,
 } from '../element'
-import { ParseData } from '../parser'
+import { ParseData } from '../parse-data'
 import { ElementParser } from './'
 
 const REPLACEMENT_REGEXP = /(##([^#]+)##)/
