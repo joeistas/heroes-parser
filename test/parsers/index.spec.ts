@@ -4,6 +4,7 @@ import { spy } from 'sinon'
 import { ELEMENT_ATTRIBUTE_KEY, ELEMENT_NAME_KEY } from '../../src/element'
 import { ElementMap } from '../../src/element-map'
 import { parseElement } from '../../src/parsers'
+import { mergeElement } from '../../src/parsers/merge-parsers'
 
 describe("parseElement", function() {
   beforeEach(function() {
@@ -98,7 +99,47 @@ describe("parseElement", function() {
     expect(processSpy).to.have.been.calledTwice
   })
 
-  describe("endless loop prevention", function() {
-    it("should not process an element already seen in the current branch")
+  it("should not process an element already seen in the current branch", function(done) {
+    const parseData: any = {
+      elements: new Map([
+        [
+          'hero',
+          new Map([
+            [
+              '',
+              [
+                { [ELEMENT_ATTRIBUTE_KEY]: { tier: '1' }, testElement: [ { [ELEMENT_ATTRIBUTE_KEY]: { id: 'inner' }, } ] } as any ] ],
+            [
+              'test',
+              [
+                {
+                  [ELEMENT_ATTRIBUTE_KEY]: { tier: '5', value: 'text', id: 'test' },
+                  testElement2: [
+                    {
+                      [ELEMENT_ATTRIBUTE_KEY]: {
+                        value: 'test'
+                      }
+                    }
+                  ]
+                } as any
+              ]
+            ]
+          ])
+        ]
+      ]) as ElementMap,
+      functions: {
+        'default': {
+          "merge": (parentElements: any[], childElements: any[]) => parentElements.concat(childElements)
+        },
+        'testElement': {
+          "preParse": mergeElement('hero'),
+        },
+      }
+    }
+
+    const element = parseData.elements.get('hero').get('test')[0]
+    const parsedElement = parseElement(element, null, 'hero', this.parseData)
+    expect(parsedElement.testElement2[0][ELEMENT_ATTRIBUTE_KEY]).to.have.keys('value')
+    done()
   })
 })
