@@ -7,7 +7,9 @@ import {
   getElementFunction,
   getElementAttributes,
   getElementId,
+  getElementName,
   getElement,
+  findElementNameForId,
   copyElement,
   mergeAttributes,
   mergeElements,
@@ -67,6 +69,11 @@ describe("getElementId", function() {
   })
 })
 
+it("getElementName should return the value in $elementName", function() {
+  const element = { [ELEMENT_NAME_KEY]: 'thing' }
+  expect(getElementName(element)).to.equal('thing')
+})
+
 describe("getElement", function() {
   const elementMap = new Map([
     ['CHero', new Map([
@@ -91,6 +98,26 @@ describe("getElement", function() {
   })
 })
 
+describe("findElementNameForId", function() {
+  const elementMap = new Map([
+    ['CHero', new Map([
+      [ 'test', [ {}, {} ] ],
+      [ 'test2', [ {} ] ]
+    ])],
+    ['CSkin', new Map([
+      [ 'test3', [ {}, {} ] ],
+      [ 'test4', [ {} ] ]
+    ])]
+  ])
+
+  it("should find the elementName that has the elementId in the ElementMap", function() {
+    expect(findElementNameForId(['CHero', 'CSkin'], 'test3', elementMap)).to.equal('CSkin')
+  })
+  it("should return undefined if the elementId is not found in elementNames", function() {
+    expect(findElementNameForId(['CHero', 'CSkin'], 'element', elementMap)).to.be.undefined
+  })
+})
+
 describe("copyElement", function() {
   const element = {
     [ELEMENT_ATTRIBUTE_KEY]: { id: 'test' },
@@ -109,6 +136,10 @@ describe("copyElement", function() {
   it("should place child elements in new arrays", function() {
     expect(copyElement(element).childElements).to.not.equal(element.childElements)
   })
+
+  it("should set the element's name", function() {
+    expect(copyElement(element)).to.have.property(ELEMENT_NAME_KEY).that.is.eql('testName')
+  })
 })
 
 describe("mergeWithParent", function() {
@@ -120,7 +151,6 @@ describe("mergeWithParent", function() {
           [
             {
               [ELEMENT_ATTRIBUTE_KEY]: { tier: '1' },
-              [ELEMENT_NAME_KEY]: 'hero',
               testElement: [ {} ]
             } as any
           ]
@@ -130,7 +160,6 @@ describe("mergeWithParent", function() {
           [
             {
               [ELEMENT_ATTRIBUTE_KEY]: { tier: '5', value: 'text', id: 'test' },
-              [ELEMENT_NAME_KEY]: 'test',
               testElement2: [ {} ]
             } as any
           ]
@@ -350,5 +379,22 @@ describe("mergeElements", function() {
       [ELEMENT_NAME_KEY]: 'test',
       testElement: [ {}, {}, {} ]
     })
+  })
+
+  it("should set the elementName to the child's elementName", function() {
+    const parent = {
+      [ELEMENT_ATTRIBUTE_KEY]: { tier: '1' },
+      [ELEMENT_NAME_KEY]: 'test',
+      testElement: [ {} ],
+    }
+
+    const child = {
+      [ELEMENT_ATTRIBUTE_KEY]: { id: 'element', value: 'thing' },
+      [ELEMENT_NAME_KEY]: 'hero',
+      testElement: [ {} ]
+    }
+
+    const merged = mergeElements(parent, child, parseData)
+    expect(merged).to.have.property(ELEMENT_NAME_KEY).that.is.equal('hero')
   })
 })
