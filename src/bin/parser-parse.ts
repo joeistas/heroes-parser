@@ -3,24 +3,25 @@
 import *  as program from 'commander'
 import { ParseOptions } from '../parse-options'
 import { DETAILED_FUNCTIONS } from '../element-functions/detailed'
-import { parse } from '../parser'
+import { parse } from '../index'
 program
   .description("Generate JSON from Heroes of the Storm data")
-  .option("--out <dir>, --out-dir <dir>", "Directory to save JSON and source files")
+  .option("--out-dir <dir>", "Directory to save JSON and source files")
   .option("--no-game-dir", "Source directory is not the Heroes of the Storm install directory")
   .option("--build-number <number>", "Build number to use if the soruce is not a game directory")
   .option("--root-element <element-name>", "Root XML element")
+  .option("--root-id <element-id>", "Root XML element Id")
   .option("--parse-element <element-name>", "Name of XML element to JSON")
   .option(
-    "-e, --elements <name>",
+    "-e <name>, --elements <name>",
     "Friendly name for elements to parse. Sets root-element and parse-element [hero]",
     /^heroes|maps|mounts$/
   )
-  .option("--detailed", "Generate very detailed JSON")
-  .option("--save-source-files", "Save source files (XML, txt, etc.) to out directory")
-  .option("--archive-source-files", "Bundle source files into a zip file")
-  .option("--archive-json", "Bundle JSON into a zip file")
-  .option("-l, --log-level [level]", "Log level (none|info|debug)", /^none|info|debug$/, 'info')
+  .option("-d, --detailed", "Generate very detailed JSON")
+  .option("-s, --save-source-files", "Save source files (XML, txt, etc.) to out directory")
+  .option("-S, --archive-source-files", "Bundle source files into a zip file")
+  .option("-a, --archive-json", "Bundle JSON into a zip file")
+  .option("--log-level <level>", "Log level (none|info|debug)", /^none|info|debug$/, 'info')
   .option("--config-file <fileName>", "Use config file. Can be JSON or Javascript")
   .parse(process.argv)
 
@@ -28,25 +29,60 @@ const args = program.args
 
 if(args.length === 0) {
   console.error("Source directory is required.")
+  process.exit(1)
 }
 
 const options: Partial<ParseOptions> = {
   sourceDir: args[0],
-  sourceCASCStorage: program.gameDir,
-  buildNumber: program.buildNumber ? parseInt(program.buildNumber): null,
-  rootElementName: program.rootElement,
-  parseElementName: program.parseElement,
-  saveSourceFiles: program.saveSourceFiles,
-  archiveSourceFiles: program.archiveSourceFiles,
+  sourceCASCStorage: true,
+  saveSourceFiles: false,
+  archiveSourceFiles: false,
+  archiveJSON: false,
   saveJSON: true,
-  archiveJSON: program.archiveJson,
   logLevel: program.logLevel,
+}
+
+if(program.outDir) {
+  options.outputPath = program.outDir
+}
+
+if(program.gameDir) {
+  options.sourceCASCStorage = program.gameDir
+}
+
+if(program.buildNumber) {
+  options.buildNumber = parseInt(program.buildNumber)
+}
+
+if(program.rootElement) {
+  options.rootElementName = program.rootElement
+}
+
+if(program.rootId) {
+  options.rootElementId = program.rootId
+}
+
+if(program.parseElement) {
+  options.parseElementName = program.parseElement
+}
+
+if(program.saveSourceFiles) {
+  options.saveSourceFiles = program.saveSourceFiles
+}
+
+if(program.archiveSourceFiles) {
+  options.archiveSourceFiles = program.archiveSourceFiles
+}
+
+if(program.archiveJson) {
+  options.archiveJSON = program.archiveJson
 }
 
 if(program.elements) {
   switch(program.elements) {
     case 'heroes':
       options.rootElementName = 'CConfig'
+      options.rootElementId = 'Config'
       options.parseElementName = 'HeroArray'
       break;
 
@@ -55,13 +91,13 @@ if(program.elements) {
 
     case 'mounts':
       options.rootElementName = 'CConfig'
+      options.rootElementId = 'Config'
       options.parseElementName = 'MountArray'
       break;
   }
 }
 
 options.elementFunctions = program.detailed ? DETAILED_FUNCTIONS : DETAILED_FUNCTIONS
-
 if(program.configFile) {
   Object.assign(options, require(program.configFile))
 }

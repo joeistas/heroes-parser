@@ -138,8 +138,8 @@ export function xml2Json(fileXml: string): Promise<any> {
 }
 
 function formatElementName(options: ParseOptions) {
-  let elementName = options.parseElementName ? options.parseElementName : options.rootElementName
-  elementName = elementName.startsWith('C') ? options.rootElementName.substring(1) : options.rootElementName
+  let elementName = options.parseElementName || options.rootElementName
+  elementName = elementName.startsWith('C') ? elementName.substring(1) : elementName
   elementName = elementName.replace('Array', '')
   return elementName.split(/(?=[A-Z])/g).join('-').toLowerCase()
 }

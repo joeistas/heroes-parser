@@ -10,6 +10,7 @@ export interface ParseOptions {
   textSearchPatterns: string[]
   assetSearchPatterns: string[]
   rootElementName: string
+  rootElementId: string
   parseElementName?: string
   elementFunctions: { [elementName: string]: ElementFunctions }
   saveSourceFiles: boolean
@@ -39,6 +40,7 @@ export const DEFAULT_PARSE_OPTIONS: ParseOptions = {
     "mods/heroes.stormmod/*.stormassets/*",
   ],
   rootElementName: 'CConfig',
+  rootElementId: 'Config',
   parseElementName: 'HeroArray',
   elementFunctions: DETAILED_FUNCTIONS,
   archiveSourceFiles: true,

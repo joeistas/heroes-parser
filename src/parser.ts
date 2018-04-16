@@ -1,27 +1,38 @@
-import { getElementAttributes, reduceElements } from './element'
+import { getElementAttributes, reduceElements, mergeWithParent } from './element'
 import { saveJSON } from './files'
 import { ParseOptions, buildParseOptions } from './parse-options'
 import { parseElement } from './parsers'
 import { formatElement } from './formatters'
 import { LOGGER, buildLogger } from './logger'
-import { buildParseData } from './parse-data'
+import { ParseData, buildParseData } from './parse-data'
 
 export async function parse(options: Partial<ParseOptions> = {}): Promise<any[]> {
   const parseOptions = buildParseOptions(options)
+
   buildLogger(parseOptions)
-  const parseData = await buildParseData(parseOptions)
+  let parseData: ParseData
+  try {
+    parseData = await buildParseData(parseOptions)
+  }
+  catch(error) {
+    LOGGER.error(error)
+    return null
+  }
 
   LOGGER.info(`Building JSON for ${ parseOptions.rootElementName } ${ parseOptions.parseElementName } elements.`)
-  const rootElementMap = parseData.elements.get(parseOptions.rootElementName) || new Map()
-  const rootElements = [ ...rootElementMap.values() ]
-
+  const rootElements = parseData.elements.get(parseOptions.rootElementName) || new Map()
   let elementList: any[]
-  if(options.parseElementName && options.parseElementName !== options.rootElementName) {
-    const rootElemment = reduceElements(rootElements, parseData)
-    elementList = rootElemment[options.parseElementName]
+  if(parseOptions.parseElementName && parseOptions.parseElementName !== parseOptions.rootElementName) {
+    const rootElement = mergeWithParent(
+      reduceElements(rootElements.get(parseOptions.rootElementId), parseData),
+      parseOptions.rootElementName,
+      parseData
+    )
+
+    elementList = rootElement[parseOptions.parseElementName]
   }
   else {
-    elementList = rootElements.map(elements => reduceElements(elements, parseData))
+    elementList = [ ...rootElements.values() ].map(elements => reduceElements(elements, parseData))
       .filter(element => {
         const attributes = getElementAttributes(element)
         return attributes.default != '1' && !!attributes.id
@@ -33,14 +44,15 @@ export async function parse(options: Partial<ParseOptions> = {}): Promise<any[]>
 
   elementList.forEach((element, index) => {
     const attributes = getElementAttributes(element)
-
-    LOGGER.info(`Building JSON for ${ attributes.id || attributes.value } ${ index + 1 }/${ elementCount }`)
+    const name = attributes.id || attributes.value
+    const elementName = parseOptions.parseElementName || parseOptions.rootElementName
+    LOGGER.info(`Building JSON for ${ name } ${ index + 1 }/${ elementCount }`)
     LOGGER.group('info')
 
-    LOGGER.info(`Parsing ${ attributes.id }`)
-    element = parseElement(element, null, parseOptions.rootElementName, parseData)
+    LOGGER.info(`Parsing ${ name }`)
+    element = parseElement(element, null, elementName, parseData)
 
-    LOGGER.info(`Formatting ${ attributes.id }`)
+    LOGGER.info(`Formatting ${ name }`)
     processedElements.push(formatElement(element, null, parseData))
     LOGGER.groupEnd('info')
   })
