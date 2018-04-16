@@ -35,7 +35,7 @@ export function addInnerElement(attribute: string, key: string, innerAttribute: 
       [ELEMENT_NAME_KEY]: innerName
     }
     const innerElements = element[key] || []
-    const mergeFunction = getElementFunction(innerName, parseData.functions, "merge") as ElementMerger
+    const mergeFunction = getElementFunction(key, parseData.functions, "merge") as ElementMerger
     element[key] = mergeFunction ?
       mergeFunction(innerElements, [ innerElement ], getElementAttributes(element), parseData) :
       [ ...innerElements, innerElement ]
