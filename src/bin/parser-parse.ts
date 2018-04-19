@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 
 import *  as program from 'commander'
-import { ParseOptions } from '../parse-options'
-import { DETAILED_FUNCTIONS } from '../element-functions/detailed'
-import { parse } from '../index'
+import { parse, DETAILED_FUNCTIONS, BASIC_FUNCTIONS, ParseOptions } from '../index'
+
 program
   .description("Generate JSON from Heroes of the Storm data")
   .option("--out-dir <dir>", "Directory to save JSON and source files")
@@ -97,7 +96,7 @@ if(program.elements) {
   }
 }
 
-options.elementFunctions = program.detailed ? DETAILED_FUNCTIONS : DETAILED_FUNCTIONS
+options.elementFunctions = program.detailed ? DETAILED_FUNCTIONS : BASIC_FUNCTIONS
 if(program.configFile) {
   Object.assign(options, require(program.configFile))
 }

@@ -56,6 +56,90 @@ describe("defaultMerge", function() {
     expect(results).to.have.length(3)
   })
 
+  it("should replace non-indexed elements at the same array index as a child element with a index with the same number", function() {
+    const parentElements = [
+      {
+        [ELEMENT_ATTRIBUTE_KEY]: {
+          id: "one"
+        }
+      },
+      {
+        [ELEMENT_ATTRIBUTE_KEY]: {
+          id: "five"
+        }
+      },
+    ]
+
+    const childElements = [
+      {
+        [ELEMENT_ATTRIBUTE_KEY]: {
+          id: "two",
+          index: "1",
+        }
+      },
+    ]
+
+    const results = defaultMerge(parentElements, childElements, {}, {} as any)
+    expect(results).to.have.length(2)
+    expect(results[1][ELEMENT_ATTRIBUTE_KEY].id).to.equal("two")
+  })
+
+  it("should remove the index attribute from elements with a number index", function() {
+    const parentElements = [
+      {
+        [ELEMENT_ATTRIBUTE_KEY]: {
+          id: "one"
+        }
+      },
+      {
+        [ELEMENT_ATTRIBUTE_KEY]: {
+          id: "five"
+        }
+      },
+    ]
+
+    const childElements = [
+      {
+        [ELEMENT_ATTRIBUTE_KEY]: {
+          id: "two",
+          index: "1",
+        }
+      },
+    ]
+
+    const results = defaultMerge(parentElements, childElements, {}, {} as any)
+    expect(results).to.have.length(2)
+    expect(results[1][ELEMENT_ATTRIBUTE_KEY]).to.not.have.property("index")
+  })
+
+  it("should not remove numbered index of child element if unindexed elements length is less than then index number", function() {
+    const parentElements = [
+      {
+        [ELEMENT_ATTRIBUTE_KEY]: {
+          id: "one"
+        }
+      },
+      {
+        [ELEMENT_ATTRIBUTE_KEY]: {
+          id: "five"
+        }
+      },
+    ]
+
+    const childElements = [
+      {
+        [ELEMENT_ATTRIBUTE_KEY]: {
+          id: "two",
+          index: "5",
+        }
+      },
+    ]
+
+    const results = defaultMerge(parentElements, childElements, {}, {} as any)
+    expect(results).to.have.length(3)
+    expect(results[2][ELEMENT_ATTRIBUTE_KEY]).to.have.property("index").that.equals('5')
+  })
+
   it("replace parent elments with child elements that have the same index value", function() {
     const parentElements = [
       {

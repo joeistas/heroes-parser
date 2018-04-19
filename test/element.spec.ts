@@ -13,6 +13,7 @@ import {
   copyElement,
   mergeAttributes,
   mergeElements,
+  joinElements,
   mergeWithParent,
   reduceElements,
 } from '../src/element'
@@ -396,5 +397,82 @@ describe("mergeElements", function() {
 
     const merged = mergeElements(parent, child, parseData)
     expect(merged).to.have.property(ELEMENT_NAME_KEY).that.is.equal('hero')
+  })
+})
+
+describe("joinElements", function() {
+  it("should set the element name on the joined element if at least one of the elements has one", function() {
+    const elements = [
+      {},
+      {
+        [ELEMENT_NAME_KEY]: 'hero'
+      },
+      {}
+    ]
+
+    const joined = joinElements(elements)
+    expect(joined).to.have.property(ELEMENT_NAME_KEY).that.equals('hero')
+  })
+
+  it("should not set the elemet name if no elements has an element name", function() {
+    const elements = [ {}, {} ]
+
+    const joined = joinElements(elements)
+    expect(joined).to.not.have.property(ELEMENT_NAME_KEY)
+  })
+
+  it("should merge the attributes of all of the elements", function() {
+    const elements = [
+      {
+        [ELEMENT_ATTRIBUTE_KEY]: {
+          id: 'thing',
+          value: 'test',
+        }
+      },
+      {
+        [ELEMENT_ATTRIBUTE_KEY]: {
+          effect: 'anEffect',
+        }
+      },
+      {
+        [ELEMENT_ATTRIBUTE_KEY]: {
+          value: 'override',
+        }
+      },
+    ]
+
+    const joined = joinElements(elements)
+    expect(joined[ELEMENT_ATTRIBUTE_KEY]).to.eql({
+      id: 'thing',
+      effect: 'anEffect',
+      value: 'override',
+    })
+  })
+
+  it("should concat the arrays for all inner elements", function() {
+    const elements = [
+      {
+        testElement: [ {} ]
+      },
+      {
+        testElement: [ {}, {} ]
+      },
+    ]
+
+    const joined = joinElements(elements)
+    expect(joined).to.have.property('testElement').with.length(3)
+  })
+
+  it("should add inner elements that only on a single element", function() {
+    const elements = [
+      {
+        testElement: [ {} ]
+      },
+      {},
+      {}
+    ]
+
+    const joined = joinElements(elements)
+    expect(joined).to.have.property('testElement').with.length(1)
   })
 })

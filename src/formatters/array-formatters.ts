@@ -1,3 +1,5 @@
+import * as deepmerge from 'deepmerge'
+
 import { ElementArrayFormatter } from './'
 
 export type ElementArrayConditional = (elements: any[]) => boolean
@@ -48,7 +50,7 @@ export function reduceToSingleObject(mergeOntoOuterElement: boolean = false): El
     }
 
     const initialObject = mergeOntoOuterElement ? { mergeOntoOuterElement: true } : {}
-    return elements.reduce((reduced, element) => Object.assign(reduced, element), initialObject)
+    return deepmerge.all([ initialObject, ...elements ])
   }
 }
 

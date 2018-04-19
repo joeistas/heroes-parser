@@ -1,4 +1,4 @@
-import { getElementAttributes, reduceElements, mergeWithParent } from './element'
+import { getElementAttributes, joinElements, mergeWithParent } from './element'
 import { saveJSON } from './files'
 import { ParseOptions, buildParseOptions } from './parse-options'
 import { parseElement } from './parsers'
@@ -24,7 +24,7 @@ export async function parse(options: Partial<ParseOptions> = {}): Promise<any[]>
   let elementList: any[]
   if(parseOptions.parseElementName && parseOptions.parseElementName !== parseOptions.rootElementName) {
     const rootElement = mergeWithParent(
-      reduceElements(rootElements.get(parseOptions.rootElementId), parseData),
+      joinElements(rootElements.get(parseOptions.rootElementId)),
       parseOptions.rootElementName,
       parseData
     )
@@ -32,7 +32,7 @@ export async function parse(options: Partial<ParseOptions> = {}): Promise<any[]>
     elementList = rootElement[parseOptions.parseElementName]
   }
   else {
-    elementList = [ ...rootElements.values() ].map(elements => reduceElements(elements, parseData))
+    elementList = [ ...rootElements.values() ].map(elements => joinElements(elements))
       .filter(element => {
         const attributes = getElementAttributes(element)
         return attributes.default != '1' && !!attributes.id

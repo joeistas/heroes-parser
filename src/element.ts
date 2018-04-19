@@ -36,8 +36,16 @@ export function getElementId(element: any) {
   return getElementAttributes(element).id
 }
 
+export function getElementIndex(element: any) {
+  return getElementAttributes(element).index
+}
+
 export function getElementName(element: any) {
   return element[ELEMENT_NAME_KEY]
+}
+
+export function getInnerElementKeys(element: any): string[] {
+  return Object.keys(element).filter(key => ![ELEMENT_ATTRIBUTE_KEY, ELEMENT_NAME_KEY].includes(key))
 }
 
 export function getElement(elementId: string, elementName: string, elementMap: ElementMap) {
@@ -59,11 +67,7 @@ export function copyElement(element: any): any {
     [ELEMENT_NAME_KEY]: getElementName(element),
   }
 
-  for(const key of Object.keys(element)) {
-    if([ELEMENT_ATTRIBUTE_KEY, ELEMENT_NAME_KEY].includes(key)) {
-      continue
-    }
-
+  for(const key of getInnerElementKeys(element)) {
     copy[key] = [ ...element[key] ]
   }
 
@@ -76,7 +80,7 @@ export function mergeWithParent(element: any, elementName: string, parseData: Pa
   }
 
   const parentId = getElementAttributes(element).parent || ''
-  let parent = reduceElements(getElement(parentId, elementName, parseData.elements), parseData)
+  let parent = joinElements(getElement(parentId, elementName, parseData.elements))
   parent = mergeWithParent(parent, elementName, parseData)
 
   return mergeElements(parent, element, parseData, ATTRIBUTE_BLACKLIST.concat('parent'))
@@ -90,22 +94,36 @@ export function mergeAttributes(parent: any, child: any, filters: string[] = ATT
   return filterKeysFromObject(attributes, filters)
 }
 
+export function joinElements(elements: any[]) {
+  return elements.reduce((joined: any, element: any) => {
+    joined[ELEMENT_ATTRIBUTE_KEY] = mergeAttributes(joined, element)
+    const elementName = getElementName(element) || joined[ELEMENT_NAME_KEY]
+    if(elementName) {
+      joined[ELEMENT_NAME_KEY] = elementName
+    }
+
+    const keys = new Set([ ...getInnerElementKeys(joined), ...getInnerElementKeys(element) ])
+    for(const key of keys) {
+      const joinedElements: any[] = joined[key] || []
+      joined[key] = joinedElements.concat(element[key] || [])
+    }
+
+    return joined
+  }, {})
+}
+
 export function reduceElements(elements: any[], parseData: ParseData) {
-  return elements.reduce((result, e) => mergeElements(result, e, parseData), {})
+  return elements.reduce((result, e) => mergeElements(result, e, parseData, []), {})
 }
 
 export function mergeElements(parent: any, child: any, parseData: ParseData, attributeFilters: string[] = ATTRIBUTE_BLACKLIST) {
-  const elementSet = new Set([ ...Object.keys(parent), ...Object.keys(child) ])
+  const elementSet = new Set([ ...getInnerElementKeys(parent), ...getInnerElementKeys(child) ])
   const mergedElement: any = {
     [ELEMENT_ATTRIBUTE_KEY]: mergeAttributes(parent, child, attributeFilters),
     [ELEMENT_NAME_KEY]: getElementName(child)
   }
 
   for(const elementName of elementSet) {
-    if([ELEMENT_ATTRIBUTE_KEY, ELEMENT_NAME_KEY].includes(elementName)) {
-      continue
-    }
-
     const func = getElementFunction(elementName, parseData.functions, 'merge') as ElementMerger
     if(func) {
       mergedElement[elementName] = func(parent[elementName] || [], child[elementName] || [], getElementAttributes(mergedElement), parseData)

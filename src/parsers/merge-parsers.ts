@@ -3,7 +3,7 @@ import {
   getElementAttributes,
   getElement,
   findElementNameForId,
-  reduceElements,
+  joinElements,
   mergeElements,
 } from '../element'
 import { ParseData } from '../parse-data'
@@ -23,7 +23,7 @@ export function mergeElement(elementNameOrFilter: string | ElementNameFilter, at
       return element
     }
 
-    let replacementElement = reduceElements(getElement(attributes[attribute], elementName, parseData.elements), parseData)
+    let replacementElement = joinElements(getElement(attributes[attribute], elementName, parseData.elements))
     replacementElement = mergeElements(element, replacementElement, parseData, ATTRIBUTE_BLACKLIST.concat(attribute))
 
     return preParseElement(replacementElement, containingElement, elementName, parseData)

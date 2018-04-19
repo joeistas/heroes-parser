@@ -4,7 +4,7 @@ import * as glob from 'glob'
 import { existsSync } from 'fs'
 
 import { readFiles, findFiles } from './casc'
-import { ELEMENT_ATTRIBUTE_KEY, ElementFunctionsMap, getElementAttributes, reduceElements } from './element'
+import { ELEMENT_ATTRIBUTE_KEY, ElementFunctionsMap, getElementAttributes } from './element'
 import { ElementMap, buildElementMap } from './element-map'
 import { TextMap, buildTextMap, LINE_REGEXP } from './text'
 import {
