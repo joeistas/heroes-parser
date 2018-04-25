@@ -17,8 +17,8 @@ import { LOGGER } from '../logger'
 export type ElementParser = (element: any, outerElement: any, parseData: ParseData) => any
 
 export function join(...processors: ElementParser[]) {
-  return (element: any, containingElement: any, parseData: ParseData): any => {
-    return processors.reduce((e, processor) => processor(e, containingElement, parseData), element)
+  return (element: any, outerElement: any, parseData: ParseData): any => {
+    return processors.reduce((e, processor) => processor(e, outerElement, parseData), element)
   }
 }
 

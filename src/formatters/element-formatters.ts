@@ -2,6 +2,7 @@ import {
   ElementFormatter,
   ElementKeyFormatter,
 } from './'
+import * as utils from '../utils'
 
 export type ElementConditional = (formattedElement: any, element: any) => boolean
 
@@ -35,6 +36,13 @@ export function isEmpty(formattedElement: any, element: any): boolean {
 export function attributeIsDefined(attribute = 'value'): ElementConditional {
   return (formattedElement: any, element: any): boolean => {
     return formattedElement[attribute] !== null && formattedElement[attribute] !== undefined
+  }
+}
+
+export function onlyHasKeys(...keys: string[]): ElementConditional {
+  return (formattedElement: any, element: any): boolean => {
+    const keySet = new Set(Object.keys(formattedElement))
+    return keySet.size === keys.length && keys.every(key => keySet.has(key))
   }
 }
 
@@ -87,28 +95,51 @@ export function valueToNumber(formattedElement: any, element: any): any {
 }
 
 export function splitOnCaps(formattedElement: any, element: any): any {
-  return formattedElement.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/\b([A-Z]+)([A-Z])([a-z])/, '$1 $2$3')
+  return utils.splitOnCaps(formattedElement)
+}
+
+export function removeFromStart(remove: string) {
+  return (formattedElement: any, element: any) => {
+    return formattedElement.startsWith(remove) ? formattedElement.substring(remove.length) : formattedElement
+  }
+}
+
+export function formatCompareOperator(formattedElement: any, element: any) {
+  switch(formattedElement.toLowerCase()) {
+    case 'eq': return '=='
+    case 'ne': return "!="
+    case 'gt': return ">"
+    case 'ge': return ">="
+    case 'lt': return "<"
+    case 'le': return "<="
+  }
+}
+
+export function applyFormatterToAttribute(attribute: string = 'value', formatter: ElementFormatter) {
+  return (formattedElement: any, element: any): any => {
+    if(!formattedElement[attribute]) {
+      return formattedElement
+    }
+
+    formattedElement[attribute] = formatter(formattedElement[attribute], null)
+    return formattedElement
+  }
 }
 
 export function attributeToBoolean(attribute: string = 'value', trueValue: string = '1', falseValue: string = '0') {
-  return (formattedElement: any, element: any): any => {
-    formattedElement[attribute] = valueToBoolean(trueValue, falseValue)(formattedElement[attribute], element)
-    return formattedElement
-  }
+  return applyFormatterToAttribute(attribute, valueToBoolean(trueValue, falseValue))
 }
 
 export function attributeToNumber(attribute: string = 'value') {
-  return (formattedElement: any, element: any): any => {
-    formattedElement[attribute] = valueToNumber(formattedElement[attribute], element)
-    return formattedElement
-  }
+  return applyFormatterToAttribute(attribute, valueToNumber)
+}
+
+export function removeFromStartOfAttribute(remove: string, attribute: string = 'value') {
+  return applyFormatterToAttribute(attribute, removeFromStart(remove))
 }
 
 export function formatAttributeWithKeyFormatter(formatter: ElementKeyFormatter, attribute: string = 'index') {
-  return (formattedElement: any, element: any): any => {
-    formattedElement[attribute] = formatter(formattedElement[attribute])
-    return formattedElement
-  }
+  return applyFormatterToAttribute(attribute, formatter)
 }
 
 export function toKeyValuePair(keyAttribute: string = 'index', valueAttribute = 'value'): ElementFormatter {
@@ -120,6 +151,10 @@ export function toKeyValuePair(keyAttribute: string = 'index', valueAttribute = 
 }
 
 export function parseFilterString(formattedElement: any, element: any) {
+  if(typeof formattedElement !== 'string') {
+    return formattedElement
+  }
+
   const [ trueFilters, falseFilters ] = formattedElement.split(";")
   const filters: any = {}
 

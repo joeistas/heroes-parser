@@ -43,6 +43,12 @@ export function elementsAreObjects(elements: any[]): boolean {
   return elements.every(element => typeof element === 'object' && element !== null)
 }
 
+export function allHaveAttribute(attribute: string = 'index') {
+  return(elements: any[]) => {
+    return elements.every(element => element[attribute] !== null && element[attribute] !== undefined)
+  }
+}
+
 export function reduceToSingleObject(mergeOntoOuterElement: boolean = false): ElementArrayFormatter {
   return (elements: any[]): any => {
     if(elements.length === 0) {
@@ -51,6 +57,19 @@ export function reduceToSingleObject(mergeOntoOuterElement: boolean = false): El
 
     const initialObject = mergeOntoOuterElement ? { mergeOntoOuterElement: true } : {}
     return deepmerge.all([ initialObject, ...elements ])
+  }
+}
+
+export function combineBy(indexAttribute = 'index', removeIndexAttribute: boolean = true) {
+  return (elements: any[]): any => {
+    return elements.reduce((reduced: any, element: any) => {
+      const index = element[indexAttribute]
+      if(removeIndexAttribute) {
+        delete element[indexAttribute]
+      }
+      reduced[index] = element
+      return reduced
+    }, {})
   }
 }
 

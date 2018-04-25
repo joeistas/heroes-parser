@@ -20,6 +20,15 @@ export interface ElementFunctions {
 
 export type ElementFunctionsMap = { [elementName: string]: ElementFunctions }
 
+export function buildElement(elementName?: string, attributes: { [index: string]: any } = {}): any {
+  const element: any = { [ELEMENT_ATTRIBUTE_KEY]: { ...attributes }}
+  if(elementName) {
+    element[ELEMENT_NAME_KEY] = elementName
+  }
+
+  return element
+}
+
 export function getElementFunction(elementName: string, functions: ElementFunctionsMap, functionName: keyof ElementFunctions) {
   if(functions[elementName] && functions[elementName][functionName]) {
     return functions[elementName][functionName]
@@ -61,11 +70,17 @@ export function findElementNameForId(elementNames: string[], elementId: string, 
   return elementNames.find(name => getElement(elementId, name, elementMap).length > 0)
 }
 
-export function copyElement(element: any): any {
-  const copy = {
-    [ELEMENT_ATTRIBUTE_KEY]: Object.assign({}, element[ELEMENT_ATTRIBUTE_KEY]),
-    [ELEMENT_NAME_KEY]: getElementName(element),
+export function findElement(elementNames: string[], elementId: string, elementMap: ElementMap): any {
+  const elementName = findElementNameForId(elementNames, elementId, elementMap)
+  if(!elementName) {
+    return null
   }
+
+  return joinElements(getElement(elementId, elementName, elementMap))
+}
+
+export function copyElement(element: any): any {
+  const copy = buildElement(getElementName(element), getElementAttributes(element))
 
   for(const key of getInnerElementKeys(element)) {
     copy[key] = [ ...element[key] ]
@@ -109,7 +124,7 @@ export function joinElements(elements: any[]) {
     }
 
     return joined
-  }, {})
+  }, buildElement())
 }
 
 export function reduceElements(elements: any[], parseData: ParseData) {
@@ -118,10 +133,7 @@ export function reduceElements(elements: any[], parseData: ParseData) {
 
 export function mergeElements(parent: any, child: any, parseData: ParseData, attributeFilters: string[] = ATTRIBUTE_BLACKLIST) {
   const elementSet = new Set([ ...getInnerElementKeys(parent), ...getInnerElementKeys(child) ])
-  const mergedElement: any = {
-    [ELEMENT_ATTRIBUTE_KEY]: mergeAttributes(parent, child, attributeFilters),
-    [ELEMENT_NAME_KEY]: getElementName(child)
-  }
+  const mergedElement: any = buildElement(getElementName(child), mergeAttributes(parent, child, attributeFilters))
 
   for(const elementName of elementSet) {
     const func = getElementFunction(elementName, parseData.functions, 'merge') as ElementMerger

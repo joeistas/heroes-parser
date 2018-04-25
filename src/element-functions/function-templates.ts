@@ -22,6 +22,13 @@ export function singleValue(attribute: string = 'value'): ElementFunctions {
   }
 }
 
+export function singleValueWithReplacement(attribute: string = 'value'): ElementFunctions {
+  return {
+    ...singleValue(attribute),
+    preParse: textParsers.attributeValueReplacement(attribute),
+  }
+}
+
 export function singleBooleanValue(attribute: string = 'value', trueValue = '1', falseValue = '0'): ElementFunctions {
   return {
     merge: elementMergers.singleElement,
@@ -44,10 +51,44 @@ export function singleNumberValue(attribute: string = 'value'): ElementFunctions
   }
 }
 
+export function singleValueRemoveIfValue(attributeValue: string, attribute: string = "value") {
+  const sv = singleValue()
+  return {
+    ...sv,
+    formatElement: elementFormatters.conditionallyFormatElement(
+      elementFormatters.attributeHasValue(attributeValue),
+      elementFormatters.removeFromOutput,
+      sv.formatElement
+    )
+  }
+}
+
+export function singleValueIfOnlyAttribute(attribute: string = 'value'): ElementFunctions {
+  return {
+    merge: elementMergers.singleElement,
+    formatElement: elementFormatters.conditionallyFormatElement(
+      elementFormatters.onlyHasKeys(attribute),
+      elementFormatters.valueFromAttribute(attribute)
+    ),
+    formatArray: arrayFormatters.firstValue,
+  }
+}
+
 export function valuesToSingleObject(keyAttribute: string = 'index', valueAttribute: string = 'value'): ElementFunctions {
   return {
     formatElement: elementFormatters.join(
       elementFormatters.formatAttributeWithKeyFormatter(keyFormatters.defaultKeyFormatter, keyAttribute),
+      elementFormatters.toKeyValuePair(keyAttribute, valueAttribute),
+    ),
+    formatArray: arrayFormatters.reduceToSingleObject(),
+  }
+}
+
+export function valuesToSingleObjectOfNumbers(keyAttribute: string = 'index', valueAttribute: string = 'value'): ElementFunctions {
+  return {
+    formatElement: elementFormatters.join(
+      elementFormatters.formatAttributeWithKeyFormatter(keyFormatters.defaultKeyFormatter, keyAttribute),
+      elementFormatters.attributeToNumber(valueAttribute),
       elementFormatters.toKeyValuePair(keyAttribute, valueAttribute),
     ),
     formatArray: arrayFormatters.reduceToSingleObject(),
@@ -139,4 +180,24 @@ export function arrayOfNumberValues(attribute: string ='value'): ElementFunction
       elementFormatters.valueToNumber,
     ),
   }
+}
+
+export function filters(attribute: string = 'value'): ElementFunctions {
+  return {
+    ...singleValue(attribute),
+    formatElement: elementFormatters.join(
+      elementFormatters.valueFromAttribute(),
+      elementFormatters.parseFilterString,
+    ),
+  }
+}
+
+export const singleValueAddEffectRemoveIfUnknown: ElementFunctions = {
+  merge: elementMergers.singleElement,
+  preParse: addParsers.addInnerElement('Effect', 'Effect'),
+  formatElement: elementFormatters.conditionallyFormatElement(
+    elementFormatters.attributeHasValue('Unknown'),
+    elementFormatters.removeFromOutput
+  ),
+  formatArray: arrayFormatters.firstValue,
 }
