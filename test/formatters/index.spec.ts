@@ -131,6 +131,36 @@ describe("formatElement", function() {
     expect(functions.innerElement.formatKey).to.have.been.calledWith('innerElement')
   })
 
+  it("should use the value for 'formatKey' as the key if it is a string", function() {
+    const element = {
+      innerElement: [
+        {
+          [ELEMENT_ATTRIBUTE_KEY]: {
+            value: 'thing',
+          },
+          [ELEMENT_NAME_KEY]: 'innerElement'
+        },
+        {
+          [ELEMENT_ATTRIBUTE_KEY]: {
+            value: 'thing2',
+          },
+          [ELEMENT_NAME_KEY]: 'innerElement'
+        }
+      ]
+    }
+
+    const functions = {
+      default: {},
+      innerElement: {
+        formatKey: 'testElements'
+      }
+    }
+
+    const result = formatElement(element, {}, { functions } as any)
+    expect(result).to.have.property('testElements')
+    expect(result).to.not.have.property('innerElement')
+  })
+
   it("should call the appropriate 'formatArray' function for each inner element key", function() {
     const element = {
       innerElement: [

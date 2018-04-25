@@ -14,7 +14,7 @@ export interface ElementFunctions {
   preParse?: ElementParser
   postParse?: ElementParser
   formatElement?: ElementFormatter
-  formatKey?: ElementKeyFormatter
+  formatKey?: ElementKeyFormatter | string
   formatArray?: ElementArrayFormatter
 }
 

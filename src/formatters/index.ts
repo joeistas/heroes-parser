@@ -29,8 +29,14 @@ export function formatElement(element: any, outerElement: any, parseData: ParseD
     }
 
     LOGGER.debug(`Formatting key: ${ key }`)
-    const formatKeyFunction = getElementFunction(key, parseData.functions, 'formatKey') as ElementKeyFormatter
-    const formattedKey = formatKeyFunction ? formatKeyFunction(key) : key
+    const formatKeyFunction = getElementFunction(key, parseData.functions, 'formatKey')
+    let formattedKey = key
+    if(typeof formatKeyFunction === 'string') {
+      formattedKey = formatKeyFunction
+    }
+    else if(formatKeyFunction) {
+      formattedKey = (formatKeyFunction as ElementKeyFormatter)(key)
+    }
 
     const innerElements = element[key].map((e: any) => formatElement(e, formattedElement, parseData))
       .reduce((flattened: any[], array: any) => flattened.concat(array), [])
