@@ -8,11 +8,11 @@ import {
 } from '../element'
 import { ParseData } from '../parse-data'
 import { ElementNameFilter } from './element-name-filters'
-import { ElementParser } from './'
+import { ElementParser, ParseContext } from './'
 import { ElementMerger } from '../merge'
 
 export function addAttribute(name: string, value: string, override: boolean = false) {
-  return (element: any, containingElement: any, parseData: ParseData): any => {
+  return (element: any, containingElement: any, parseData: ParseData, context: ParseContext): any => {
     const attributes = getElementAttributes(element)
     attributes[name] = override || !attributes[name] ? value : attributes[name]
 
@@ -21,7 +21,7 @@ export function addAttribute(name: string, value: string, override: boolean = fa
 }
 
 export function addInnerElement(attribute: string, key: string, innerAttribute: string = 'value', innerName?: string): ElementParser {
-  return (element: any, containingElement: any, parseData: ParseData): any => {
+  return (element: any, containingElement: any, parseData: ParseData, context: ParseContext): any => {
     const attributes = getElementAttributes(element)
     if(!attributes[attribute]) {
       return element

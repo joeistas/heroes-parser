@@ -4,14 +4,12 @@ import {
   mergeAttributes,
 } from '../element'
 import { ParseData } from '../parse-data'
-import { ElementParser } from './'
+import { ElementParser, ParseContext } from './'
 
 const REPLACEMENT_REGEXP = /(##([^#]+)##)/
 
 export function attributeValueReplacement(attribute: string = 'value'): ElementParser {
-  return (element: any, containingElement: any, parseData: ParseData): any => {
-    const values = mergeAttributes(containingElement, element)
-
+  return (element: any, containingElement: any, parseData: ParseData, context: ParseContext): any => {
     const value = getElementAttributes(element)[attribute]
     if(!value) {
       return element
@@ -22,14 +20,17 @@ export function attributeValueReplacement(attribute: string = 'value'): ElementP
       return element
     }
 
-    element[ELEMENT_ATTRIBUTE_KEY][attribute] = value.replace(match[1], values[match[2]])
+    const replacement = context[match[2]]
+    if(replacement) {
+      element[ELEMENT_ATTRIBUTE_KEY][attribute] = value.replace(match[1], replacement)
+    }
 
     return element
   }
 }
 
 export function replaceWithLocaleText(attribute: string = 'value'): ElementParser {
-  return (element: any, containingElement: any, parseData: ParseData): any => {
+  return (element: any, containingElement: any, parseData: ParseData, context: ParseContext): any => {
     const elementAttributes = getElementAttributes(element)
     if(!elementAttributes[attribute]) {
       return element

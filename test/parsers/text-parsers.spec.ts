@@ -13,7 +13,7 @@ describe("attributeValueReplacement", function() {
       }
     }
 
-    const result = attributeValueReplacement('value')(element, {}, {} as any)
+    const result = attributeValueReplacement('value')(element, {}, {} as any, {})
     expect(result).to.eql(element)
   })
 
@@ -25,11 +25,11 @@ describe("attributeValueReplacement", function() {
       }
     }
 
-    const result = attributeValueReplacement('another')(element, {}, {} as any)
+    const result = attributeValueReplacement('another')(element, {}, {} as any, {})
     expect(result).to.eql(element)
   })
 
-  it("should replace the text with the value from the element's attributes", function() {
+  it("should replace the text with the value from the parse context", function() {
     const element = {
       [ELEMENT_ATTRIBUTE_KEY]: {
         test: 'thing',
@@ -38,27 +38,21 @@ describe("attributeValueReplacement", function() {
       }
     }
 
-    const result = attributeValueReplacement('value')(element, {}, {} as any)
+    const result = attributeValueReplacement('value')(element, {}, {} as any, { test: "thing" })
     expect(result[ELEMENT_ATTRIBUTE_KEY]).to.have.property('value').that.is.eql('thing_thing')
   })
 
-  it("should replace the text with the value from the containingElement's attributes", function() {
+  it("should not change the attribute if the replacement value isn't in the parse context", function() {
     const element = {
       [ELEMENT_ATTRIBUTE_KEY]: {
         test: 'thing',
         another: 'value',
-        value: "thing_##id##",
+        value: "thing_##another##",
       }
     }
 
-    const containingElement = {
-      [ELEMENT_ATTRIBUTE_KEY]: {
-        id: 'Muradin'
-      }
-    }
-
-    const result = attributeValueReplacement('value')(element, containingElement, {} as any)
-    expect(result[ELEMENT_ATTRIBUTE_KEY]).to.have.property('value').that.is.eql('thing_Muradin')
+    const result = attributeValueReplacement('value')(element, {}, {} as any, { test: "thing" })
+    expect(result[ELEMENT_ATTRIBUTE_KEY]).to.have.property('value').that.is.eql("thing_##another##")
   })
 })
 
@@ -94,7 +88,7 @@ describe("replaceWithLocaleText", function() {
       }
     }
 
-    const result = replaceWithLocaleText('text')(element, {}, {} as any)
+    const result = replaceWithLocaleText('text')(element, {}, {} as any, {})
     expect(result).to.eql(element)
   })
 
@@ -105,7 +99,7 @@ describe("replaceWithLocaleText", function() {
       }
     }
 
-    const result = replaceWithLocaleText('text')(element, {}, {} as any)
+    const result = replaceWithLocaleText('text')(element, {}, {} as any, {})
     expect(result).to.eql(element)
   })
 
@@ -116,7 +110,7 @@ describe("replaceWithLocaleText", function() {
       }
     }
 
-    const result = replaceWithLocaleText('value')(element, {}, parseData)
+    const result = replaceWithLocaleText('value')(element, {}, parseData, {})
     expect(result[ELEMENT_ATTRIBUTE_KEY]).to.have.property('value').that.is.eql({
       'enus': "This is some text",
       'dede': "This is some text for another locale"

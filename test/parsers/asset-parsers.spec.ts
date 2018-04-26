@@ -13,7 +13,7 @@ describe("processAsset", function() {
         }
       }
 
-      const result = processAsset('value')(element, {}, {} as any)
+      const result = processAsset('value')(element, {}, {} as any, {})
       expect(result).to.eql(element)
     })
 
@@ -24,7 +24,7 @@ describe("processAsset", function() {
         }
       }
 
-      const result = processAsset('test')(element, {}, {} as any)
+      const result = processAsset('test')(element, {}, {} as any, {})
       expect(result).to.eql(element)
     })
 
@@ -35,7 +35,7 @@ describe("processAsset", function() {
         }
       }
 
-      const result = processAsset('test')(element, {}, {} as any)
+      const result = processAsset('test')(element, {}, {} as any, {})
       expect(result).to.eql(element)
     })
 
@@ -46,7 +46,7 @@ describe("processAsset", function() {
         }
       }
 
-      const result = processAsset('test')(element, {}, {} as any)
+      const result = processAsset('test')(element, {}, {} as any, {})
       expect(result).to.eql(element)
     })
 
@@ -57,7 +57,7 @@ describe("processAsset", function() {
         }
       }
 
-      const result = processAsset('test')(element, {}, {} as any)
+      const result = processAsset('test')(element, {}, {} as any, {})
       expect(result).to.eql(element)
     })
   })
@@ -79,7 +79,7 @@ describe("processAsset", function() {
         }
       }
 
-      const result = processAsset('test')(element, {}, parseData)
+      const result = processAsset('test')(element, {}, parseData, {})
       expect(result[ELEMENT_ATTRIBUTE_KEY].test).to.eql(['thing', 'anotherthing'])
     })
 
@@ -90,7 +90,7 @@ describe("processAsset", function() {
         }
       }
 
-      const result = processAsset('test')(element, {}, parseData)
+      const result = processAsset('test')(element, {}, parseData, {})
       expect(result[ELEMENT_ATTRIBUTE_KEY].test).to.eql(['thing', 'anotherthing'])
     })
 
@@ -101,7 +101,7 @@ describe("processAsset", function() {
         }
       }
 
-      const result = processAsset('test')(element, {}, parseData)
+      const result = processAsset('test')(element, {}, parseData, {})
       expect(result[ELEMENT_ATTRIBUTE_KEY].test).to.eql(['thing', 'something'])
     })
 
@@ -112,7 +112,7 @@ describe("processAsset", function() {
         }
       }
 
-      const result = processAsset('test')(element, {}, parseData)
+      const result = processAsset('test')(element, {}, parseData, {})
       expect(result[ELEMENT_ATTRIBUTE_KEY].test).to.eql(['thing', 'something'])
     })
   })
@@ -134,7 +134,7 @@ describe("processAsset", function() {
         }
       }
 
-      const result = processAsset('test')(element, {}, parseData)
+      const result = processAsset('test')(element, {}, parseData, {})
       expect(result[ELEMENT_ATTRIBUTE_KEY].test).to.eql([ 'test/path' ])
     })
     it("asset value has back slashes", function() {
@@ -144,7 +144,7 @@ describe("processAsset", function() {
         }
       }
 
-      const result = processAsset('test')(element, {}, parseData)
+      const result = processAsset('test')(element, {}, parseData, {})
       expect(result[ELEMENT_ATTRIBUTE_KEY].test).to.eql([ 'test/path' ])
     })
 
@@ -155,7 +155,7 @@ describe("processAsset", function() {
         }
       }
 
-      const result = processAsset('test')(element, {}, parseData)
+      const result = processAsset('test')(element, {}, parseData, {})
       expect(result[ELEMENT_ATTRIBUTE_KEY].test).to.eql([ 'test/path', 'another/path' ])
     })
 
@@ -166,7 +166,7 @@ describe("processAsset", function() {
         }
       }
 
-      const result = processAsset('test')(element, {}, parseData)
+      const result = processAsset('test')(element, {}, parseData, {})
       expect(result[ELEMENT_ATTRIBUTE_KEY].test).to.eql([ 'test/path', 'another/path' ])
     })
 
@@ -177,7 +177,7 @@ describe("processAsset", function() {
         }
       }
 
-      const result = processAsset('test')(element, {}, parseData)
+      const result = processAsset('test')(element, {}, parseData, {})
       expect(result[ELEMENT_ATTRIBUTE_KEY].test).to.eql([ 'another/path', 'Another/Thing/Here' ])
     })
 
@@ -188,7 +188,7 @@ describe("processAsset", function() {
         }
       }
 
-      const result = processAsset('test')(element, {}, parseData)
+      const result = processAsset('test')(element, {}, parseData, {})
       expect(result[ELEMENT_ATTRIBUTE_KEY].test).to.eql([ 'test/path' ])
     })
   })
@@ -212,7 +212,7 @@ describe("processAsset", function() {
         }
       }
 
-      processAsset('test')(element, {}, this.parseData)
+      processAsset('test')(element, {}, this.parseData, {})
       expect(this.parseData.assetfindCache.size).to.equal(1)
       expect(this.parseData.assetfindCache).to.have.keys('test/path')
       expect(this.parseData.assetfindCache.get('test/path')).to.have.eql([ 'test/path' ])
@@ -225,7 +225,7 @@ describe("processAsset", function() {
         }
       }
 
-      processAsset('test')(element, {}, this.parseData)
+      processAsset('test')(element, {}, this.parseData, {})
       expect(this.parseData.assetfindCache.size).to.equal(1)
       expect(this.parseData.assetfindCache).to.have.keys('test/path')
     })

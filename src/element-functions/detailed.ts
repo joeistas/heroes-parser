@@ -37,7 +37,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
       functionTemplates.singleValue().formatElement,
       elementFormatters.removeFromStart("CAbil")
     ),
-    formatKey: () => 'abilityType',
+    formatKey: 'abilityType',
   },
   "AbilClassEnableArray": {
     ...functionTemplates.flags(),
@@ -45,7 +45,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
       elementFormatters.removeFromStartOfAttribute("CAbil", "index"),
       functionTemplates.flags().formatElement
     ),
-    formatKey: () => "enableAbilityTypes"
+    formatKey: "enableAbilityTypes"
   },
   "AbilClassDisableArray": {
     ...functionTemplates.flags(),
@@ -53,11 +53,11 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
       elementFormatters.removeFromStartOfAttribute("CAbil", "index"),
       functionTemplates.flags().formatElement
     ),
-    formatKey: () => "disableAbilityTypes"
+    formatKey: "disableAbilityTypes"
   },
   "AbilityCategories": {
     ...functionTemplates.flags(),
-    formatKey: () => "categories"
+    formatKey: "categories"
   },
   "AbilityModificationArray": {
     preParse: textParsers.replaceWithLocaleText("TooltipAddendum"),
@@ -149,7 +149,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "AttackTargetPriority": functionTemplates.singleNumberValue(),
   "AttributeFactor": {
     ...functionTemplates.valuesToSingleObjectOfNumbers(),
-    formatKey: () => 'factors'
+    formatKey: 'factors'
   },
   "AttributeId": functionTemplates.removeFromOutput,
   "Attributes": functionTemplates.flags(true),
@@ -171,7 +171,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   },
   "BehaviorCategories": {
     ...functionTemplates.flags(),
-    formatKey: () => "categories",
+    formatKey: "categories",
   },
   "BehaviorClass": functionTemplates.removeFromOutput,
   "BehaviorFlags": functionTemplates.flags(true),
@@ -202,7 +202,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   },
   "CaseDefault": {
     preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
-    formatKey: () => "default",
+    formatKey: "default",
   },
   "CastIntroTime": functionTemplates.singleNumberValue(),
   "CastOutroTimeEffect": {
@@ -214,7 +214,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
       addParsers.addInnerElement("Operation", "Operation"),
       addParsers.addInnerElement("Reference", "Reference")
     ),
-    formatKey: () => 'modifications',
+    formatKey: 'modifications',
   },
   "Categories": functionTemplates.flags(),
   "CBehaviorBuff": {
@@ -1094,7 +1094,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   },
   "RemoveValidatorArray": {
     ...functionTemplates.arrayOfSingleValues(),
-    formatKey: () => "removeValidators"
+    formatKey: "removeValidators"
   },
   "ReplacementArray": functionTemplates.removeFromOutput,
   "RequireCaster": functionTemplates.singleValueRemoveIfValue("Unknown"),
@@ -1300,11 +1300,11 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "Vital": functionTemplates.valuesToSingleObject(),
   "VitalArray": {
     formatArray: arrayFormatters.combineBy("index"),
-    formatKey: () => "vitals"
+    formatKey: "vitals"
   },
   "VitalMaxArray": {
     ...functionTemplates.valuesToSingleObjectOfNumbers(),
-    formatKey: () => "vitalMaxModification"
+    formatKey: "vitalMaxModification"
   },
   "VitalMaxIncreaseAffectsCurrentArray": functionTemplates.flags(),
   "VOArray": {

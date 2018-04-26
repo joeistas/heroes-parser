@@ -6,7 +6,7 @@ import {
   copyElement,
 } from '../element'
 import { ParseData } from '../parse-data'
-import { ElementParser } from './'
+import { ElementParser, ParseContext } from './'
 
 export type AssetFindCache = Map<string, string[]>
 
@@ -20,7 +20,7 @@ function setAssetValue(element: any, attribute: string, assetValue: string, pars
 }
 
 export function processAsset(attribute: string = 'value'): ElementParser {
-  return (element: any, containingElement: any, parseData: ParseData): any => {
+  return (element: any, containingElement: any, parseData: ParseData, context: ParseContext): any => {
     let assetValue = getElementAttributes(element)[attribute]
     if(!isValidAsset(assetValue)) {
       return element

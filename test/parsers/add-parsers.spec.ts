@@ -12,7 +12,7 @@ describe("addAttribute", function() {
       }
     }
 
-    const result = addAttribute('test', 'value')(element, null, {} as any)
+    const result = addAttribute('test', 'value')(element, null, {} as any, {})
     expect(result[ELEMENT_ATTRIBUTE_KEY]).to.include.keys('test')
     expect(result[ELEMENT_ATTRIBUTE_KEY].test).to.equal('value')
   })
@@ -25,7 +25,7 @@ describe("addAttribute", function() {
       }
     }
 
-    const result = addAttribute('test', 'value', true)(element, null, {} as any)
+    const result = addAttribute('test', 'value', true)(element, null, {} as any, {})
     expect(result[ELEMENT_ATTRIBUTE_KEY]).to.include.keys('test')
     expect(result[ELEMENT_ATTRIBUTE_KEY].test).to.equal('value')
   })
@@ -38,7 +38,7 @@ describe("addAttribute", function() {
       }
     }
 
-    const result = addAttribute('test', 'value', false)(element, null, {} as any)
+    const result = addAttribute('test', 'value', false)(element, null, {} as any, {})
     expect(result[ELEMENT_ATTRIBUTE_KEY]).to.include.keys('test')
     expect(result[ELEMENT_ATTRIBUTE_KEY].test).to.equal('original')
   })
@@ -58,7 +58,7 @@ describe("addInnerElement", function() {
       }
     }
 
-    const result = addInnerElement('test', 'innerElement', 'value')(element, {}, parseData)
+    const result = addInnerElement('test', 'innerElement', 'value')(element, {}, parseData, {})
     expect(result).to.eql(element)
   })
 
@@ -76,7 +76,7 @@ describe("addInnerElement", function() {
       }
     }
 
-    const result = addInnerElement('test', 'innerElement', 'value')(element, {}, parseData)
+    const result = addInnerElement('test', 'innerElement', 'value')(element, {}, parseData, {})
     expect(result).to.include.keys('innerElement')
     expect(result.innerElement).to.have.length(1)
   })
@@ -95,7 +95,7 @@ describe("addInnerElement", function() {
       }
     }
 
-    const result = addInnerElement('test', 'innerElement', 'thing')(element, {}, parseData)
+    const result = addInnerElement('test', 'innerElement', 'thing')(element, {}, parseData, {})
     expect(result.innerElement[0][ELEMENT_ATTRIBUTE_KEY]).to.eql({ thing: 'text' })
   })
 
@@ -113,7 +113,7 @@ describe("addInnerElement", function() {
       }
     }
 
-    const result = addInnerElement('test', 'innerElement', 'thing', 'newElement')(element, {}, parseData)
+    const result = addInnerElement('test', 'innerElement', 'thing', 'newElement')(element, {}, parseData, {})
     expect(result.innerElement[0][ELEMENT_NAME_KEY]).to.equal('newElement')
   })
 
@@ -131,7 +131,7 @@ describe("addInnerElement", function() {
       }
     }
 
-    const result = addInnerElement('test', 'innerElement', 'thing')(element, {}, parseData)
+    const result = addInnerElement('test', 'innerElement', 'thing')(element, {}, parseData, {})
     expect(result.innerElement[0][ELEMENT_NAME_KEY]).to.equal('innerElement')
   })
 
@@ -152,7 +152,7 @@ describe("addInnerElement", function() {
       }
     }
 
-    const result = addInnerElement('test', 'innerElement', 'thing', 'newElement')(element, {}, parseData)
+    const result = addInnerElement('test', 'innerElement', 'thing', 'newElement')(element, {}, parseData, {})
     expect(parseData.functions.innerElement.merge).to.have.been.called
   })
 })
