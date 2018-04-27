@@ -26,7 +26,7 @@ export const BASIC_FUNCTIONS = {
   "Alignment": functionTemplates.removeFromOutput,
   "AlliedPushPriority": functionTemplates.removeFromOutput,
   "AttackTargetPriority": functionTemplates.removeFromOutput,
-  "CButton": functionTemplates.singleValue('icon'),
+  "CButton": functionTemplates.valueFromAttributeIfOnlyKey('icon'),
   "DamageDealtXP": functionTemplates.removeFromOutput,
   "DamageResponse": functionTemplates.removeFromOutput,
   "DamageTakenXP": functionTemplates.removeFromOutput,

@@ -13,11 +13,13 @@ import {
 } from '../element'
 import { ParseData } from '../parse-data'
 import { ElementNameFilter } from './element-name-filters'
+import { attributesToInnerElements } from './add-parsers'
 import { LOGGER } from '../logger'
 
 export type ElementParser = (element: any, outerElement: any, parseData: ParseData, context: ParseContext) => any
 export type ParseContext = { [attribute: string]: string }
 
+export const defaultPreParser = attributesToInnerElements(/^[A-Z]/)
 export function join(...processors: ElementParser[]) {
   return (element: any, outerElement: any, parseData: ParseData, context: ParseContext): any => {
     return processors.reduce((e, processor) => processor(e, outerElement, parseData, context), element)

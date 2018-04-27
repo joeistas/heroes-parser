@@ -6,6 +6,11 @@ import * as utils from '../utils'
 
 export type ElementConditional = (formattedElement: any, element: any) => boolean
 
+export const defaultElementFormatter = conditionallyFormatElement(
+  onlyHasKeys('value'),
+  valueFromAttribute('value')
+)
+
 export function join(...formatters: ElementFormatter[]): ElementFormatter {
   return (formattedElement: any, element: any): any => {
     for(const formatter of formatters) {
@@ -117,7 +122,7 @@ export function formatCompareOperator(formattedElement: any, element: any) {
 
 export function applyFormatterToAttribute(attribute: string = 'value', formatter: ElementFormatter) {
   return (formattedElement: any, element: any): any => {
-    if(!formattedElement[attribute]) {
+    if(formattedElement[attribute] === undefined || formattedElement[attribute] === null) {
       return formattedElement
     }
 

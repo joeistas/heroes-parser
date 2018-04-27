@@ -26,16 +26,26 @@ const ACCUMULATOR_TYPE_FILTER = elementNameFilters.startsWith("CAccumulator")
 export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "default": {
     merge: defaultMerge,
+    preParse: parsers.defaultPreParser,
     formatKey: keyFormatters.defaultKeyFormatter,
+    formatElement: elementFormatters.defaultElementFormatter,
     formatArray: arrayFormatters.defaultArrayFormatter,
   },
-  "Abil": functionTemplates.singleValueWithReplacement(),
-  "AbilArray": functionTemplates.arrayOfSingleValues("Link"),
+  "Abil": {
+    preParse: parsers.join(
+      parsers.defaultPreParser,
+      conditionalParsers.conditionallyParseElement(
+        conditionalParsers.outerElementHasName('HeroAbilArray'),
+        functionTemplates.mergeElement(ABIL_TYPE_FILTER).preParse
+      )
+    )
+  },
+  "AbilArray": functionTemplates.valueFromAttributeIfOnlyKey("link"),
   "AbilClass": {
-    ...functionTemplates.singleValue(),
+    ...functionTemplates.singleElement,
     formatElement: elementFormatters.join(
-      functionTemplates.singleValue().formatElement,
-      elementFormatters.removeFromStart("CAbil")
+      elementFormatters.removeFromStartOfAttribute("CAbil", "value"),
+      elementFormatters.defaultElementFormatter
     ),
     formatKey: 'abilityType',
   },
@@ -60,114 +70,78 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     formatKey: "categories"
   },
   "AbilityModificationArray": {
-    preParse: textParsers.replaceWithLocaleText("TooltipAddendum"),
+
   },
-  "AbilityStage": functionTemplates.singleValue(),
+  "AbilityStage": functionTemplates.singleElement,
   "AbilLinkDisableArray": {
     ...functionTemplates.arrayOfSingleValues(),
-    formatKey: (key: string) => "disableAbilities"
+    formatKey: "disableAbilities"
   },
   "AbilSetId": functionTemplates.removeFromOutput,
-  "Acceleration": functionTemplates.singleNumberValue(),
-  "AccumulatorArray": {
-    preParse: mergeParsers.mergeElement(ACCUMULATOR_TYPE_FILTER)
-  },
+  "Acceleration": functionTemplates.numberValue(),
+  "AccelerationBonus": functionTemplates.numberValue(),
+  "AccumulatorArray": functionTemplates.mergeElement(ACCUMULATOR_TYPE_FILTER),
   "Activity": functionTemplates.removeFromOutput,
   "ActorKey": functionTemplates.removeFromOutput,
   "AcquireFilters": functionTemplates.flags(),
-  "AcquireLeashRadius": functionTemplates.singleNumberValue(),
-  "AcquirePlayer": functionTemplates.singleValueRemoveIfValue("Unknown"),
-  "AcquirePriority": functionTemplates.singleNumberValue(),
+  "AcquireLeashRadius": functionTemplates.numberValue(),
+  "AcquirePlayer": functionTemplates.removeIfValue("Unknown"),
+  "AcquirePriority": functionTemplates.numberValue(),
   "AcquireTargetSorts": functionTemplates.removeFromOutput,
-  "Active": functionTemplates.singleBooleanValue(),
-  "AddedThreat": functionTemplates.singleNumberValue(),
+  "Active": functionTemplates.booleanValue(),
+  "AddedThreat": functionTemplates.numberValue(),
   "AdditionalSearchText": functionTemplates.localeText(),
-  "AdditiveAttackSpeedFactor": functionTemplates.singleNumberValue(),
-  "AdditiveMoveSpeedFactor": functionTemplates.singleNumberValue(),
-  "AffectedByAbilityPower": functionTemplates.singleBooleanValue(),
-  "AffectedByCooldownReduction": functionTemplates.singleBooleanValue(),
-  "AffectedByOverdrive": functionTemplates.singleBooleanValue(),
+  "AdditiveAttackSpeedFactor": functionTemplates.numberValue(),
+  "AdditiveMoveSpeedFactor": functionTemplates.numberValue(),
+  "AffectedByAbilityPower": functionTemplates.booleanValue(),
+  "AffectedByCooldownReduction": functionTemplates.booleanValue(),
+  "AffectedByOverdrive": functionTemplates.booleanValue(),
   "AIBaseThreat": functionTemplates.removeFromOutput,
   "AIEvalFactor": functionTemplates.removeFromOutput,
   "AIHealthThresholds": functionTemplates.removeFromOutput,
+  "AIOnly": functionTemplates.booleanValue(),
   "AIThinkTree": functionTemplates.removeFromOutput,
   "AIUtility": functionTemplates.removeFromOutput,
   "AlertName": functionTemplates.localeText(),
   "AlertTooltip": functionTemplates.localeText(),
   "Alignment": functionTemplates.removeFromOutput,
-  "AlliedPushPriority": functionTemplates.singleNumberValue(),
+  "AllArmorBonus": functionTemplates.numberValue(),
+  "AlliedPushPriority": functionTemplates.numberValue(),
   "AlternateNameSearchText": functionTemplates.localeText(),
-  "AlternateUnitArray": {
-    preParse: mergeParsers.mergeElement("CUnit")
-  },
-  "AmmoOwner": functionTemplates.singleValue(),
-  "AmmoUnit": {
-    preParse: parsers.join(textParsers.attributeValueReplacement(), mergeParsers.mergeElement("CUnit")),
-  },
-  "ArmorMitigationTable": {
-    formatArray: arrayFormatters.conditionallyFormatArray(
-      arrayFormatters.allHaveAttribute("index"),
-      arrayFormatters.combineBy("index")
-    )
-  },
-  "Amount": functionTemplates.singleNumberValue(),
+  "AlternateUnitArray": functionTemplates.mergeElement("CUnit"),
+  "AmmoOwner": functionTemplates.singleElement,
+  "AmmoUnit": functionTemplates.mergeElement("CUnit"),
+  "Amount": functionTemplates.numberValue(),
   "AmountScoreArray": functionTemplates.removeFromOutput,
-  "ApplicationRule": functionTemplates.singleValue(),
-  "Arc": functionTemplates.singleNumberValue(),
-  "ArcSlop": functionTemplates.singleNumberValue(),
+  "ApplicationRule": functionTemplates.singleElement,
+  "Arc": functionTemplates.numberValue(),
+  "ArcSlop": functionTemplates.numberValue(),
   "AreaArray": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER, "Effect"),
     formatKey: keyFormatters.join(
       keyFormatters.defaultKeyFormatter,
       keyFormatters.pluralizeKey,
     ),
   },
   "ArmorModification": {
-    formatElement: elementFormatters.join(
-      elementFormatters.attributeToNumber("allArmorBonus"),
-      elementFormatters.attributeToNumber("stackCount"),
-    ),
     formatArray: arrayFormatters.reduceToSingleObject(),
   },
-  "ArmorSet": {
-    formatArray: arrayFormatters.conditionallyFormatArray(
-      arrayFormatters.allHaveAttribute("index"),
-      arrayFormatters.combineBy("index")
-    ),
-  },
-  "Around": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER, "Effect"),
-  },
-  "AtMaxEvents": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER, "Effect"),
-    formatElement: elementFormatters.valueFromAttribute("EventId"),
-  },
-  "AtMinEvents": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER, "Effect"),
-    formatElement: elementFormatters.valueFromAttribute("EventId"),
-  },
-  "AttackTargetPriority": functionTemplates.singleNumberValue(),
+  "AttackTargetPriority": functionTemplates.numberValue(),
   "AttributeFactor": {
-    ...functionTemplates.valuesToSingleObjectOfNumbers(),
     formatKey: 'factors'
   },
   "AttributeId": functionTemplates.removeFromOutput,
   "Attributes": functionTemplates.flags(true),
-  "AutoCastAcquireLevel": functionTemplates.singleValue(),
+  "AutoCastAcquireLevel": functionTemplates.singleElement,
   "AutoCastFilters": functionTemplates.filters(),
   "AutoQueueArray": functionTemplates.flags(),
-  "Backswing": functionTemplates.singleNumberValue(),
+  "Backswing": functionTemplates.numberValue(),
   "Behavior": {
+    ...functionTemplates.mergeElement(BEHAVIOR_TYPE_FILTER),
     merge: singleElement,
-    preParse: parsers.join(
-      textParsers.attributeValueReplacement(),
-      mergeParsers.mergeElement(BEHAVIOR_TYPE_FILTER)
-    ),
-    formatArray: arrayFormatters.firstValue,
   },
   "BehaviorArray": {
-    preParse: mergeParsers.mergeElement(BEHAVIOR_TYPE_FILTER),
-    formatElement: elementFormatters.valueFromAttribute("Link"),
+    ...functionTemplates.mergeElement(BEHAVIOR_TYPE_FILTER),
+    ...functionTemplates.valueFromAttributeIfOnlyKey("link"),
   },
   "BehaviorCategories": {
     ...functionTemplates.flags(),
@@ -175,51 +149,36 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   },
   "BehaviorClass": functionTemplates.removeFromOutput,
   "BehaviorFlags": functionTemplates.flags(true),
-  "BehaviorLink": functionTemplates.singleValueWithReplacement(),
+  "BehaviorLink": functionTemplates.singleElementWithReplacement(),
   "BehaviorLinkDisableArray": {
-    ...functionTemplates.arrayOfSingleValues(),
-    formatKey: (key: string) => "disableBehaviors",
+    formatKey: "disableBehaviors",
   },
-  "BehaviorState": functionTemplates.singleValue(),
+  "BehaviorState": functionTemplates.singleElement,
   "Birth": functionTemplates.removeFromOutput,
   "BuffFlags": functionTemplates.flags(true),
-  "CAccumulatorTimed": {
-    preParse: addParsers.addAttribute('accumulator', 'timed')
-  },
+  "CAccumulatorTimed": functionTemplates.addAttribute('accumulator', 'timed'),
   "CanBeSuppressed": functionTemplates.flags(),
   "CancelableArray": functionTemplates.flags(),
   "CardLayouts": functionTemplates.removeFromOutput,
-  "CargoSize": functionTemplates.singleNumberValue(),
+  "CargoSize": functionTemplates.numberValue(),
   "CaseArray": {
-    preParse: parsers.join(
-      addParsers.addInnerElement("Validator", "Validator"),
-      addParsers.addInnerElement("Effect", "Effect"),
-    ),
     formatKey: keyFormatters.join(
       keyFormatters.defaultKeyFormatter,
       keyFormatters.pluralizeKey
     ),
   },
   "CaseDefault": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
+    ...functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
     formatKey: "default",
   },
-  "CastIntroTime": functionTemplates.singleNumberValue(),
-  "CastOutroTimeEffect": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
-  },
-  "Catalog": functionTemplates.singleValue(),
+  "CastIntroTime": functionTemplates.numberValue(),
+  "CastOutroTimeEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "Catalog": functionTemplates.singleElement,
   "CatalogModifications": {
-    preParse: parsers.join(
-      addParsers.addInnerElement("Operation", "Operation"),
-      addParsers.addInnerElement("Reference", "Reference")
-    ),
     formatKey: 'modifications',
   },
   "Categories": functionTemplates.flags(),
-  "CBehaviorBuff": {
-    preParse: addParsers.addAttribute("type", "buff")
-  },
+  "CBehaviorBuff": functionTemplates.addAttribute("type", "buff"),
   "CBehaviorClickResponse": functionTemplates.removeFromOutput,
   "CBehaviorCreepSource": functionTemplates.removeFromOutput,
   "CBehaviorHeroPlaystyle": functionTemplates.removeFromOutput,
@@ -227,430 +186,257 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "CBehaviorUnitTracker": functionTemplates.removeFromOutput,
   "CBehaviorThreat": functionTemplates.removeFromOutput,
   "CBehaviorTimeStamp": functionTemplates.removeFromOutput,
-  "CEffectAbortMissle": {
-    preParse: addParsers.addAttribute('effectType', 'abortMissle')
-  },
-  "CEffectApplyForce": {
-    preParse: addParsers.addAttribute('effectType', 'applyForce')
-  },
-  "CEffectCancelOrder": {
-    preParse: addParsers.addAttribute('effectType', 'cancelOrder')
-  },
-  "CEffectDamage": {
-    preParse: addParsers.addAttribute('effectType', 'damage')
-  },
-  "CEffectDestroyPersistent": {
-    preParse: addParsers.addAttribute('effectType', 'destroyEffect')
-  },
-  "CEffectIssueOrder": {
-    preParse: addParsers.addAttribute('effectType', 'issueOrder')
-  },
-  "CEffectLaunchMissle": {
-    preParse: addParsers.addAttribute('effectType', 'launchMissle')
-  },
-  "CEffectLaunchMissleAdvanced": {
-    preParse: addParsers.addAttribute('effectType', 'launchMissle')
-  },
-  "CEffectModifyBehaviorBuffDuration": {
-    preParse: addParsers.addAttribute('effectType', 'modifyDuration')
-  },
-  "CEffectRemoveBehavior": {
-    preParse: addParsers.addAttribute('effectType', 'removeBehavior')
-  },
-  "CEffectRemoveKinetic": {
-    preParse: addParsers.addAttribute('effectType', 'removeBehavior')
-  },
+  "CEffectAbortMissle": functionTemplates.addAttribute('effectType', 'abortMissle'),
+  "CEffectApplyForce": functionTemplates.addAttribute('effectType', 'applyForce'),
+  "CEffectCancelOrder": functionTemplates.addAttribute('effectType', 'cancelOrder'),
+  "CEffectDamage": functionTemplates.addAttribute('effectType', 'damage'),
+  "CEffectDestroyPersistent": functionTemplates.addAttribute('effectType', 'destroyEffect'),
+  "CEffectIssueOrder": functionTemplates.addAttribute('effectType', 'issueOrder'),
+  "CEffectLaunchMissle": functionTemplates.addAttribute('effectType', 'launchMissle'),
+  "CEffectLaunchMissleAdvanced": functionTemplates.addAttribute('effectType', 'launchMissle'),
+  "CEffectModifyBehaviorBuffDuration": functionTemplates.addAttribute('effectType', 'modifyDuration'),
+  "CEffectRemoveBehavior": functionTemplates.addAttribute('effectType', 'removeBehavior'),
+  "CEffectRemoveKinetic": functionTemplates.addAttribute('effectType', 'removeBehavior'),
   "CEffectSet": {
     formatElement: elementFormatters.valueFromAttribute("effects")
   },
-  "CEffectAddTrackedUnit": {
-    preParse: addParsers.addAttribute('effectType', 'addTrackedUnit')
-  },
-  "CEffectClearTrackedUnits": {
-    preParse: addParsers.addAttribute('effectType', 'clearTrackedUnits')
-  },
-  "CEffectRemoveTrackedUnit": {
-    preParse: addParsers.addAttribute('effectType', 'removeTrackedUnit')
-  },
+  "CEffectAddTrackedUnit": functionTemplates.addAttribute('effectType', 'addTrackedUnit'),
+  "CEffectClearTrackedUnits": functionTemplates.addAttribute('effectType', 'clearTrackedUnits'),
+  "CEffectRemoveTrackedUnit": functionTemplates.addAttribute('effectType', 'removeTrackedUnit'),
   "CEffectUseMagazine": functionTemplates.removeFromOutput,
-  "Chance": functionTemplates.singleNumberValue(),
-  "ChanceArray": {
-    formatElement: elementFormatters.join(
-      elementFormatters.formatAttributeWithKeyFormatter(keyFormatters.defaultKeyFormatter),
-      elementFormatters.attributeToNumber(),
-      elementFormatters.toKeyValuePair(),
-    ),
-    formatArray: arrayFormatters.reduceToSingleObject(),
-  },
-  "Change": functionTemplates.singleNumberValue(),
-  "ChangeFraction": functionTemplates.singleNumberValue(),
-  "Charge": {
-    preParse: textParsers.attributeValueReplacement("Link"),
-    formatArray: arrayFormatters.reduceToSingleObject(),
-  },
-  "ChargeLink": functionTemplates.singleValue(),
-  "CItemAbil": {
-    preParse: mergeParsers.mergeElementFromInnerElementValue(ABIL_TYPE_FILTER, "Abil")
-  },
+  "Chance": functionTemplates.numberValue(),
+  "ChanceArray": functionTemplates.valuesToSingleObject(),
+  "Change": functionTemplates.numberValue(),
+  "ChangeFraction": functionTemplates.numberValue(),
+  "Charge": functionTemplates.singleElement,
+  "ChargeLink": functionTemplates.singleElement,
+  "CItemAbil": functionTemplates.valueFromAttributeIfOnlyKey("abil"),
+  "ClampMinimum": functionTemplates.numberValue(),
   "Class": functionTemplates.removeFromOutput,
-  "CmdButtonArray": {
-    preParse: parsers.join(
-      mergeParsers.mergeElement("CButton", "DefaultButtonFace"),
-      addParsers.addInnerElement("Requirements", "Requirements")
-    ),
-    formatArray: arrayFormatters.combineBy('index'),
-  },
-  "CollationId": {
-    preParse: textParsers.attributeValueReplacement()
-  },
-  "CollectionCategory": functionTemplates.singleValue(),
+  "CmdButtonArray": functionTemplates.mergeElement("CButton", "DefaultButtonFace"),
+  "CollationId": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "CollectionCategory": functionTemplates.singleElement,
   "CollectionIcon": functionTemplates.singleAsset(),
   "Collide": functionTemplates.flags(),
-  "Column": functionTemplates.singleNumberValue(),
+  "Column": functionTemplates.numberValue(),
   "CombineArray": {
-    preParse: mergeParsers.mergeElement(VALIDATOR_TYPE_FILTER),
-    formatKey: (key: string) => "validators"
+    ...functionTemplates.mergeElement(VALIDATOR_TYPE_FILTER),
+    formatKey: "validators"
   },
-  "CombinedVital": functionTemplates.singleValueRemoveIfValue("Unknown"),
+  "CombinedVital": functionTemplates.removeIfValue("Unknown"),
   "CombinedVitalCompare": {
-    ...functionTemplates.singleValue(),
+    ...functionTemplates.singleElement,
     formatElement: elementFormatters.join(
-      functionTemplates.singleValue().formatElement,
-      elementFormatters.formatCompareOperator,
+      elementFormatters.applyFormatterToAttribute('value', elementFormatters.formatCompareOperator),
+      elementFormatters.defaultElementFormatter,
     )
   },
   "Compare": {
-    ...functionTemplates.singleValue(),
+    ...functionTemplates.singleElement,
     formatElement: elementFormatters.join(
-      functionTemplates.singleValue().formatElement,
-      elementFormatters.formatCompareOperator,
+      elementFormatters.applyFormatterToAttribute('value', elementFormatters.formatCompareOperator),
+      elementFormatters.defaultElementFormatter,
     )
   },
-  "ConditionalEvents": {
+  "CompareValue": functionTemplates.numberValue(),
+  "ConjoinedFlags": functionTemplates.flags(true),
+  "ContainsHeroic": {
     formatElement: elementFormatters.join(
-      elementFormatters.attributeToNumber("CompareValue"),
-      elementFormatters.applyFormatterToAttribute("Compare", elementFormatters.formatCompareOperator)
+      elementFormatters.attributeToBoolean('value', 'true', 'false'),
+      elementFormatters.attributeToBoolean('value', '1', '0'),
+      elementFormatters.defaultElementFormatter
     ),
   },
-  "ConjoinedFlags": functionTemplates.flags(true),
-  "ContextUnit": functionTemplates.singleValueAddEffectRemoveIfUnknown,
+  "ContextUnit": functionTemplates.removeIfValue("Unknown"),
   "Cooldown": {
-    preParse: textParsers.attributeValueReplacement("Link"),
-    formatElement: elementFormatters.join(
-      elementFormatters.attributeToNumber("timeStart"),
-      elementFormatters.attributeToNumber("timeUse")
-    ),
     formatArray: arrayFormatters.reduceToSingleObject(),
   },
-  "CooldownLink": functionTemplates.singleValue(),
-  "Copy": functionTemplates.singleBooleanValue(),
+  "CooldownLink": functionTemplates.singleElement,
+  "Copy": functionTemplates.booleanValue(),
   "Cost": {
     formatArray: arrayFormatters.reduceToSingleObject(),
   },
-  "Count": functionTemplates.singleBooleanValue(),
-  "CountMax": functionTemplates.singleNumberValue(),
-  "CountStart": functionTemplates.singleNumberValue(),
-  "CountUse": functionTemplates.singleNumberValue(),
-  "CountEffect": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
-  },
+  "Count": functionTemplates.booleanValue(),
+  "CountMax": functionTemplates.numberValue(),
+  "CountStart": functionTemplates.numberValue(),
+  "CountUse": functionTemplates.numberValue(),
+  "CountEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
   "CreateFlags": functionTemplates.flags(),
-  "CRequirementAnd": {
-    preParse: addParsers.addAttribute('operator', "and")
-  },
-  "CRequirementCountAbil": {
-    preParse: addParsers.addAttribute('operator', "countAbility")
-  },
-  "CRequirementCountBehavior": {
-    preParse: addParsers.addAttribute('operator', "countBehavior")
-  },
-  "CRequirementCountUnit": {
-    preParse: addParsers.addAttribute('operator', "countUnit")
-  },
-  "CRequirementCountUpgrade": {
-    preParse: addParsers.addAttribute('operator', "countUpgrade")
-  },
-  "CRequirementDiv": {
-    preParse: addParsers.addAttribute('operator', "divide")
-  },
-  "CRequirementEq": {
-    preParse: addParsers.addAttribute('operator', "==")
-  },
-  "CRequirementGT": {
-    preParse: addParsers.addAttribute('operator', ">")
-  },
-  "CRequirementGTE": {
-    preParse: addParsers.addAttribute('operator', ">=")
-  },
-  "CRequirementLT": {
-    preParse: addParsers.addAttribute('operator', "<")
-  },
-  "CRequirementLTE": {
-    preParse: addParsers.addAttribute('operator', "<=")
-  },
-  "CRequirementMod": {
-    preParse: addParsers.addAttribute('operator', "modulus")
-  },
-  "CRequirementMul": {
-    preParse: addParsers.addAttribute('operator', "multiply")
-  },
-  "CRequirementNE": {
-    preParse: addParsers.addAttribute('operator', "!=")
-  },
-  "CRequirementNot": {
-    preParse: addParsers.addAttribute('operator', "not")
-  },
-  "CRequirementOdd": {
-    preParse: addParsers.addAttribute('operator', "odd")
-  },
-  "CRequirementOr": {
-    preParse: addParsers.addAttribute('operator', "or")
-  },
-  "CRequirementSum": {
-    preParse: addParsers.addAttribute('operator', "sum")
-  },
-  "CRequirementXor": {
-    preParse: addParsers.addAttribute('operator', "xor")
-  },
-  "CritStep": functionTemplates.singleNumberValue(),
-  "CritValidator": {
-    preParse: mergeParsers.mergeElement(VALIDATOR_TYPE_FILTER),
-  },
+  "CRequirementAnd": functionTemplates.addAttribute('operator', "and"),
+  "CRequirementCountAbil": functionTemplates.addAttribute('operator', "countAbility"),
+  "CRequirementCountBehavior": functionTemplates.addAttribute('operator', "countBehavior"),
+  "CRequirementCountUnit": functionTemplates.addAttribute('operator', "countUnit"),
+  "CRequirementCountUpgrade": functionTemplates.addAttribute('operator', "countUpgrade"),
+  "CRequirementDiv": functionTemplates.addAttribute('operator', "divide"),
+  "CRequirementEq": functionTemplates.addAttribute('operator', "=="),
+  "CRequirementGT": functionTemplates.addAttribute('operator', ">"),
+  "CRequirementGTE": functionTemplates.addAttribute('operator', ">="),
+  "CRequirementLT": functionTemplates.addAttribute('operator', "<"),
+  "CRequirementLTE": functionTemplates.addAttribute('operator', "<="),
+  "CRequirementMod": functionTemplates.addAttribute('operator', "modulus"),
+  "CRequirementMul": functionTemplates.addAttribute('operator', "multiply"),
+  "CRequirementNE": functionTemplates.addAttribute('operator', "!="),
+  "CRequirementNot": functionTemplates.addAttribute('operator', "not"),
+  "CRequirementOdd": functionTemplates.addAttribute('operator', "odd"),
+  "CRequirementOr": functionTemplates.addAttribute('operator', "or"),
+  "CRequirementSum": functionTemplates.addAttribute('operator', "sum"),
+  "CRequirementXor": functionTemplates.addAttribute('operator', "xor"),
+  "CritStep": functionTemplates.numberValue(),
+  "CritValidator": functionTemplates.mergeElement(VALIDATOR_TYPE_FILTER),
   "CSkin": {
-    // preParse: parsers.join(
-    //   // addParsers.addAttribute("AdditionalSearchText", "Skin/AdditionalSearchText/##id##"),
-    //   // textParsers.attributeValueReplacement("AdditionalSearchText"),
-    //   // textParsers.replaceWithLocaleText("AdditionalSearchText"),
-    //   addParsers.addAttribute("Name", "Skin/Name/##id##"),
-    //   textParsers.attributeValueReplacement("Name"),
-    //   textParsers.replaceWithLocaleText("Name"),
-    //   // addParsers.addAttribute("SortName", "Skin/SortName/##id##"),
-    //   // textParsers.attributeValueReplacement("SortName"),
-    //   // textParsers.replaceWithLocaleText("SortName"),
-    // ),
+
   },
-  "CTalent": {
-    formatElement: elementFormatters.join(
-      elementFormatters.attributeToNumber("tier"),
-      elementFormatters.attributeToNumber("column"),
-    ),
-  },
-  "CursorRangeMode": functionTemplates.singleValue(),
+  "CursorRangeMode": functionTemplates.singleElement,
   "CValidatorIsUnitTracked": {
-    formatElement: (formattedElement: any, element: any) => {
-      formattedElement.tracked = formattedElement.find
-      delete formattedElement.find
-      return formattedElement
-    }
+    // formatElement: elementFormatters.join(
+    //   (formattedElement: any, element: any) => {
+    //     formattedElement.tracked = formattedElement.find
+    //     delete formattedElement.find
+    //     return formattedElement
+    //   },
+    //   elementFormatters.defaultElementFormatter
+    // )
   },
   "CValidatorPlayerAI": functionTemplates.removeFromOutput,
   "CValidatorPlayerTalent": {
-    formatElement: (formattedElement: any, element: any) => {
-      formattedElement.talent = formattedElement.value
-      formattedElement.hasTalent = !!formattedElement.find
+    formatElement: elementFormatters.join(
+      (formattedElement: any, element: any) => {
+        formattedElement.talent = formattedElement.value
+        formattedElement.hasTalent = !!formattedElement.find
 
-      delete formattedElement.find
-      delete formattedElement.value
+        delete formattedElement.find
+        delete formattedElement.value
 
-      return formattedElement
-    }
+        return formattedElement
+      },
+      elementFormatters.defaultElementFormatter
+    )
   },
-  "CValidatorUnitArmorLevel": {
-    formatElement: (formattedElement: any, element: any) => {
-      formattedElement.validates = 'armorAmount'
-      return formattedElement
-    }
-  },
-  "CValidatorUnitCompareDamageTakenTime": {
-    formatElement: (formattedElement: any, element: any) => {
-      formattedElement.validates = 'damageTakenTime'
-      return formattedElement
-    }
-  },
-  "CValidatorUnitCompareField": {
-    formatElement: (formattedElement: any, element: any) => {
-      formattedElement.validates = 'compareField'
-      return formattedElement
-    }
-  },
-  "CValidatorUnitCompareKillCount": {
-    formatElement: (formattedElement: any, element: any) => {
-      formattedElement.validates = 'hasKills'
-      return formattedElement
-    }
-  },
-  "CValidatorUnitCompareMarkerCount": {
-    formatElement: (formattedElement: any, element: any) => {
-      formattedElement.validates = 'markerCount'
-      return formattedElement
-    }
-  },
-  "CValidatorUnitCompareOrderCount": {
-    formatElement: (formattedElement: any, element: any) => {
-      formattedElement.validates = 'orderCount'
-      return formattedElement
-    }
-  },
-  "CValidatorUnitCompareSpeed": {
-    formatElement: (formattedElement: any, element: any) => {
-      formattedElement.validates = 'speed'
-      return formattedElement
-    }
-  },
-  "CValidatorUnitCompareTargetRange": {
-    formatElement: (formattedElement: any, element: any) => {
-      formattedElement.validates = 'targetRange'
-      return formattedElement
-    }
-  },
-  "CValidatorUnitCompareVital": {
-    formatElement: (formattedElement: any, element: any) => {
-      formattedElement.validates = 'vital'
-      return formattedElement
-    }
-  },
-  "CValidatorUnitCompareVitality": {
-    formatElement: (formattedElement: any, element: any) => {
-      formattedElement.validates = 'vital'
-      return formattedElement
-    }
-  },
+  "CValidatorUnitArmorLevel": functionTemplates.addAttribute('validates', 'armorAmount'),
+  "CValidatorUnitCompareDamageTakenTime": functionTemplates.addAttribute('validates', 'damageTakenTime'),
+  "CValidatorUnitCompareField": functionTemplates.addAttribute('validates', 'compareField'),
+  "CValidatorUnitCompareKillCount": functionTemplates.addAttribute('validates', 'hasKills'),
+  "CValidatorUnitCompareMarkerCount": functionTemplates.addAttribute('validates', 'markerCount'),
+  "CValidatorUnitCompareOrderCount": functionTemplates.addAttribute('validates', 'orderCount'),
+  "CValidatorUnitCompareSpeed": functionTemplates.addAttribute('validates', 'speed'),
+  "CValidatorUnitCompareTargetRange": functionTemplates.addAttribute('validates', 'targetRange'),
+  "CValidatorUnitCompareVital": functionTemplates.addAttribute('validates', 'vital'),
+  "CValidatorUnitCompareVitality": functionTemplates.addAttribute('validates', 'vital'),
   "CValidatorUnitCompareWeaponLegacyState": {
-    formatElement: (formattedElement: any, element: any) => {
-      formattedElement.state = formattedElement.value
-      delete formattedElement.value
-      return formattedElement
-    }
+    formatElement: elementFormatters.join(
+      (formattedElement: any, element: any) => {
+        formattedElement.state = formattedElement.value
+        delete formattedElement.value
+        return formattedElement
+      },
+      elementFormatters.defaultElementFormatter
+    )
   },
-  "CValidatorUnitIsHero": {
-    formatElement: (formattedElement: any, element: any) => {
-      formattedElement.isHero = true
-
-      return formattedElement
-    },
-  },
+  "CValidatorUnitIsHero": functionTemplates.addAttribute('isHero', true),
   "CValidatorUnitMover": {
-    formatElement: (formattedElement: any, element: any) => {
-      formattedElement.unitType = formattedElement.value
-      formattedElement.movesUnit = !!formattedElement.find
+    formatElement: elementFormatters.join(
+      (formattedElement: any, element: any) => {
+        formattedElement.unitType = formattedElement.value
+        formattedElement.movesUnit = !!formattedElement.find
 
-      delete formattedElement.find
-      delete formattedElement.value
+        delete formattedElement.find
+        delete formattedElement.value
 
-      return formattedElement
-    }
+        return formattedElement
+      },
+      elementFormatters.defaultElementFormatter
+    )
   },
   "CValidatorUnitOrder": functionTemplates.removeFromOutput,
   "CValidatorUnitOrderQueue": functionTemplates.removeFromOutput,
   "CValidatorUnitOrderTargetType": functionTemplates.removeFromOutput,
   "CValidatorUnitTimeElapsed": functionTemplates.removeFromOutput,
   "CValidatorUnitType": {
-    formatElement: (formattedElement: any, element: any) => {
-      formattedElement.unit = formattedElement.value
-      formattedElement.isUnit = !!formattedElement.find
+    formatElement: elementFormatters.join(
+      (formattedElement: any, element: any) => {
+        formattedElement.unit = formattedElement.value
+        formattedElement.isUnit = !!formattedElement.find
 
-      delete formattedElement.find
-      delete formattedElement.value
+        delete formattedElement.find
+        delete formattedElement.value
 
-      return formattedElement
-    }
+        return formattedElement
+      },
+      elementFormatters.defaultElementFormatter
+    ),
   },
-  "CValidatorUnitWeaponCanTargetUnit": {
-    formatElement: (formattedElement: any, element: any) => {
-      formattedElement.canTarget = true
-
-      return formattedElement
-    },
-  },
+  "CValidatorUnitWeaponCanTargetUnit": functionTemplates.addAttribute('canTarget', true),
   "DamageDealtAdditiveMultiplier": functionTemplates.valuesToSingleObjectOfNumbers(),
   "DamageDealtFraction": functionTemplates.valuesToSingleObjectOfNumbers(),
   "DamageDealtScaled": functionTemplates.valuesToSingleObjectOfNumbers(),
-  "DamageDealtXP": functionTemplates.singleBooleanValue(),
-  "DamageModifierSource": functionTemplates.singleValueRemoveIfValue("Unknown"),
-  "DamagePoint": functionTemplates.singleNumberValue(),
-  "DamageResponse": {
-    merge: singleElement,
-    preParse: parsers.join(
-      addParsers.addInnerElement("Handled", "Handled"),
-      addParsers.addInnerElement("Exhausted", "Exhausted")
-    ),
-    formatElement: elementFormatters.join(
-      elementFormatters.attributeToNumber("modifyLimit"),
-      elementFormatters.attributeToNumber("modifyFraction"),
-      elementFormatters.attributeToNumber("modifyMinimumDamage"),
-      elementFormatters.attributeToNumber("priority"),
-      elementFormatters.attributeToNumber("clampMinimum"),
-      elementFormatters.attributeToBoolean("fatal"),
-      elementFormatters.attributeToBoolean("suppressFloatersCausedByBehavior"),
-      elementFormatters.applyFormatterToAttribute("targetFilters", elementFormatters.parseFilterString),
-    ),
-    formatArray: arrayFormatters.firstValue,
-  },
-  "DamageTakenXP": functionTemplates.singleBooleanValue(),
-  "Day": functionTemplates.singleNumberValue(),
+  "DamageDealtXP": functionTemplates.booleanValue(),
+  "DamageModifierSource": functionTemplates.removeIfValue("Unknown"),
+  "DamagePoint": functionTemplates.numberValue(),
+  "DamageResponse": functionTemplates.singleElement,
+  "DamageTakenXP": functionTemplates.booleanValue(),
+  "Day": functionTemplates.numberValue(),
   "DeathRevealDuration": functionTemplates.removeFromOutput,
   "DeathRevealFilters": functionTemplates.removeFromOutput,
   "DeathRevealRadius": functionTemplates.removeFromOutput,
   "DeathRevealType": functionTemplates.removeFromOutput,
-  "DeathTime": functionTemplates.singleNumberValue(),
-  "DeathType": functionTemplates.singleValueRemoveIfValue("Unknown"),
-  "DeathUnloadEffect": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER)
-  },
-  "DecreaseEvents": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER, "Effect"),
-    formatElement: elementFormatters.valueFromAttribute("EventId"),
-  },
+  "DeathTime": functionTemplates.numberValue(),
+  "DeathType": functionTemplates.removeIfValue("Unknown"),
+  "DeathUnloadEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
   "DefaultAcquireLevel": functionTemplates.removeFromOutput,
   "DefaultError": functionTemplates.removeFromOutput,
-  "Delay": functionTemplates.singleNumberValue(),
-  "DelayMax": functionTemplates.singleNumberValue(),
-  "DelayMin": functionTemplates.singleNumberValue(),
+  "Delay": functionTemplates.numberValue(),
+  "DelayMax": functionTemplates.numberValue(),
+  "DelayMin": functionTemplates.numberValue(),
   "Description": functionTemplates.localeText(),
   "DestructionFunction": functionTemplates.removeFromOutput,
-  "Detected": functionTemplates.singleBooleanValue(),
+  "Detect": functionTemplates.numberValue(),
+  "Detected": functionTemplates.booleanValue(),
+  "DetectFilters": functionTemplates.filters(),
   "Difficulty": {
     merge: singleElement,
-    formatElement: elementFormatters.join(elementFormatters.valueFromAttribute(), elementFormatters.splitOnCaps),
-    formatArray: arrayFormatters.firstValue,
-  },
-  "DisableValidatorArray": {
-    ...functionTemplates.arrayOfSingleValues(),
-    formatKey: (key: string) => "disableValidators"
-  },
-  "DisplayDuration": functionTemplates.flags(),
-  "DisplayEffect": {
-    preParse: parsers.join(
-      textParsers.attributeValueReplacement(),
-      mergeParsers.mergeElement(EFFECT_TYPE_FILTER)
+    formatElement: elementFormatters.join(
+      elementFormatters.applyFormatterToAttribute('value', elementFormatters.splitOnCaps),
+      elementFormatters.defaultElementFormatter
     ),
   },
+  "DisableValidatorArray": {
+    formatKey: "disableValidators"
+  },
+  "DisplayDuration": functionTemplates.flags(),
+  "DisplayEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
   "DisplayModel": functionTemplates.removeFromOutput,
-  "DistanceMax": functionTemplates.singleNumberValue(),
-  "DistanceMin": functionTemplates.singleNumberValue(),
+  "Distance": functionTemplates.numberValue(),
+  "DistanceMax": functionTemplates.numberValue(),
+  "DistanceMin": functionTemplates.numberValue(),
   "DraftCutsceneFile": functionTemplates.removeFromOutput,
   "DraftPickCutsceneFile": functionTemplates.removeFromOutput,
   "DraftScreenLargeImage": functionTemplates.singleAsset(),
   "DraftScreenLargeImageBackground": functionTemplates.singleAsset(),
   "DraftScreenPortrait": functionTemplates.singleAsset(),
   "DraftScreenPortraitBackground": functionTemplates.singleAsset(),
-  "Duration": functionTemplates.singleNumberValue(),
-  "DurationBonusMax": functionTemplates.singleNumberValue(),
-  "DurationBonusMin": functionTemplates.singleNumberValue(),
+  "Duration": functionTemplates.numberValue(),
+  "DurationBonusMax": functionTemplates.numberValue(),
+  "DurationBonusMin": functionTemplates.numberValue(),
   "EditorCategories": functionTemplates.removeFromOutput,
   "EditorFlags": functionTemplates.removeFromOutput,
   "Effect": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
-    formatKey: keyFormatters.join(keyFormatters.defaultKeyFormatter, keyFormatters.pluralizeKey),
+    ...functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+    formatKey: keyFormatters.join(
+      keyFormatters.defaultKeyFormatter,
+      keyFormatters.pluralizeKey
+    ),
   },
   "EffectArray": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
-    formatKey: keyFormatters.join(keyFormatters.defaultKeyFormatter, keyFormatters.pluralizeKey),
+    ...functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+    formatKey: keyFormatters.join(
+      keyFormatters.defaultKeyFormatter,
+      keyFormatters.pluralizeKey
+    ),
   },
   "EffectCategory": functionTemplates.flags(),
   "EffectHistoryLimit": functionTemplates.valuesToSingleObjectOfNumbers(),
   "EffectRange": {
-    ...functionTemplates.singleValue(),
+    ...functionTemplates.singleElement,
     formatElement: elementFormatters.join(
       (formattedElement: any) => {
         const [ min, max ] = formattedElement.value.split(',')
@@ -662,148 +448,110 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
       },
       elementFormatters.attributeToNumber('minRange'),
       elementFormatters.attributeToNumber('maxRange'),
+      elementFormatters.defaultElementFormatter
     )
   },
-  "Enabled": functionTemplates.singleBooleanValue(),
+  "Enabled": functionTemplates.booleanValue(),
   "EndOfMatchCutsceneFile": functionTemplates.removeFromOutput,
-  "EnergyMax": functionTemplates.singleNumberValue(),
-  "EnergyStart": functionTemplates.singleNumberValue(),
-  "EnergyRegenRate": functionTemplates.singleNumberValue(),
-  "Entry": functionTemplates.singleValue(),
+  "EnergyMax": functionTemplates.numberValue(),
+  "EnergyStart": functionTemplates.numberValue(),
+  "EnergyRegenRate": functionTemplates.numberValue(),
+  "Entry": functionTemplates.singleElement,
   "ErrorAlert": functionTemplates.removeFromOutput,
-  "Event": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER, "Effect"),
-    formatElement: elementFormatters.valueFromAttribute("EventId"),
-  },
-  "EventName": functionTemplates.singleValue(),
-  "ExcludeCasterUnit": functionTemplates.singleValueRemoveIfValue("Unknown"),
-  "ExcludeOriginPlayer": functionTemplates.singleValueRemoveIfValue("Unknown"),
+  "EventName": functionTemplates.singleElement,
+  "ExcludeCasterUnit": functionTemplates.removeIfValue("Unknown"),
+  "ExcludeOriginPlayer": functionTemplates.removeIfValue("Unknown"),
   "ExecuteUnitAutoQueueId": functionTemplates.removeFromOutput,
-  "Exhausted": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
-  },
-  "ExpireDelay": functionTemplates.singleNumberValue(),
-  "ExpireEffect": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
-  },
+  "Exhausted": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "ExpireDelay": functionTemplates.numberValue(),
+  "ExpireEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
   "Face": {
-    preParse: parsers.join(textParsers.attributeValueReplacement(), mergeParsers.mergeElement("CButton")),
-    formatKey: (key: string) => "button",
+    ...functionTemplates.mergeElement("CButton"),
+    formatKey: "button",
   },
-  "FacingLocation": functionTemplates.singleValueAddEffectRemoveIfUnknown,
+  "FacingLocation": functionTemplates.removeIfValue("Unknown"),
+  "Fatal": functionTemplates.booleanValue(),
   "FeatureArray": {
-    formatKey: keyFormatters.join(keyFormatters.defaultKeyFormatter, keyFormatters.pluralizeKey),
-    formatElement: elementFormatters.join(elementFormatters.valueFromAttribute(), elementFormatters.splitOnCaps),
+    formatElement: elementFormatters.join(
+      elementFormatters.applyFormatterToAttribute('value', elementFormatters.splitOnCaps),
+      elementFormatters.defaultElementFormatter
+    ),
+    formatKey: keyFormatters.join(
+      keyFormatters.defaultKeyFormatter,
+      keyFormatters.pluralizeKey
+    ),
   },
   "Fidget": functionTemplates.removeFromOutput,
-  "Field": functionTemplates.singleValue(),
-  "FieldIsInteger": functionTemplates.singleBooleanValue(),
+  "Field": functionTemplates.singleElement,
+  "FieldIsInteger": functionTemplates.booleanValue(),
   "Filters": {
     formatElement: elementFormatters.conditionallyFormatElement(
       elementFormatters.attributeIsDefined("index"),
       elementFormatters.join(
         elementFormatters.formatAttributeWithKeyFormatter(keyFormatters.defaultKeyFormatter),
         elementFormatters.attributeToBoolean(),
-        elementFormatters.toKeyValuePair(),
       ),
       elementFormatters.join(
-        elementFormatters.valueFromAttribute(),
-        elementFormatters.parseFilterString,
+        elementFormatters.applyFormatterToAttribute('value', elementFormatters.parseFilterString),
+        elementFormatters.defaultElementFormatter
       )
     ),
     formatArray: arrayFormatters.conditionallyFormatArray(
       arrayFormatters.elementsAreObjects,
       arrayFormatters.reduceToSingleObject(),
-      arrayFormatters.lastValue,
+      arrayFormatters.defaultArrayFormatter,
     )
   },
-  "FinalEffect": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
-  },
-  "Find": functionTemplates.singleBooleanValue(),
+  "FinalEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "Find": functionTemplates.booleanValue(),
   "Flags": functionTemplates.flags(true),
   "FlagArray": functionTemplates.flags(true),
-  "FleeTime": functionTemplates.singleNumberValue(),
-  "FleeRange": functionTemplates.singleNumberValue(),
-  "FloaterCreation": functionTemplates.singleValueRemoveIfValue("Unknown"),
-  "FollowRange": functionTemplates.singleNumberValue(),
-  "Fraction": {
-    merge: singleElement,
-    formatArray: arrayFormatters.firstValue,
-  },
-  "Gender": functionTemplates.singleValue(),
+  "FleeTime": functionTemplates.numberValue(),
+  "FleeRange": functionTemplates.numberValue(),
+  "FloaterCreation": functionTemplates.removeIfValue("Unknown"),
+  "FollowRange": functionTemplates.numberValue(),
+  "Fraction": functionTemplates.singleElement,
+  "Gender": functionTemplates.singleElement,
   "Grown": functionTemplates.removeFromOutput,
-  "Handled": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
-  },
-  "HasShield": functionTemplates.singleBooleanValue(),
+  "Handled": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "HasShield": functionTemplates.booleanValue(),
   "HealDealtAdditiveMultiplier": functionTemplates.valuesToSingleObjectOfNumbers(),
-  "Height": functionTemplates.singleNumberValue(),
-  "HeroAbilArray": {
-    preParse: parsers.join(
-      textParsers.attributeValueReplacement("Abil"),
-      textParsers.attributeValueReplacement("Button"),
-      mergeParsers.mergeElement(ABIL_TYPE_FILTER, "Abil"),
-      addParsers.addInnerElement("Button", "Face")
-    )
-  },
-  "HeroArray": {
-    preParse: mergeParsers.mergeElement("CHero")
-  },
+  "Height": functionTemplates.numberValue(),
+  "HeroArray": functionTemplates.mergeElement("CHero"),
   "HeroPlaystyleFlags": functionTemplates.flags(),
   "HeroSelectCutsceneFile": functionTemplates.removeFromOutput,
   "HomeScreenCutsceneFile": functionTemplates.removeFromOutput,
   "HitMask": functionTemplates.flags(),
-  "HitsChangedEffect": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
-  },
+  "HitsChangedEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
   "Hotkey": functionTemplates.removeFromOutput,
   "HotkeyAlias": functionTemplates.removeFromOutput,
   "HyperlinkId": functionTemplates.removeFromOutput,
   "Icon": functionTemplates.singleAsset(),
-  "IgnoreRange": functionTemplates.singleNumberValue(),
-  "ImageFacing": functionTemplates.singleValue(),
-  "ImpactEffect": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
-  },
+  "IgnoreRange": functionTemplates.numberValue(),
+  "ImageFacing": functionTemplates.singleElement,
+  "ImpactEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
   "ImpactFilters": functionTemplates.flags(),
-  "ImpactLocation": {
-    merge: singleElement,
-    preParse: addParsers.addInnerElement("Effect", "Effect"),
-    formatArray: arrayFormatters.firstValue
-  },
-  "ImpactUnit": {
-    merge: singleElement,
-    preParse: addParsers.addInnerElement("Effect", "Effect"),
-    formatArray: arrayFormatters.firstValue
-  },
-  "IncreaseEvents": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER, "Effect"),
-    formatElement: elementFormatters.valueFromAttribute("EventId"),
-  },
-  "InfoArray": {
-    formatElement: elementFormatters.attributeToNumber("Distance"),
-    formatArray: arrayFormatters.combineBy('index')
-  },
   "InfoFlags": functionTemplates.flags(true),
   "InfoIcon": functionTemplates.singleAsset(),
   "InfoText": functionTemplates.localeText(),
-  "InfoTooltipPriority": functionTemplates.singleNumberValue(),
+  "InfoTooltipPriority": functionTemplates.numberValue(),
   "InGameUnitStatusCutsceneFile": functionTemplates.removeFromOutput,
   "InitialEffect": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
-    formatKey: keyFormatters.join(keyFormatters.defaultKeyFormatter, keyFormatters.pluralizeKey),
+    ...functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+    formatKey: keyFormatters.join(
+      keyFormatters.defaultKeyFormatter,
+      keyFormatters.pluralizeKey
+    ),
   },
   "InitializerFunction": functionTemplates.removeFromOutput,
-  "InnerRadius": functionTemplates.singleNumberValue(),
-  "InnerRadiusSafetyMultiplier": functionTemplates.singleNumberValue(),
+  "InnerRadius": functionTemplates.numberValue(),
+  "InnerRadiusSafetyMultiplier": functionTemplates.numberValue(),
   "InterruptArray": functionTemplates.flags(),
-  "InterruptCost": {
-    merge: singleElement,
-    formatArray: arrayFormatters.firstValue
-  },
-  "KillCredit": functionTemplates.singleValueRemoveIfValue("Unknown"),
-  "KillCreditUnit": functionTemplates.singleValueRemoveIfValue("Unknown"),
+  "InterruptCost": functionTemplates.singleElement,
+  "Item": functionTemplates.mergeElement(ITEM_TYPE_FILTER),
+  "KillCredit": functionTemplates.removeIfValue("Unknown"),
+  "KillCreditUnit": functionTemplates.removeIfValue("Unknown"),
+  "KillXPBonus": functionTemplates.numberValue(),
   "Kind": {
     formatElement: elementFormatters.conditionallyFormatElement(
       elementFormatters.attributeIsDefined("index"),
@@ -812,12 +560,12 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
         elementFormatters.attributeToNumber(),
         elementFormatters.toKeyValuePair(),
       ),
-      elementFormatters.valueFromAttribute()
+      elementFormatters.defaultElementFormatter
     ),
     formatArray: arrayFormatters.conditionallyFormatArray(
       arrayFormatters.elementsAreObjects,
       arrayFormatters.reduceToSingleObject(),
-      arrayFormatters.lastValue,
+      arrayFormatters.defaultArrayFormatter,
     )
   },
   "KindArray": {
@@ -828,102 +576,77 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     ),
     formatArray: arrayFormatters.reduceToSingleObject(),
   },
-  "KindSplash": functionTemplates.singleValue(),
-  "Kinetic": {
-    preParse: mergeParsers.mergeElement(KINETIC_TYPE_FILTER),
-  },
-  "LastAttackTargetUnit": {
-    merge: singleElement,
-    preParse: addParsers.addInnerElement("Effect", "Effect"),
-    formatArray: arrayFormatters.firstValue,
-  },
-  "LateralAcceleration": functionTemplates.singleNumberValue(),
+  "KindSplash": functionTemplates.singleElement,
+  "Kinetic": functionTemplates.mergeElement(KINETIC_TYPE_FILTER),
+  "LateralAcceleration": functionTemplates.numberValue(),
   "Launch": functionTemplates.removeFromOutput,
-  "LaunchEffect": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
-  },
-  "LaunchLocation": {
-    merge: singleElement,
-    preParse: addParsers.addInnerElement("Effect", "Effect"),
-    formatArray: arrayFormatters.firstValue,
-  },
-  "LauncMissileEffect": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
-  },
-  "LaunchUnit": {
-    merge: singleElement,
-    preParse: addParsers.addInnerElement("Effect", "Effect"),
-    formatArray: arrayFormatters.firstValue,
-  },
+  "LaunchEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "LauncMissileEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
   "LayoutButtons": functionTemplates.removeFromOutput,
   "LeaderAlias": functionTemplates.removeFromOutput,
   "LeaderboardImage": functionTemplates.singleAsset(),
-  "Leash": functionTemplates.singleNumberValue(),
+  "Leash": functionTemplates.numberValue(),
   "LeechScoreArray": functionTemplates.removeFromOutput,
   "LegacyOptions": functionTemplates.flags(),
+  "Level": functionTemplates.numberValue(),
   "LevelScalingArray": {
 
   },
-  "LifeMax": functionTemplates.singleNumberValue(),
-  "LifeRegenMax": functionTemplates.singleNumberValue(),
-  "LifeRegenRate": functionTemplates.singleNumberValue(),
-  "LifeStart": functionTemplates.singleNumberValue(),
-  "LineDashType": functionTemplates.singleValue(),
-  "LoadCargoEffect": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER)
+  "LifeMax": functionTemplates.numberValue(),
+  "LifeRegenMax": functionTemplates.numberValue(),
+  "LifeRegenRate": functionTemplates.numberValue(),
+  "LifeStart": functionTemplates.numberValue(),
+  "LineDashType": functionTemplates.singleElement,
+  "Link": {
+    preParse: parsers.join(
+      parsers.defaultPreParser,
+      conditionalParsers.conditionallyParseElement(
+        conditionalParsers.outerElementHasName('Weapon'),
+        functionTemplates.mergeElement(WEAPON_TYPE_FILTER).preParse
+      ),
+      conditionalParsers.conditionallyParseElement(
+        conditionalParsers.outerElementHasName('NodeArray'),
+        functionTemplates.mergeElement(WEAPON_TYPE_FILTER).preParse
+      )
+    )
   },
+  "LoadCargoEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
   "LoadingScreenImage": functionTemplates.singleAsset(),
-  "LoadTransportBehavior": {
-    preParse: mergeParsers.mergeElement(BEHAVIOR_TYPE_FILTER)
-  },
-  "Location": functionTemplates.singleValue(),
-  "LoiterInnerRadius": functionTemplates.singleNumberValue(),
-  "LoiterRadius": functionTemplates.singleNumberValue(),
+  "LoadTransportBehavior": functionTemplates.mergeElement(BEHAVIOR_TYPE_FILTER),
+  "Location": functionTemplates.singleElement,
+  "LoiterInnerRadius": functionTemplates.numberValue(),
+  "LoiterRadius": functionTemplates.numberValue(),
   "LootChestRewardCutsceneFile": functionTemplates.removeFromOutput,
-  "Marker": functionTemplates.singleValueWithReplacement(),
-  "Mass": functionTemplates.singleNumberValue(),
-  "Max": functionTemplates.singleNumberValue(),
-  "MaxAccumulation": functionTemplates.singleNumberValue(),
-  "MaxAttackSpeedMultiplier": functionTemplates.singleNumberValue(),
-  "MaxCargoCount": functionTemplates.singleNumberValue(),
-  "MaxCargoSize": functionTemplates.singleNumberValue(),
-  "MaxCount": functionTemplates.singleNumberValue(),
-  "MaxCountError": functionTemplates.singleValue(),
-  "MaxStackCount": functionTemplates.singleNumberValue(),
-  "MaxStepCount": functionTemplates.singleNumberValue(),
-  "MaxUnloadRange": functionTemplates.singleNumberValue(),
-  "Melee": functionTemplates.singleBooleanValue(),
-  "MinAccumulation": functionTemplates.singleNumberValue(),
-  "MinAttackSpeedMultiplier": functionTemplates.singleNumberValue(),
+  "Marker": functionTemplates.singleElementWithReplacement(),
+  "Mass": functionTemplates.numberValue(),
+  "Max": functionTemplates.numberValue(),
+  "MaxAccumulation": functionTemplates.numberValue(),
+  "MaxAttackSpeedMultiplier": functionTemplates.numberValue(),
+  "MaxCargoCount": functionTemplates.numberValue(),
+  "MaxCargoSize": functionTemplates.numberValue(),
+  "MaxCount": functionTemplates.numberValue(),
+  "MaxCountError": functionTemplates.singleElement,
+  "MaxStackCount": functionTemplates.numberValue(),
+  "MaxStepCount": functionTemplates.numberValue(),
+  "MaxUnloadRange": functionTemplates.numberValue(),
+  "Melee": functionTemplates.booleanValue(),
+  "MinAccumulation": functionTemplates.numberValue(),
+  "MinAttackSpeedMultiplier": functionTemplates.numberValue(),
   "MinCountError": functionTemplates.removeFromOutput,
-  "MinDistanceRadiusMultiplier": functionTemplates.singleNumberValue(),
+  "MinDistanceRadiusMultiplier": functionTemplates.numberValue(),
   "MiniPortraitCutsceneFile": functionTemplates.removeFromOutput,
-  "MinimapRadius": functionTemplates.singleNumberValue(),
-  "MinimumRange": functionTemplates.singleNumberValue(),
-  "MinPatrolDistance": functionTemplates.singleNumberValue(),
-  "MinScanRange": functionTemplates.singleNumberValue(),
-  "MinStackCountDisplayed": functionTemplates.singleValue(),
-  "Missing": functionTemplates.singleBooleanValue(),
+  "MinimapRadius": functionTemplates.numberValue(),
+  "MinimumRange": functionTemplates.numberValue(),
+  "MinPatrolDistance": functionTemplates.numberValue(),
+  "MinScanRange": functionTemplates.numberValue(),
+  "MinStackCountDisplayed": functionTemplates.singleElement,
+  "MinVeterancyXP": functionTemplates.numberValue(),
+  "Missing": functionTemplates.booleanValue(),
   "Model": functionTemplates.removeFromOutput,
   "ModelGroups": functionTemplates.removeFromOutput,
   "ModelMacroRun": functionTemplates.removeFromOutput,
-  "Modification": {
-    formatElement: elementFormatters.join(
-      elementFormatters.attributeToNumber("pushPriority"),
-      elementFormatters.attributeToNumber("alliedPushPriority"),
-      elementFormatters.attributeToNumber("radar"),
-      elementFormatters.attributeToNumber("killXPBonus"),
-      elementFormatters.attributeToNumber("detect"),
-      elementFormatters.attributeToNumber("unifiedMoveSpeedFactor"),
-      elementFormatters.attributeToNumber("moveSpeedBonus"),
-      elementFormatters.attributeToNumber("accelerationBonus"),
-      elementFormatters.attributeToBoolean("updateAttackSpeedEachFrame"),
-      elementFormatters.applyFormatterToAttribute("detectFilters", elementFormatters.parseFilterString),
-      elementFormatters.applyFormatterToAttribute("radarFilters", elementFormatters.parseFilterString),
-    ),
-    formatArray: arrayFormatters.reduceToSingleObject(true),
-  },
-  "ModificationType": functionTemplates.singleValue(),
+  "Modification": functionTemplates.singleElement,
+  "ModificationType": functionTemplates.singleElement,
   // "Modifications": {
   //   preParse: (element: any, outerElement: any, parseData: ParseData) => {
   //     if(!element["Catalog"] || element["Catalog"].length === 0) {
@@ -958,25 +681,19 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   //   )
   // },
   "ModifyFlags": functionTemplates.flags(true),
+  "ModifyFraction": functionTemplates.numberValue(),
+  "ModifyLimit": functionTemplates.numberValue(),
   "ModifyLimitVitalMaxFractionArray": functionTemplates.valuesToSingleObjectOfNumbers(),
-  "ModifyOwnerPlayer": {
-    merge: singleElement,
-    preParse: addParsers.addInnerElement("Effect", "Effect"),
-    formatArray: arrayFormatters.firstValue,
-  },
+  "ModifyMinimumDamage": functionTemplates.numberValue(),
   "ModifyScoreArray": functionTemplates.arrayOfNumberValues("Value"),
-  "Month": functionTemplates.singleNumberValue(),
-  "Mover": functionTemplates.singleValue(),
+  "Month": functionTemplates.numberValue(),
+  "Mover": functionTemplates.singleElement,
   "MoveFilters": functionTemplates.filters(),
-  "MoveSpeedBonus": functionTemplates.singleNumberValue(),
-  "MultiplierPerStep": functionTemplates.singleNumberValue(),
+  "MoveSpeedBonus": functionTemplates.numberValue(),
+  "MultiplierPerStep": functionTemplates.numberValue(),
   "Name": functionTemplates.localeText(),
-  "Negate": functionTemplates.singleBooleanValue(),
-  "NodeArray": {
-    preParse: mergeParsers.mergeElement(REQUIREMENT_TYPE_FILTER, 'Link'),
-    formatArray: arrayFormatters.combineBy('index'),
-  },
-  "OccludeHeight": functionTemplates.singleNumberValue(),
+  "Negate": functionTemplates.booleanValue(),
+  "OccludeHeight": functionTemplates.numberValue(),
   "OffCost": {
     formatArray: arrayFormatters.reduceToSingleObject(),
   },
@@ -984,90 +701,74 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "Offsets": functionTemplates.removeFromOutput,
   "OffsetVectorEndLocation": functionTemplates.removeFromOutput,
   "OffsetVectorStartLocation": functionTemplates.removeFromOutput,
-  "OperandArray": {
-    preParse: mergeParsers.mergeElement(REQUIREMENT_TYPE_FILTER)
-  },
-  "Operation": functionTemplates.singleValue(),
+  "OperandArray": functionTemplates.mergeElement(REQUIREMENT_TYPE_FILTER),
+  "Operation": functionTemplates.singleElement,
   "Options": functionTemplates.flags(),
   "OrderArray": functionTemplates.removeFromOutput,
-  "Origin": functionTemplates.singleValueAddEffectRemoveIfUnknown,
-  "OtherBehavior": {
-    preParse: mergeParsers.mergeElement(BEHAVIOR_TYPE_FILTER),
-  },
-  "OtherLocation": functionTemplates.singleValueAddEffectRemoveIfUnknown,
-  "OtherUnit": functionTemplates.singleValueAddEffectRemoveIfUnknown,
-  "OverlapIndex": functionTemplates.singleValue(),
-  "ParentAbil": functionTemplates.singleValue(),
+  "Origin": functionTemplates.removeIfValue("Unknown"),
+  "OtherBehavior": functionTemplates.mergeElement(BEHAVIOR_TYPE_FILTER),
+  "OtherLocation": functionTemplates.removeIfValue("Unknown"),
+  "OtherUnit": functionTemplates.removeIfValue("Unknown"),
+  "OverlapIndex": functionTemplates.singleElement,
+  "ParentAbil": functionTemplates.singleElement,
   "PartyFrameImage": functionTemplates.singleAsset(),
   "PartyPanelButtonImage": functionTemplates.singleAsset(),
   "PauseableArray": functionTemplates.flags(),
-  "Period": functionTemplates.singleNumberValue(),
-  "PeriodCount": functionTemplates.singleNumberValue(),
-  "PeriodicEffect": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
-  },
+  "Period": functionTemplates.numberValue(),
+  "PeriodCount": functionTemplates.numberValue(),
+  "PeriodicEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
   "PeriodicEffectArray": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
-    formatKey: keyFormatters.join(keyFormatters.defaultKeyFormatter, keyFormatters.pluralizeKey)
+    ...functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+    formatKey: keyFormatters.join(
+      keyFormatters.defaultKeyFormatter,
+      keyFormatters.pluralizeKey
+    ),
   },
-  "PeriodicPeriod": functionTemplates.singleNumberValue(),
+  "PeriodicPeriod": functionTemplates.numberValue(),
   "PeriodicPeriodArray": functionTemplates.arrayOfNumberValues(),
   "PeriodicOffsetArray": functionTemplates.removeFromOutput,
-  "PeriodMax": functionTemplates.singleNumberValue(),
-  "PeriodMin": functionTemplates.singleNumberValue(),
+  "PeriodMax": functionTemplates.numberValue(),
+  "PeriodMin": functionTemplates.numberValue(),
   "Placeholder": functionTemplates.removeFromOutput,
-  "PlacementArc": functionTemplates.singleNumberValue(),
-  "PlacementAround": functionTemplates.singleValueRemoveIfValue("Unknown"),
-  "PlacementRange": functionTemplates.singleNumberValue(),
+  "PlacementArc": functionTemplates.numberValue(),
+  "PlacementAround": functionTemplates.removeIfValue("Unknown"),
+  "PlacementRange": functionTemplates.numberValue(),
   "Plane": functionTemplates.removeFromOutput,
   "PlaneArray": functionTemplates.removeFromOutput,
   "PlaneDelta": functionTemplates.removeFromOutput,
-  "Player": functionTemplates.singleValueRemoveIfValue('Unknown'),
+  "Player": functionTemplates.removeIfValue('Unknown'),
   "Portrait": functionTemplates.singleAsset(),
   "PreemptableArray": functionTemplates.flags(),
-  "PrepEffect": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
-  },
-  "PreswingBeforeAttack": functionTemplates.singleNumberValue(),
-  "PreswingBetweenAttacks": functionTemplates.singleNumberValue(),
+  "PrepEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "PreswingBeforeAttack": functionTemplates.numberValue(),
+  "PreswingBetweenAttacks": functionTemplates.numberValue(),
   "PreviewCutsceneFile": functionTemplates.removeFromOutput,
+  "Priority": functionTemplates.numberValue(),
   "ProductId": functionTemplates.removeFromOutput,
   "ProgressionLootChestReward": functionTemplates.removeFromOutput,
-  "ProjectionDistanceScale": functionTemplates.singleNumberValue(),
-  "ProjectionMultiplier": functionTemplates.singleNumberValue(),
-  "ProjectionSourceValue": functionTemplates.singleValue(),
-  "ProjectionTargetValue": functionTemplates.singleValue(),
+  "ProjectionDistanceScale": functionTemplates.numberValue(),
+  "ProjectionMultiplier": functionTemplates.numberValue(),
+  "ProjectionSourceValue": functionTemplates.singleElement,
+  "ProjectionTargetValue": functionTemplates.singleElement,
   "ProvideCategories": functionTemplates.flags(),
   "PurchaseWarningCondition": functionTemplates.removeFromOutput,
-  "PushPriority": functionTemplates.singleNumberValue(),
-  "Radius": functionTemplates.singleNumberValue(),
-  "RandomDelayMax": functionTemplates.singleNumberValue(),
-  "RandomDelayMin": functionTemplates.singleNumberValue(),
-  "Range": functionTemplates.singleNumberValue(),
-  "RangeSlop": functionTemplates.singleNumberValue(),
-  "RankArray": {
-    preParse: parsers.join(
-      addParsers.addInnerElement("Face", "Face"),
-      mergeParsers.mergeElement(ITEM_TYPE_FILTER, "Item")
-    )
-  },
-  "Rarity": functionTemplates.singleValue(),
-  "Ratings": {
-    merge: singleElement,
-    formatArray: arrayFormatters.firstValue,
-  },
-  "Ratio": functionTemplates.singleNumberValue(),
-  "RechargeVital": functionTemplates.singleValue(),
-  "RechargeVitalRate": functionTemplates.singleNumberValue(),
-  "RechargeVitalFraction": functionTemplates.singleNumberValue(),
-  "RefreshEffect": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER)
-  },
+  "PushPriority": functionTemplates.numberValue(),
+  "Radar": functionTemplates.numberValue(),
+  "RadarFilters": functionTemplates.filters(),
+  "Radius": functionTemplates.numberValue(),
+  "RandomDelayMax": functionTemplates.numberValue(),
+  "RandomDelayMin": functionTemplates.numberValue(),
+  "Range": functionTemplates.numberValue(),
+  "RangeSlop": functionTemplates.numberValue(),
+  "Rarity": functionTemplates.singleElement,
+  "Ratings": functionTemplates.singleElement,
+  "Ratio": functionTemplates.numberValue(),
+  "RechargeVital": functionTemplates.singleElement,
+  "RechargeVitalRate": functionTemplates.numberValue(),
+  "RechargeVitalFraction": functionTemplates.numberValue(),
+  "RefreshEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
   "RefundArray": functionTemplates.flags(),
-  "RefundFraction": {
-    merge: singleElement,
-    formatArray: arrayFormatters.firstValue,
-  },
+  "RefundFraction": functionTemplates.singleElement,
   "Relationship": {
     formatElement: elementFormatters.conditionallyFormatElement(
       elementFormatters.attributeIsDefined('index'),
@@ -1075,231 +776,177 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
         elementFormatters.attributeToBoolean(),
         elementFormatters.toKeyValuePair(),
       ),
-      elementFormatters.valueFromAttribute()
+      elementFormatters.defaultElementFormatter
     ),
     formatArray: arrayFormatters.conditionallyFormatArray(
       arrayFormatters.allHaveAttribute("index"),
       arrayFormatters.combineBy("index"),
-      arrayFormatters.lastValue
+      arrayFormatters.defaultArrayFormatter
     )
   },
-  "ReleaseDate": {
-    merge: singleElement,
-    formatElement: elementFormatters.join(
-      elementFormatters.attributeToNumber("Month"),
-      elementFormatters.attributeToNumber("Day"),
-      elementFormatters.attributeToNumber("Year"),
-    ),
-    formatArray: arrayFormatters.reduceToSingleObject()
-  },
+  "ReleaseDate": functionTemplates.singleElement,
   "RemoveValidatorArray": {
-    ...functionTemplates.arrayOfSingleValues(),
     formatKey: "removeValidators"
   },
   "ReplacementArray": functionTemplates.removeFromOutput,
-  "RequireCaster": functionTemplates.singleValueRemoveIfValue("Unknown"),
-  "RequireCasterUnit": functionTemplates.singleValueAddEffectRemoveIfUnknown,
-  "Requirements": {
-    preParse: mergeParsers.mergeElement(REQUIREMENT_TYPE_FILTER)
-  },
-  "RequireOriginPlayer": functionTemplates.singleValueAddEffectRemoveIfUnknown,
+  "RequireCaster": functionTemplates.removeIfValue("Unknown"),
+  "RequireCasterUnit": functionTemplates.removeIfValue("Unknown"),
+  "Requirements": functionTemplates.mergeElement(REQUIREMENT_TYPE_FILTER),
+  "RequireOriginPlayer": functionTemplates.removeIfValue("Unknown"),
   "RequiredRewardArray": functionTemplates.removeFromOutput,
-  "Response": functionTemplates.singleValue(),
+  "Response": functionTemplates.singleElement,
   "ResponseFlags": functionTemplates.removeFromOutput,
   "ResultFailed": functionTemplates.removeFromOutput,
   "ResultFallback": functionTemplates.removeFromOutput,
   "ResultNoEffect": functionTemplates.removeFromOutput,
   "ResultNoUnit": functionTemplates.removeFromOutput,
-  "RevealUnit": functionTemplates.singleValueRemoveIfValue("Unknown"),
+  "RevealUnit": functionTemplates.removeIfValue("Unknown"),
   "ReviveInfoBase": functionTemplates.removeFromOutput,
-  "ReviveType": functionTemplates.singleValueWithReplacement(),
-  "Role": functionTemplates.singleValue(),
-  "RolesMultiClass": functionTemplates.singleValue(),
-  "RoleScoreValueOverride": functionTemplates.singleValue(),
-  "Row": functionTemplates.singleNumberValue(),
-  "Scale": functionTemplates.singleNumberValue(),
-  "ScoreResult": functionTemplates.singleValue(),
+  "ReviveType": functionTemplates.singleElementWithReplacement(),
+  "Role": functionTemplates.singleElement,
+  "RolesMultiClass": functionTemplates.singleElement,
+  "RoleScoreValueOverride": functionTemplates.singleElement,
+  "Row": functionTemplates.numberValue(),
+  "Scale": functionTemplates.numberValue(),
+  "ScoreResult": functionTemplates.singleElement,
   "ScoreScreenCutsceneFile": functionTemplates.removeFromOutput,
   "ScoreScreenImage": functionTemplates.singleAsset(),
   "SelectAlias": functionTemplates.removeFromOutput,
-  "SelectUnit": functionTemplates.singleValueAddEffectRemoveIfUnknown,
-  "SelfReviveCmd": functionTemplates.singleValue(),
-  "SeparationRadius": functionTemplates.singleNumberValue(),
+  "SelectUnit": functionTemplates.removeIfValue("Unknown"),
+  "SelfReviveCmd": functionTemplates.singleElement,
+  "SeparationRadius": functionTemplates.numberValue(),
   "SearchFilters": functionTemplates.filters(),
   "SearchFlags": functionTemplates.flags(),
-  "SearchRadius": functionTemplates.singleNumberValue(),
+  "SearchRadius": functionTemplates.numberValue(),
   "SelectScreenButtonImage": functionTemplates.singleAsset(),
-  "SelectTransferUnit": functionTemplates.singleValueRemoveIfValue("Unknown"),
-  "SetLastTarget": functionTemplates.singleValueRemoveIfValue("Unknown"),
-  "SharedListPersistsForever": functionTemplates.singleBooleanValue(),
-  "ShieldRegenDelay": functionTemplates.singleNumberValue(),
-  "ShowInUI": functionTemplates.singleBooleanValue("value", "True", "False"),
+  "SelectTransferUnit": functionTemplates.removeIfValue("Unknown"),
+  "SetLastTarget": functionTemplates.removeIfValue("Unknown"),
+  "SharedFlags": functionTemplates.flags(),
+  "SharedListPersistsForever": functionTemplates.booleanValue(),
+  "ShieldRegenDelay": functionTemplates.numberValue(),
+  "ShowInUI": functionTemplates.booleanValue("value", "True", "False"),
   "ShowProgressArray": functionTemplates.flags(),
-  "Sight": functionTemplates.singleNumberValue(),
-  "SightMaximum": functionTemplates.singleNumberValue(),
+  "Sight": functionTemplates.numberValue(),
+  "SightMaximum": functionTemplates.numberValue(),
   "SimpleDisplayText": functionTemplates.localeText(),
   "SkinArray": {
-    preParse: mergeParsers.mergeElement("CSkin"),
+    ...functionTemplates.mergeElement("CSkin"),
     formatKey: keyFormatters.join(keyFormatters.defaultKeyFormatter, keyFormatters.pluralizeKey),
   },
   "SmartFilters": functionTemplates.filters(),
-  "SmartPriority": functionTemplates.singleNumberValue(),
-  "SmartValidatorArray": {
-    preParse: parsers.join(
-      textParsers.attributeValueReplacement(),
-      mergeParsers.mergeElement(VALIDATOR_TYPE_FILTER)
-    ),
-  },
-  "SpawnCount": functionTemplates.singleNumberValue(),
-  "SpawnEffect": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER, "Effect"),
-  },
-  "SpawnRange": functionTemplates.singleNumberValue(),
-  "SpawnUnit": {
-    preParse: mergeParsers.mergeElement("CUnit"),
-  },
-  "Speed": functionTemplates.singleNumberValue(),
-  "SpeedMax": functionTemplates.singleNumberValue(),
-  "SpeedMultiplierCreep": functionTemplates.singleNumberValue(),
-  "SplashHistory": functionTemplates.singleValue(),
+  "SmartPriority": functionTemplates.numberValue(),
+  "SmartValidatorArray": functionTemplates.mergeElement(VALIDATOR_TYPE_FILTER),
+  "SpawnCount": functionTemplates.numberValue(),
+  "SpawnRange": functionTemplates.numberValue(),
+  "SpawnUnit": functionTemplates.mergeElement("CUnit"),
+  "Speed": functionTemplates.numberValue(),
+  "SpeedMax": functionTemplates.numberValue(),
+  "SpeedMultiplierCreep": functionTemplates.numberValue(),
+  "SplashHistory": functionTemplates.singleElement,
   "SortName": functionTemplates.localeText(),
-  "Source": {
-    merge: singleElement,
-    formatArray: arrayFormatters.firstValue
-  },
-  "SourceButtonFace": {
-    preParse: mergeParsers.mergeElement("CButton"),
-  },
-  "SourceEffect": functionTemplates.singleValue(),
+  "Source": functionTemplates.singleElement,
+  "SourceButtonFace": functionTemplates.mergeElement("CButton"),
+  "SourceEffect": functionTemplates.singleElement,
+  "StackBonus": functionTemplates.numberValue(),
   "Start": functionTemplates.removeFromOutput,
-  "State": functionTemplates.singleValue(),
+  "State": functionTemplates.singleElement,
   "StateFlags": functionTemplates.flags(),
-  "StationaryTurningRate": functionTemplates.singleNumberValue(),
-  "StepDistance": functionTemplates.singleNumberValue(),
-  "StepLoops": functionTemplates.singleNumberValue(),
+  "StationaryTurningRate": functionTemplates.numberValue(),
+  "StepDistance": functionTemplates.numberValue(),
+  "StepLoops": functionTemplates.numberValue(),
   "SubgroupAlias": functionTemplates.removeFromOutput,
-  "SubgroupPriority": functionTemplates.singleNumberValue(),
-  "SucceedIfBehaviorLacksDuration": functionTemplates.singleBooleanValue(),
-  "SucceedIfUnitLacksBehavior": functionTemplates.singleBooleanValue(),
+  "SubgroupPriority": functionTemplates.numberValue(),
+  "SucceedIfBehaviorLacksDuration": functionTemplates.booleanValue(),
+  "SucceedIfUnitLacksBehavior": functionTemplates.booleanValue(),
   "SupportedFilters": functionTemplates.filters(),
+  "SuppressFloatersCausedByBehavior": functionTemplates.booleanValue(),
   "TacticalAIFilters": functionTemplates.filters(),
+  "Talent": functionTemplates.mergeElement("CTalent"),
   "TalentAIBuildsArray": {
-    formatKey: (key: string) => "AIBuilds",
-    formatElement: elementFormatters.attributeToBoolean("AIOnly"),
+    formatKey: "AIBuilds",
   },
   "TalentsArray": functionTemplates.arrayOfSingleValues(),
-  "TalentTreeArray": {
-    preParse: mergeParsers.mergeElement("CTalent", "Talent"),
-  },
-  "Target": functionTemplates.singleValueAddEffectRemoveIfUnknown,
+  "Target": functionTemplates.removeIfValue("Unknown"),
   "TargetCursorInfo": functionTemplates.removeFromOutput,
   "TargetFilters": {
-    ...functionTemplates.valuesToSingleObject(),
     formatElement: elementFormatters.join(
       elementFormatters.applyFormatterToAttribute("value", elementFormatters.parseFilterString),
-      functionTemplates.valuesToSingleObject().formatElement
+      elementFormatters.defaultElementFormatter
     )
   },
   "TargetingHitTestPriority": functionTemplates.removeFromOutput,
-  "TargetLocation": functionTemplates.singleValueAddEffectRemoveIfUnknown,
+  "TargetLocation": functionTemplates.removeIfValue("Unknown"),
   "TargetMessage": functionTemplates.localeText(),
   "TargetSorts": functionTemplates.removeFromOutput,
   "TargetType": functionTemplates.removeFromOutput,
   "TauntDoesntStopUnit": functionTemplates.flags(),
   "TauntDuration": functionTemplates.valuesToSingleObjectOfNumbers(),
-  "TeleportEffect": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER),
-  },
+  "TeleportEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
   "TeleportFlags": functionTemplates.flags(true),
-  "TeleportResetRange": functionTemplates.singleNumberValue(),
+  "TeleportResetRange": functionTemplates.numberValue(),
+  "Text": functionTemplates.localeText(),
+  "Tier": functionTemplates.numberValue(),
   "TileCutsceneFile": functionTemplates.removeFromOutput,
-  "TimeScaleSource": functionTemplates.singleValue(),
+  "TimeScaleSource": functionTemplates.singleElement,
   "TimestampBehavior": functionTemplates.removeFromOutput,
-  "TimeUse": functionTemplates.singleNumberValue(),
+  "TimeStart": functionTemplates.numberValue(),
+  "TimeUse": functionTemplates.numberValue(),
   "Tip": functionTemplates.localeText(),
   "Title": functionTemplates.localeText(),
-  "TokenId": {
-    preParse: parsers.join(textParsers.attributeValueReplacement(), mergeParsers.mergeElement("CBehaviorTokenCounter")),
-  },
+  "TokenId": functionTemplates.mergeElement("CBehaviorTokenCounter"),
   "Tooltip": functionTemplates.localeText(),
-  "TooltipAppender": {
-    preParse: parsers.join(
-      textParsers.replaceWithLocaleText("Text"),
-      addParsers.addInnerElement("Validator", "Validator"),
-      addParsers.addInnerElement("Face", "Face")
-    )
-  },
+  "TooltipAddendum": functionTemplates.localeText(),
   "TooltipFlags": functionTemplates.flags(),
   "TooltipVitalName": functionTemplates.localeTextToSingleObject(),
-  "TotalCargoSpace": functionTemplates.singleNumberValue(),
-  "TrackedUnit": {
-    merge: singleElement,
-    preParse: parsers.join(
-      addParsers.addInnerElement('Effect', "Effect"),
-      addParsers.addInnerElement('Value', "Value"),
-    ),
-    formatArray: arrayFormatters.firstValue,
-  },
+  "TotalCargoSpace": functionTemplates.numberValue(),
+  "TrackedUnit": functionTemplates.singleElement,
   "TrackedUnitFilters": functionTemplates.filters(),
-  "TrackerUnit": functionTemplates.singleValue(),
-  "TrackingBehavior": {
-    preParse: mergeParsers.mergeElement(BEHAVIOR_TYPE_FILTER)
-  },
-  "Trait": functionTemplates.singleBooleanValue(),
-  "TurnAngle": functionTemplates.singleNumberValue(),
-  "TurningRate": functionTemplates.singleNumberValue(),
-  "Type": functionTemplates.singleValue(),
-  "TypeFallbackUnit": functionTemplates.singleValue(),
+  "TrackerUnit": functionTemplates.singleElement,
+  "TrackingBehavior": functionTemplates.mergeElement(BEHAVIOR_TYPE_FILTER),
+  "Trait": functionTemplates.booleanValue(),
+  "TurnAngle": functionTemplates.numberValue(),
+  "TurningRate": functionTemplates.numberValue(),
+  "Type": functionTemplates.singleElement,
+  "TypeFallbackUnit": functionTemplates.singleElement,
   "Types": functionTemplates.flags(),
-  "UnifiedMoveSpeedFactor": functionTemplates.singleNumberValue(),
+  "UnifiedMoveSpeedFactor": functionTemplates.numberValue(),
   "Unit": {
     preParse: parsers.join(
+      parsers.defaultPreParser,
       textParsers.attributeValueReplacement(),
       conditionalParsers.conditionallyParseElement(
         conditionalParsers.outerElementHasName('CValidatorLocationPlacement'),
         conditionalParsers.passThrough,
         mergeParsers.mergeElement("CUnit")
-      )
+      ),
     )
   },
   "UninterruptibleArray": functionTemplates.flags(),
-  "UnitDamageType": functionTemplates.singleValue(),
-  "Universe": functionTemplates.singleValue(),
+  "UnitDamageType": functionTemplates.singleElement,
+  "Universe": functionTemplates.singleElement,
   "UniverseIcon": functionTemplates.singleAsset(),
-  "UnloadCargoEffect": {
-    preParse: mergeParsers.mergeElement(EFFECT_TYPE_FILTER)
-  },
-  "UnloadPeriod": functionTemplates.singleNumberValue(),
+  "UnloadCargoEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "UnloadPeriod": functionTemplates.numberValue(),
+  "UpdateAttackSpeedEachFrame": functionTemplates.booleanValue(),
   "UseHotkeyLabel": functionTemplates.removeFromOutput,
   "UseMarkerArray": functionTemplates.flags(),
-  "UseSharedList": functionTemplates.singleBooleanValue(),
-  "UsesLineDash": functionTemplates.singleBooleanValue(),
+  "UseSharedList": functionTemplates.booleanValue(),
+  "UsesLineDash": functionTemplates.booleanValue(),
   "ValidatedArray": functionTemplates.flags(),
-  "ValidatorArray": {
-    preParse: parsers.join(
-      textParsers.attributeValueReplacement(),
-      mergeParsers.mergeElement(VALIDATOR_TYPE_FILTER)
-    ),
-  },
-  "Value": {
-    ...functionTemplates.singleValueIfOnlyAttribute(),
-    formatElement: elementFormatters.join(
-      elementFormatters.attributeToNumber(),
-      functionTemplates.singleValueIfOnlyAttribute().formatElement
-    ),
-  },
+  "Validator": functionTemplates.mergeElement(VALIDATOR_TYPE_FILTER),
+  "ValidatorArray": functionTemplates.mergeElement(VALIDATOR_TYPE_FILTER),
+  "Value": functionTemplates.numberValue(),
   "VariationArray": {
     preParse: mergeParsers.mergeElement("CSkin"),
-    formatKey: keyFormatters.join(keyFormatters.defaultKeyFormatter, keyFormatters.pluralizeKey),
+    formatKey: keyFormatters.join(
+      keyFormatters.defaultKeyFormatter,
+      keyFormatters.pluralizeKey
+    ),
   },
   "VariationIcon": functionTemplates.singleAsset(),
-  "VeterancyLevelArray": {
-    formatElement: elementFormatters.attributeToNumber("minVeterancyXP"),
-  },
-  "Visibility": functionTemplates.singleValue(),
+  "Visibility": functionTemplates.singleElement,
   "Vital": functionTemplates.valuesToSingleObject(),
   "VitalArray": {
-    formatArray: arrayFormatters.combineBy("index"),
     formatKey: "vitals"
   },
   "VitalMaxArray": {
@@ -1309,30 +956,25 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "VitalMaxIncreaseAffectsCurrentArray": functionTemplates.flags(),
   "VOArray": {
     ...functionTemplates.assetArrayToSingleObject(),
-    formatKey: (key: string) => "voiceOver",
+    formatKey: "voiceOver",
   },
   "VODefinition": {
-    ...functionTemplates.singleValueWithReplacement(),
-    formatKey: (key: string) => key,
+    ...functionTemplates.singleElementWithReplacement(),
+    formatKey: "VODefinition",
   },
   "VoiceLineArray": {
     preParse: textParsers.attributeValueReplacement(),
-    formatKey: keyFormatters.join(keyFormatters.defaultKeyFormatter, keyFormatters.pluralizeKey),
-    formatElement: elementFormatters.valueFromAttribute(),
-  },
-  "Weapon": {
-    preParse: mergeParsers.mergeElement(WEAPON_TYPE_FILTER)
-  },
-  "WhichEffect": {
-    preParse: parsers.join(
-      textParsers.attributeValueReplacement(),
-      mergeParsers.mergeElement(EFFECT_TYPE_FILTER)
+    formatKey: keyFormatters.join(
+      keyFormatters.defaultKeyFormatter,
+      keyFormatters.pluralizeKey
     ),
   },
-  "WhichLocation": functionTemplates.singleValue(),
-  "WhichPlayer": functionTemplates.singleValue(),
-  "WhichUnit": functionTemplates.singleValueAddEffectRemoveIfUnknown,
-  "WithPlayer": functionTemplates.singleValue(),
+  "Weapon": functionTemplates.mergeElement(WEAPON_TYPE_FILTER),
+  "WhichEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "WhichLocation": functionTemplates.singleElement,
+  "WhichPlayer": functionTemplates.singleElement,
+  "WhichUnit": functionTemplates.removeIfValue("Unknown"),
+  "WithPlayer": functionTemplates.singleElement,
   "XPFraction": functionTemplates.valuesToSingleObjectOfNumbers(),
-  "Year": functionTemplates.singleNumberValue(),
+  "Year": functionTemplates.numberValue(),
 }

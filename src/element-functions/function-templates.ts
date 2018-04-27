@@ -9,68 +9,71 @@ import * as arrayFormatters from '../formatters/array-formatters'
 import * as elementFormatters from '../formatters/element-formatters'
 import * as keyFormatters from '../formatters/key-formatters'
 import * as elementMergers from '../merge'
+import { ElementNameFilter } from '../parsers/element-name-filters'
 
 export const removeFromOutput = {
   formatElement: elementFormatters.removeFromOutput,
 }
 
-export function singleValue(attribute: string = 'value'): ElementFunctions {
-  return {
-    merge: elementMergers.singleElement,
-    formatElement: elementFormatters.valueFromAttribute(attribute),
-    formatArray: arrayFormatters.firstValue,
-  }
+export const singleElement: ElementFunctions = {
+  merge: elementMergers.singleElement,
 }
 
-export function singleValueWithReplacement(attribute: string = 'value'): ElementFunctions {
+export function singleElementWithReplacement(attribute: string = 'value'): ElementFunctions {
   return {
-    ...singleValue(attribute),
-    preParse: textParsers.attributeValueReplacement(attribute),
-  }
-}
-
-export function singleBooleanValue(attribute: string = 'value', trueValue = '1', falseValue = '0'): ElementFunctions {
-  return {
-    merge: elementMergers.singleElement,
-    formatElement: elementFormatters.join(
-      elementFormatters.valueFromAttribute(attribute),
-      elementFormatters.valueToBoolean(trueValue, falseValue),
+    ...singleElement,
+    preParse: parsers.join(
+      parsers.defaultPreParser,
+      textParsers.attributeValueReplacement(attribute)
     ),
-    formatArray: arrayFormatters.firstValue,
   }
 }
 
-export function singleNumberValue(attribute: string = 'value'): ElementFunctions {
+export function valueFromAttributeIfOnlyKey(attribute: string = 'value'): ElementFunctions {
   return {
-    merge: elementMergers.singleElement,
-    formatElement: elementFormatters.join(
-      elementFormatters.valueFromAttribute(attribute),
-      elementFormatters.valueToNumber,
-    ),
-    formatArray: arrayFormatters.firstValue,
-  }
-}
-
-export function singleValueRemoveIfValue(attributeValue: string, attribute: string = "value") {
-  const sv = singleValue()
-  return {
-    ...sv,
     formatElement: elementFormatters.conditionallyFormatElement(
-      elementFormatters.attributeHasValue(attributeValue),
-      elementFormatters.removeFromOutput,
-      sv.formatElement
+      elementFormatters.onlyHasKeys(attribute),
+      elementFormatters.valueFromAttribute(attribute)
     )
   }
 }
 
-export function singleValueIfOnlyAttribute(attribute: string = 'value'): ElementFunctions {
+export function addAttribute(attribute: string, attributeValue: any): ElementFunctions {
+  return {
+    preParse: parsers.join(
+      addParsers.addAttribute(attribute, attributeValue),
+      parsers.defaultPreParser
+    )
+  }
+}
+
+export function booleanValue(attribute: string = 'value', trueValue = '1', falseValue = '0'): ElementFunctions {
   return {
     merge: elementMergers.singleElement,
-    formatElement: elementFormatters.conditionallyFormatElement(
-      elementFormatters.onlyHasKeys(attribute),
-      elementFormatters.valueFromAttribute(attribute)
+    formatElement: elementFormatters.join(
+      elementFormatters.attributeToBoolean(attribute, trueValue, falseValue),
+      elementFormatters.defaultElementFormatter,
     ),
-    formatArray: arrayFormatters.firstValue,
+  }
+}
+
+export function numberValue(attribute: string = 'value'): ElementFunctions {
+  return {
+    merge: elementMergers.singleElement,
+    formatElement: elementFormatters.join(
+      elementFormatters.attributeToNumber(attribute),
+      elementFormatters.defaultElementFormatter,
+    ),
+  }
+}
+
+export function removeIfValue(attributeValue: string, attribute: string = "value") {
+  return {
+    ...singleElement,
+    formatElement: elementFormatters.conditionallyFormatElement(
+      elementFormatters.attributeHasValue(attributeValue),
+      elementFormatters.removeFromOutput
+    )
   }
 }
 
@@ -114,10 +117,10 @@ export function flags(
 export function localeText(attribute: string = 'value'): ElementFunctions {
   return {
     preParse: parsers.join(
+      parsers.defaultPreParser,
       textParsers.attributeValueReplacement(attribute),
-      textParsers.replaceWithLocaleText(attribute)),
-    formatElement: elementFormatters.valueFromAttribute(attribute),
-    formatArray: arrayFormatters.firstValue,
+      textParsers.replaceWithLocaleText(attribute)
+    ),
   }
 }
 
@@ -125,7 +128,7 @@ export function localeTextRemoveIfEmpty(attribute: string = 'value'): ElementFun
   return {
     ...localeText(attribute),
     formatElement: elementFormatters.join(
-      elementFormatters.valueFromAttribute(attribute),
+      elementFormatters.defaultElementFormatter,
       elementFormatters.removeIfEmptyObject,
     ),
   }
@@ -143,26 +146,26 @@ export function singleAsset(attribute: string = 'value'): ElementFunctions {
   return {
     merge: elementMergers.singleElement,
     preParse: parsers.join(
-      textParsers.attributeValueReplacement(),
-      assetParsers.processAsset()
+      parsers.defaultPreParser,
+      textParsers.attributeValueReplacement(attribute),
+      assetParsers.processAsset(attribute)
     ),
-    formatElement: elementFormatters.valueFromAttribute(attribute),
   }
 }
 
-export function assetArray(attribute: string = 'value'): ElementFunctions {
+export function assets(attribute: string = 'value'): ElementFunctions {
   return {
     preParse: parsers.join(
+      parsers.defaultPreParser,
       textParsers.attributeValueReplacement(),
       assetParsers.processAsset()
     ),
-    formatElement: elementFormatters.valueFromAttribute(attribute),
   }
 }
 
 export function assetArrayToSingleObject(keyAttribute: string = 'index', valueAttribute: string = 'value'): ElementFunctions {
   return {
-    ...assetArray(valueAttribute),
+    ...assets(valueAttribute),
     ...valuesToSingleObject(keyAttribute, valueAttribute),
   }
 }
@@ -184,20 +187,20 @@ export function arrayOfNumberValues(attribute: string ='value'): ElementFunction
 
 export function filters(attribute: string = 'value'): ElementFunctions {
   return {
-    ...singleValue(attribute),
+    ...singleElement,
     formatElement: elementFormatters.join(
-      elementFormatters.valueFromAttribute(),
+      elementFormatters.valueFromAttribute(attribute),
       elementFormatters.parseFilterString,
     ),
   }
 }
 
-export const singleValueAddEffectRemoveIfUnknown: ElementFunctions = {
-  merge: elementMergers.singleElement,
-  preParse: addParsers.addInnerElement('Effect', 'Effect'),
-  formatElement: elementFormatters.conditionallyFormatElement(
-    elementFormatters.attributeHasValue('Unknown'),
-    elementFormatters.removeFromOutput
-  ),
-  formatArray: arrayFormatters.firstValue,
+export function mergeElement(elementNameOrFilter: ElementNameFilter | string, attribute: string = 'value') {
+  return {
+    preParse: parsers.join(
+      parsers.defaultPreParser,
+      textParsers.attributeValueReplacement(attribute),
+      mergeParsers.mergeElement(elementNameOrFilter, attribute)
+    )
+  }
 }

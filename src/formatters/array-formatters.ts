@@ -4,8 +4,21 @@ import { ElementArrayFormatter } from './'
 
 export type ElementArrayConditional = (elements: any[]) => boolean
 
+export const isEmpty = isLengthEqualTo(0)
 export const removeIfEmpty = conditionallyFormatArray(isEmpty, removeArray)
-export const defaultArrayFormatter = removeIfEmpty
+
+export const defaultArrayFormatter = join(
+  conditionallyFormatArray(
+    allHaveAttribute("index"),
+    combineBy("index")
+  ),
+  conditionallyFormatArray(
+    isLengthEqualTo(1),
+    (elements: any[]): any => elements[0],
+    passThrough
+  ),
+  removeIfEmpty,
+)
 
 export function join(...formatters: ElementArrayFormatter[]): ElementArrayFormatter {
   return (elements: any[]): any => {
@@ -35,8 +48,10 @@ export function conditionallyFormatArray(
   }
 }
 
-export function isEmpty(elements: any[]): boolean {
-  return elements.length === 0
+export function isLengthEqualTo(length: number): ElementArrayConditional {
+  return (elements: any[]): boolean => {
+    return Array.isArray(elements) && elements.length === length
+  }
 }
 
 export function elementsAreObjects(elements: any[]): boolean {
