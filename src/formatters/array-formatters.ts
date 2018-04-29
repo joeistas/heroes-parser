@@ -14,7 +14,7 @@ export const defaultArrayFormatter = join(
   ),
   conditionallyFormatArray(
     isLengthEqualTo(1),
-    (elements: any[]): any => elements[0],
+    firstValue,
     passThrough
   ),
   removeIfEmpty,

@@ -44,7 +44,7 @@ export function preParseElement(element: any, outerElement: any, elementName: st
   element[ELEMENT_NAME_KEY] = elementName
 
   const func = getElementFunction(elementName, parseData.functions, 'preParse') as ElementParser
-  return func ? func(element, outerElement, parseData, context) : element
+  return (func ? func(element, outerElement, parseData, context) : element)
 }
 
 export function parseInnerElements(element: any, outerElement: any, elementName: string, parseData: ParseData, context: ParseContext, idsSeen: Set<string>) {
@@ -79,6 +79,7 @@ export function parseElement(element: any, outerElement: any, elementName: strin
   const parsedElement = preParseElement(element, outerElement, elementName, parseData, context)
 
   element = hasIdBeenSeen(parsedElement, idsSeen) ? element : parsedElement
+  elementName = getElementName(element)
   addSeenId(element, idsSeen)
 
   LOGGER.debug(`Preparsing inner elements of elementName: ${ elementName } id: ${ elementId }`)

@@ -233,7 +233,6 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "CItemAbil": functionTemplates.valueFromAttributeIfOnlyKey("abil"),
   "ClampMinimum": functionTemplates.numberValue(),
   "Class": functionTemplates.removeFromOutput,
-  "CmdButtonArray": functionTemplates.mergeElement("CButton", "DefaultButtonFace"),
   "CollationId": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
   "CollectionCategory": functionTemplates.singleElement,
   "CollectionIcon": functionTemplates.singleAsset(),
@@ -491,7 +490,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "ExpireEffect": singleEffect,
   "Face": {
     merge: singleElement,
-    preParse: parsers.join(
+    preParse: conditionalParsers.conditionallyParseElement(
       conditionalParsers.outerElementHasName('TooltipAppender'),
       parsers.defaultPreParser,
       functionTemplates.mergeElement("CButton").preParse
@@ -605,9 +604,9 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
       elementFormatters.defaultElementFormatter
     ),
     formatArray: arrayFormatters.conditionallyFormatArray(
-      arrayFormatters.elementsAreObjects,
+      arrayFormatters.allHaveAttribute('index'),
       arrayFormatters.reduceToSingleObject(),
-      arrayFormatters.defaultArrayFormatter,
+      arrayFormatters.lastValue
     )
   },
   "KindArray": {
@@ -888,7 +887,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "SplashHistory": functionTemplates.singleElement,
   "SortName": functionTemplates.localeText(),
   "Source": functionTemplates.singleElement,
-  "SourceButtonFace": functionTemplates.mergeElement("CButton"),
+  "SourceButtonFace": functionTemplates.singleElement,
   "SourceEffect": functionTemplates.singleElement,
   "StackBonus": functionTemplates.numberValue(),
   "Start": functionTemplates.removeFromOutput,
