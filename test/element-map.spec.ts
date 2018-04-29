@@ -4,6 +4,26 @@ import { ELEMENT_ATTRIBUTE_KEY } from "../src/element"
 import { buildElementMap, addCatalogToElementMap } from "../src/element-map"
 
 describe("addCatalogToElementMap", function() {
+  it("should convert element ids to lowercase in the element map", function() {
+    const catalog = {
+      CHero: [
+        { [ELEMENT_ATTRIBUTE_KEY]: { id: 'Thing' } },
+      ],
+      CTalent: [
+        { [ELEMENT_ATTRIBUTE_KEY]: { id: 'AnotherThing' } },
+      ]
+    }
+
+    const elementMap = new Map()
+    addCatalogToElementMap(catalog, elementMap)
+
+    const heroes = elementMap.get("CHero")
+    expect(heroes).to.have.keys('thing')
+
+    const talents = elementMap.get("CTalent")
+    expect(talents).to.have.keys('anotherthing')
+  })
+
   it("should add each element in the catalog to the element map, based on element name and id", function() {
     const catalog = {
       CHero: [
@@ -34,7 +54,7 @@ describe("addCatalogToElementMap", function() {
   it("should add elements without an id under the '' key", function() {
     const catalog = {
       CHero: [
-        { [ELEMENT_ATTRIBUTE_KEY]: { id: '' } },
+        { [ELEMENT_ATTRIBUTE_KEY]: {} },
       ],
     }
 

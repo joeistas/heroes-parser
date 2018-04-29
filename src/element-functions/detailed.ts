@@ -1,4 +1,4 @@
-import { ELEMENT_ATTRIBUTE_KEY, ElementFunctions, getElementAttributes, buildElement, getElement, joinElements } from "../element"
+import { ElementFunctions, getElement } from "../element"
 import { ParseData } from "../parse-data"
 import * as parsers from "../parsers"
 import * as addParsers from "../parsers/add-parsers"
@@ -23,6 +23,11 @@ const WEAPON_TYPE_FILTER = elementNameFilters.startsWith("CWeapon")
 const ITEM_TYPE_FILTER = elementNameFilters.startsWith("CItem")
 const ACCUMULATOR_TYPE_FILTER = elementNameFilters.startsWith("CAccumulator")
 
+const singleEffect = {
+  ...functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  merge: singleElement,
+}
+
 export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "default": {
     merge: defaultMerge,
@@ -32,15 +37,26 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     formatArray: arrayFormatters.defaultArrayFormatter,
   },
   "Abil": {
+    merge: singleElement,
     preParse: parsers.join(
       parsers.defaultPreParser,
       conditionalParsers.conditionallyParseElement(
-        conditionalParsers.outerElementHasName('HeroAbilArray'),
+        conditionalParsers.outerElementHasName(
+          elementNameFilters.inList(
+            'HeroAbilArray',
+            'CItemAbil',
+            'CUnit'
+          )
+        ),
         functionTemplates.mergeElement(ABIL_TYPE_FILTER).preParse
-      )
-    )
+      ),
+    ),
+    formatKey: "ability"
   },
-  "AbilArray": functionTemplates.valueFromAttributeIfOnlyKey("link"),
+  "AbilArray": {
+    ...functionTemplates.valueFromAttributeIfOnlyKey("link"),
+    formatKey: "abilities",
+  },
   "AbilClass": {
     ...functionTemplates.singleElement,
     formatElement: elementFormatters.join(
@@ -125,6 +141,8 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "ArmorModification": {
     formatArray: arrayFormatters.reduceToSingleObject(),
   },
+  "AtMaxEvents": functionTemplates.valueFromAttributeIfOnlyKey('eventId'),
+  "AtMinEvents": functionTemplates.valueFromAttributeIfOnlyKey('eventId'),
   "AttackTargetPriority": functionTemplates.numberValue(),
   "AttributeFactor": {
     formatKey: 'factors'
@@ -142,6 +160,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "BehaviorArray": {
     ...functionTemplates.mergeElement(BEHAVIOR_TYPE_FILTER),
     ...functionTemplates.valueFromAttributeIfOnlyKey("link"),
+    formatKey: "behaviors"
   },
   "BehaviorCategories": {
     ...functionTemplates.flags(),
@@ -159,6 +178,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "CAccumulatorTimed": functionTemplates.addAttribute('accumulator', 'timed'),
   "CanBeSuppressed": functionTemplates.flags(),
   "CancelableArray": functionTemplates.flags(),
+  "CancelEffect": singleEffect,
   "CardLayouts": functionTemplates.removeFromOutput,
   "CargoSize": functionTemplates.numberValue(),
   "CaseArray": {
@@ -172,7 +192,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     formatKey: "default",
   },
   "CastIntroTime": functionTemplates.numberValue(),
-  "CastOutroTimeEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "CastOutroTimeEffect": singleEffect,
   "Catalog": functionTemplates.singleElement,
   "CatalogModifications": {
     formatKey: 'modifications',
@@ -239,6 +259,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     )
   },
   "CompareValue": functionTemplates.numberValue(),
+  "Complexity": functionTemplates.numberValue(),
   "ConjoinedFlags": functionTemplates.flags(true),
   "ContainsHeroic": {
     formatElement: elementFormatters.join(
@@ -248,10 +269,10 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     ),
   },
   "ContextUnit": functionTemplates.removeIfValue("Unknown"),
-  "Cooldown": {
-    formatArray: arrayFormatters.reduceToSingleObject(),
-  },
+  "Cooldown": functionTemplates.numberValue(),
   "CooldownLink": functionTemplates.singleElement,
+  "CooldownFraction": functionTemplates.numberValue(),
+  "CooldownOperation": functionTemplates.singleElement,
   "Copy": functionTemplates.booleanValue(),
   "Cost": {
     formatArray: arrayFormatters.reduceToSingleObject(),
@@ -260,7 +281,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "CountMax": functionTemplates.numberValue(),
   "CountStart": functionTemplates.numberValue(),
   "CountUse": functionTemplates.numberValue(),
-  "CountEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "CountEffect": singleEffect,
   "CreateFlags": functionTemplates.flags(),
   "CRequirementAnd": functionTemplates.addAttribute('operator', "and"),
   "CRequirementCountAbil": functionTemplates.addAttribute('operator', "countAbility"),
@@ -366,6 +387,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     ),
   },
   "CValidatorUnitWeaponCanTargetUnit": functionTemplates.addAttribute('canTarget', true),
+  "Damage": functionTemplates.numberValue(),
   "DamageDealtAdditiveMultiplier": functionTemplates.valuesToSingleObjectOfNumbers(),
   "DamageDealtFraction": functionTemplates.valuesToSingleObjectOfNumbers(),
   "DamageDealtScaled": functionTemplates.valuesToSingleObjectOfNumbers(),
@@ -381,7 +403,8 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "DeathRevealType": functionTemplates.removeFromOutput,
   "DeathTime": functionTemplates.numberValue(),
   "DeathType": functionTemplates.removeIfValue("Unknown"),
-  "DeathUnloadEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "DeathUnloadEffect": singleEffect,
+  "DecreaseEvents": functionTemplates.valueFromAttributeIfOnlyKey('eventId'),
   "DefaultAcquireLevel": functionTemplates.removeFromOutput,
   "DefaultError": functionTemplates.removeFromOutput,
   "Delay": functionTemplates.numberValue(),
@@ -403,7 +426,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     formatKey: "disableValidators"
   },
   "DisplayDuration": functionTemplates.flags(),
-  "DisplayEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "DisplayEffect": singleEffect,
   "DisplayModel": functionTemplates.removeFromOutput,
   "Distance": functionTemplates.numberValue(),
   "DistanceMax": functionTemplates.numberValue(),
@@ -421,6 +444,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "EditorFlags": functionTemplates.removeFromOutput,
   "Effect": {
     ...functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+    merge: singleElement,
     formatKey: keyFormatters.join(
       keyFormatters.defaultKeyFormatter,
       keyFormatters.pluralizeKey
@@ -464,9 +488,14 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "ExecuteUnitAutoQueueId": functionTemplates.removeFromOutput,
   "Exhausted": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
   "ExpireDelay": functionTemplates.numberValue(),
-  "ExpireEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "ExpireEffect": singleEffect,
   "Face": {
-    ...functionTemplates.mergeElement("CButton"),
+    merge: singleElement,
+    preParse: parsers.join(
+      conditionalParsers.outerElementHasName('TooltipAppender'),
+      parsers.defaultPreParser,
+      functionTemplates.mergeElement("CButton").preParse
+    ),
     formatKey: "button",
   },
   "FacingLocation": functionTemplates.removeIfValue("Unknown"),
@@ -502,7 +531,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
       arrayFormatters.defaultArrayFormatter,
     )
   },
-  "FinalEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "FinalEffect": singleEffect,
   "Find": functionTemplates.booleanValue(),
   "Flags": functionTemplates.flags(true),
   "FlagArray": functionTemplates.flags(true),
@@ -513,31 +542,39 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "Fraction": functionTemplates.singleElement,
   "Gender": functionTemplates.singleElement,
   "Grown": functionTemplates.removeFromOutput,
-  "Handled": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "Handled": singleEffect,
   "HasShield": functionTemplates.booleanValue(),
   "HealDealtAdditiveMultiplier": functionTemplates.valuesToSingleObjectOfNumbers(),
   "Height": functionTemplates.numberValue(),
+  "HeroAbilArray": {
+    formatKey: "abilities",
+  },
   "HeroArray": functionTemplates.mergeElement("CHero"),
   "HeroPlaystyleFlags": functionTemplates.flags(),
   "HeroSelectCutsceneFile": functionTemplates.removeFromOutput,
+  "HeroTierAchievementId": functionTemplates.removeFromOutput,
   "HomeScreenCutsceneFile": functionTemplates.removeFromOutput,
   "HitMask": functionTemplates.flags(),
-  "HitsChangedEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "HitsChangedEffect": singleEffect,
   "Hotkey": functionTemplates.removeFromOutput,
   "HotkeyAlias": functionTemplates.removeFromOutput,
   "HyperlinkId": functionTemplates.removeFromOutput,
   "Icon": functionTemplates.singleAsset(),
   "IgnoreRange": functionTemplates.numberValue(),
   "ImageFacing": functionTemplates.singleElement,
-  "ImpactEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "ImpactEffect": singleEffect,
   "ImpactFilters": functionTemplates.flags(),
+  "IncreaseEvents": functionTemplates.valueFromAttributeIfOnlyKey('eventId'),
+  "IndexArray": functionTemplates.removeFromOutput,
   "InfoFlags": functionTemplates.flags(true),
   "InfoIcon": functionTemplates.singleAsset(),
   "InfoText": functionTemplates.localeText(),
   "InfoTooltipPriority": functionTemplates.numberValue(),
   "InGameUnitStatusCutsceneFile": functionTemplates.removeFromOutput,
+  "Init": functionTemplates.numberValue(),
   "InitialEffect": {
     ...functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+    merge: singleElement,
     formatKey: keyFormatters.join(
       keyFormatters.defaultKeyFormatter,
       keyFormatters.pluralizeKey
@@ -548,7 +585,12 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "InnerRadiusSafetyMultiplier": functionTemplates.numberValue(),
   "InterruptArray": functionTemplates.flags(),
   "InterruptCost": functionTemplates.singleElement,
-  "Item": functionTemplates.mergeElement(ITEM_TYPE_FILTER),
+  "Item": functionTemplates.mergeElement(
+    elementNameFilters.join(
+      ITEM_TYPE_FILTER,
+      elementNameFilters.inList('CUnit')
+    )
+  ),
   "KillCredit": functionTemplates.removeIfValue("Unknown"),
   "KillCreditUnit": functionTemplates.removeIfValue("Unknown"),
   "KillXPBonus": functionTemplates.numberValue(),
@@ -580,8 +622,8 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "Kinetic": functionTemplates.mergeElement(KINETIC_TYPE_FILTER),
   "LateralAcceleration": functionTemplates.numberValue(),
   "Launch": functionTemplates.removeFromOutput,
-  "LaunchEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
-  "LauncMissileEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "LaunchEffect": singleEffect,
+  "LauncMissileEffect": singleEffect,
   "LayoutButtons": functionTemplates.removeFromOutput,
   "LeaderAlias": functionTemplates.removeFromOutput,
   "LeaderboardImage": functionTemplates.singleAsset(),
@@ -601,16 +643,20 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     preParse: parsers.join(
       parsers.defaultPreParser,
       conditionalParsers.conditionallyParseElement(
-        conditionalParsers.outerElementHasName('Weapon'),
+        conditionalParsers.outerElementHasName('WeaponArray'),
         functionTemplates.mergeElement(WEAPON_TYPE_FILTER).preParse
       ),
       conditionalParsers.conditionallyParseElement(
         conditionalParsers.outerElementHasName('NodeArray'),
-        functionTemplates.mergeElement(WEAPON_TYPE_FILTER).preParse
+        functionTemplates.mergeElement(REQUIREMENT_TYPE_FILTER).preParse
+      ),
+      conditionalParsers.conditionallyParseElement(
+        conditionalParsers.outerElementHasName('BehaviorArray'),
+        functionTemplates.mergeElement(BEHAVIOR_TYPE_FILTER).preParse
       )
     )
   },
-  "LoadCargoEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "LoadCargoEffect": singleEffect,
   "LoadingScreenImage": functionTemplates.singleAsset(),
   "LoadTransportBehavior": functionTemplates.mergeElement(BEHAVIOR_TYPE_FILTER),
   "Location": functionTemplates.singleElement,
@@ -639,7 +685,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "MinimumRange": functionTemplates.numberValue(),
   "MinPatrolDistance": functionTemplates.numberValue(),
   "MinScanRange": functionTemplates.numberValue(),
-  "MinStackCountDisplayed": functionTemplates.singleElement,
+  "MinStackCountDisplayed": functionTemplates.numberValue(),
   "MinVeterancyXP": functionTemplates.numberValue(),
   "Missing": functionTemplates.booleanValue(),
   "Model": functionTemplates.removeFromOutput,
@@ -647,39 +693,17 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "ModelMacroRun": functionTemplates.removeFromOutput,
   "Modification": functionTemplates.singleElement,
   "ModificationType": functionTemplates.singleElement,
-  // "Modifications": {
-  //   preParse: (element: any, outerElement: any, parseData: ParseData) => {
-  //     if(!element["Catalog"] || element["Catalog"].length === 0) {
-  //       return element
-  //     }
-  //
-  //     const catalog = getElementAttributes(element["Catalog"][0])["value"]
-  //     const entry = getElementAttributes(element["Entry"][0])["value"]
-  //
-  //     if(["Effect", "Unit", "Behavior"].includes(catalog)) {
-  //       element[catalog] = [
-  //         {
-  //           [ELEMENT_ATTRIBUTE_KEY]: { value: entry }
-  //         }
-  //       ]
-  //     }
-  //
-  //     return element
-  //   },
-  //   formatElement: elementFormatters.join(
-  //     elementFormatters.conditionallyFormatElement(
-  //       elementFormatters.some(
-  //         elementFormatters.attributeHasValue("Actor", "catalog"),
-  //         elementFormatters.attributeHasValue("Model", "catalog"),
-  //         elementFormatters.attributeHasValue("Sound", "catalog"),
-  //         elementFormatters.attributeHasValue("Game", "catalog"),
-  //       ),
-  //       elementFormatters.removeFromOutput
-  //     ),
-  //     elementFormatters.removeKeyFromElement("catalog"),
-  //     elementFormatters.removeKeyFromElement("entry"),
-  //   )
-  // },
+  "Modifications": {
+    formatElement: elementFormatters.conditionallyFormatElement(
+      elementFormatters.some(
+        elementFormatters.attributeHasValue("Actor", "catalog"),
+        elementFormatters.attributeHasValue("Model", "catalog"),
+        elementFormatters.attributeHasValue("Sound", "catalog"),
+        elementFormatters.attributeHasValue("Game", "catalog"),
+      ),
+      elementFormatters.removeFromOutput
+    ),
+  },
   "ModifyFlags": functionTemplates.flags(true),
   "ModifyFraction": functionTemplates.numberValue(),
   "ModifyLimit": functionTemplates.numberValue(),
@@ -716,7 +740,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "PauseableArray": functionTemplates.flags(),
   "Period": functionTemplates.numberValue(),
   "PeriodCount": functionTemplates.numberValue(),
-  "PeriodicEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "PeriodicEffect": singleEffect,
   "PeriodicEffectArray": {
     ...functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
     formatKey: keyFormatters.join(
@@ -739,7 +763,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "Player": functionTemplates.removeIfValue('Unknown'),
   "Portrait": functionTemplates.singleAsset(),
   "PreemptableArray": functionTemplates.flags(),
-  "PrepEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "PrepEffect": singleEffect,
   "PreswingBeforeAttack": functionTemplates.numberValue(),
   "PreswingBetweenAttacks": functionTemplates.numberValue(),
   "PreviewCutsceneFile": functionTemplates.removeFromOutput,
@@ -766,7 +790,25 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "RechargeVital": functionTemplates.singleElement,
   "RechargeVitalRate": functionTemplates.numberValue(),
   "RechargeVitalFraction": functionTemplates.numberValue(),
-  "RefreshEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "Reference": {
+    merge: singleElement,
+    formatElement: elementFormatters.join(
+      (formattedElement: any, element: any): any => {
+        const [ catalog, entry, field ] = formattedElement.value.split(',')
+        delete formattedElement.value
+        return Object.assign(formattedElement, {
+          catalog,
+          entry,
+          field,
+        })
+      },
+      elementFormatters.conditionallyFormatElement(
+        elementFormatters.attributeHasValue('Actor', 'catalog'),
+        elementFormatters.removeFromOutput
+      )
+    ),
+  },
+  "RefreshEffect": singleEffect,
   "RefundArray": functionTemplates.flags(),
   "RefundFraction": functionTemplates.singleElement,
   "Relationship": {
@@ -789,6 +831,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     formatKey: "removeValidators"
   },
   "ReplacementArray": functionTemplates.removeFromOutput,
+  "RequireAccess": functionTemplates.booleanValue(),
   "RequireCaster": functionTemplates.removeIfValue("Unknown"),
   "RequireCasterUnit": functionTemplates.removeIfValue("Unknown"),
   "Requirements": functionTemplates.mergeElement(REQUIREMENT_TYPE_FILTER),
@@ -860,6 +903,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "SucceedIfUnitLacksBehavior": functionTemplates.booleanValue(),
   "SupportedFilters": functionTemplates.filters(),
   "SuppressFloatersCausedByBehavior": functionTemplates.booleanValue(),
+  "Survivability": functionTemplates.numberValue(),
   "TacticalAIFilters": functionTemplates.filters(),
   "Talent": functionTemplates.mergeElement("CTalent"),
   "TalentAIBuildsArray": {
@@ -881,7 +925,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "TargetType": functionTemplates.removeFromOutput,
   "TauntDoesntStopUnit": functionTemplates.flags(),
   "TauntDuration": functionTemplates.valuesToSingleObjectOfNumbers(),
-  "TeleportEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "TeleportEffect": singleEffect,
   "TeleportFlags": functionTemplates.flags(true),
   "TeleportResetRange": functionTemplates.numberValue(),
   "Text": functionTemplates.localeText(),
@@ -893,7 +937,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "TimeUse": functionTemplates.numberValue(),
   "Tip": functionTemplates.localeText(),
   "Title": functionTemplates.localeText(),
-  "TokenId": functionTemplates.mergeElement("CBehaviorTokenCounter"),
+  "TokenId": functionTemplates.singleElementWithReplacement(),
   "Tooltip": functionTemplates.localeText(),
   "TooltipAddendum": functionTemplates.localeText(),
   "TooltipFlags": functionTemplates.flags(),
@@ -925,13 +969,14 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "UnitDamageType": functionTemplates.singleElement,
   "Universe": functionTemplates.singleElement,
   "UniverseIcon": functionTemplates.singleAsset(),
-  "UnloadCargoEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "UnloadCargoEffect": singleEffect,
   "UnloadPeriod": functionTemplates.numberValue(),
   "UpdateAttackSpeedEachFrame": functionTemplates.booleanValue(),
   "UseHotkeyLabel": functionTemplates.removeFromOutput,
   "UseMarkerArray": functionTemplates.flags(),
   "UseSharedList": functionTemplates.booleanValue(),
   "UsesLineDash": functionTemplates.booleanValue(),
+  "Utility": functionTemplates.numberValue(),
   "ValidatedArray": functionTemplates.flags(),
   "Validator": functionTemplates.mergeElement(VALIDATOR_TYPE_FILTER),
   "ValidatorArray": functionTemplates.mergeElement(VALIDATOR_TYPE_FILTER),
@@ -944,6 +989,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     ),
   },
   "VariationIcon": functionTemplates.singleAsset(),
+  "VertextArray": functionTemplates.removeFromOutput,
   "Visibility": functionTemplates.singleElement,
   "Vital": functionTemplates.valuesToSingleObject(),
   "VitalArray": {
@@ -970,7 +1016,13 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     ),
   },
   "Weapon": functionTemplates.mergeElement(WEAPON_TYPE_FILTER),
-  "WhichEffect": functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+  "WeaponDisableArray": {
+    ...functionTemplates.numberValue(),
+    formatKey: "disableWeapons",
+  },
+  "WeaponRange": functionTemplates.numberValue(),
+  "WeaponScanBonus": functionTemplates.numberValue(),
+  "WhichEffect": singleEffect,
   "WhichLocation": functionTemplates.singleElement,
   "WhichPlayer": functionTemplates.singleElement,
   "WhichUnit": functionTemplates.removeIfValue("Unknown"),

@@ -27,7 +27,7 @@ export function getAtPath(object: any, path: string): any {
   for(const part of parts) {
     object = object[part]
     if(object === null || object === undefined) {
-      return object
+      return null
     }
   }
 

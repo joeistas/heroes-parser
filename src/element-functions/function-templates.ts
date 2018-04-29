@@ -71,8 +71,9 @@ export function removeIfValue(attributeValue: string, attribute: string = "value
   return {
     ...singleElement,
     formatElement: elementFormatters.conditionallyFormatElement(
-      elementFormatters.attributeHasValue(attributeValue),
-      elementFormatters.removeFromOutput
+      elementFormatters.attributeHasValue(attributeValue, attribute),
+      elementFormatters.removeFromOutput,
+      elementFormatters.defaultElementFormatter
     )
   }
 }
@@ -121,12 +122,6 @@ export function localeText(attribute: string = 'value'): ElementFunctions {
       textParsers.attributeValueReplacement(attribute),
       textParsers.replaceWithLocaleText(attribute)
     ),
-  }
-}
-
-export function localeTextRemoveIfEmpty(attribute: string = 'value'): ElementFunctions {
-  return {
-    ...localeText(attribute),
     formatElement: elementFormatters.join(
       elementFormatters.defaultElementFormatter,
       elementFormatters.removeIfEmptyObject,

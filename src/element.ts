@@ -63,7 +63,7 @@ export function getElement(elementId: string, elementName: string, elementMap: E
     return []
   }
 
-  return elements.get(elementId) || []
+  return elements.get(elementId.toLowerCase()) || []
 }
 
 export function findElementNameForId(elementNames: string[], elementId: string, elementMap: ElementMap): string {

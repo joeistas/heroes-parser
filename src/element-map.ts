@@ -1,4 +1,4 @@
-import { ELEMENT_ATTRIBUTE_KEY } from "./element"
+import { ELEMENT_ATTRIBUTE_KEY, getElementId } from "./element"
 
 export type ElementTypeMap = Map<string, any[]>
 export type ElementMap = Map<string, ElementTypeMap>
@@ -22,20 +22,15 @@ export function addCatalogToElementMap(catalog: any, elementMap: ElementMap): vo
     }
 
     for(const element of catalog[elementName]) {
-      if(!element.$) {
+      if(!element[ELEMENT_ATTRIBUTE_KEY]) {
         continue
       }
 
-      const name = element.$.id ? element.$.id : ''
-
-      if(!elementTypeMap.has(name)) {
-        elementTypeMap.set(name, [])
-      }
-
-      const elements = elementTypeMap.get(name) || []
+      const id = (getElementId(element) || '').toLowerCase()
+      const elements = elementTypeMap.get(id) || []
       elements.push(element)
 
-      elementTypeMap.set(name, elements)
+      elementTypeMap.set(id, elements)
     }
   }
 }

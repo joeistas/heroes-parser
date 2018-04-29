@@ -94,7 +94,7 @@ export function valueToBoolean(trueValue: string = '1', falseValue: string = '0'
 }
 
 export function valueToNumber(formattedElement: any, element: any): any {
-  const value = parseInt(formattedElement)
+  const value = parseFloat(formattedElement)
 
   return Number.isNaN(value) ? formattedElement : value
 }

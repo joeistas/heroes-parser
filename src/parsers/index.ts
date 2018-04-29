@@ -20,6 +20,7 @@ export type ElementParser = (element: any, outerElement: any, parseData: ParseDa
 export type ParseContext = { [attribute: string]: string }
 
 export const defaultPreParser = attributesToInnerElements(/^[A-Z]/)
+
 export function join(...processors: ElementParser[]) {
   return (element: any, outerElement: any, parseData: ParseData, context: ParseContext): any => {
     return processors.reduce((e, processor) => processor(e, outerElement, parseData, context), element)
@@ -27,13 +28,14 @@ export function join(...processors: ElementParser[]) {
 }
 
 function hasIdBeenSeen(element: any, idsSeen: Set<string>) {
-  return idsSeen.has(getElementId(element))
+  return idsSeen.has(`${ getElementName(element) }::${ getElementId(element)}`)
 }
 
 function addSeenId(element: any, idsSeen: Set<string>) {
   const elementId = getElementId(element)
-  if(elementId) {
-    idsSeen.add(elementId)
+  const elementName = getElementName(element)
+  if(elementId && elementName) {
+    idsSeen.add(`${ elementName }::${ elementId }`)
   }
 }
 

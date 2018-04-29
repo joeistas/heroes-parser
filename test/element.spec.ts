@@ -88,6 +88,11 @@ describe("getElement", function() {
     expect(elements).to.have.lengthOf(2)
   })
 
+  it("should convert the elementId to lowercase", function() {
+    const elements = getElement('Test', 'CHero', elementMap)
+    expect(elements).to.have.lengthOf(2)
+  })
+
   it("should return an empty array if the 'elementName' does not exist in the elementMap", function(){
     const elements = getElement('test', 'testElement', elementMap)
     expect(elements).to.have.lengthOf(0)

@@ -37,7 +37,7 @@ export function replaceWithLocaleText(attribute: string = 'value'): ElementParse
     }
 
     const localeText = parseData.text.get(elementAttributes[attribute])
-    let textObject = {}
+    let textObject: any = {}
     if(localeText) {
       textObject = [ ...localeText.entries() ].reduce((reduced: any, [key, value]) => {
         reduced[key] = value
@@ -45,7 +45,8 @@ export function replaceWithLocaleText(attribute: string = 'value'): ElementParse
       }, {})
     }
 
-    elementAttributes[attribute] = textObject
+    const keys = Object.keys(textObject)
+    elementAttributes[attribute] = keys.length === 1 ? textObject[keys[0]] : textObject
     return element
   }
 }

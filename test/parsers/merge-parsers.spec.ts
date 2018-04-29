@@ -17,7 +17,7 @@ describe("mergeElement", function() {
           'Hero',
           new Map([
             [
-              'Muradin',
+              'muradin',
               [
                 {
                   [ELEMENT_ATTRIBUTE_KEY]: {
@@ -28,7 +28,7 @@ describe("mergeElement", function() {
               ]
             ],
             [
-              'LiMing',
+              'liming',
               [
                 {
                   [ELEMENT_ATTRIBUTE_KEY]: {
@@ -44,7 +44,7 @@ describe("mergeElement", function() {
           'Skin',
           new Map([
             [
-              'MuradinUltimate',
+              'muradinultimate',
               [
                 {
                   [ELEMENT_ATTRIBUTE_KEY]: {
@@ -201,7 +201,7 @@ describe("mergeElementFromInnerElementValue", function() {
           'Skin',
           new Map([
             [
-              'MuradinUltimate',
+              'muradinultimate',
               [
                 {
                   [ELEMENT_ATTRIBUTE_KEY]: {

@@ -19,5 +19,5 @@ it("startsWith returns element names in the ElementMap that start with 'startsWi
 })
 
 it("inList returns 'list'", function() {
-  expect(inList([ 'first', 'next' ])({} as any)).to.eql([ 'first', 'next' ])
+  expect(inList('first', 'next')({} as any)).to.eql([ 'first', 'next' ])
 })
