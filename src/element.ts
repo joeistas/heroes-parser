@@ -53,6 +53,10 @@ export function getElementName(element: any) {
   return element[ELEMENT_NAME_KEY]
 }
 
+export function isCatalogElement(elementName: string): boolean {
+  return /^C[A-Z]/.test(elementName)
+}
+
 export function getInnerElementKeys(element: any): string[] {
   return Object.keys(element).filter(key => ![ELEMENT_ATTRIBUTE_KEY, ELEMENT_NAME_KEY].includes(key))
 }
@@ -89,14 +93,34 @@ export function copyElement(element: any): any {
   return copy
 }
 
+export function findParentName(elementName: string, parseData: ParseData): string {
+  let parentClassName = ""
+  for(const key of parseData.elements.keys()) {
+    if(elementName !== key && elementName.startsWith(key) && key.length > parentClassName.length) {
+      parentClassName = key
+    }
+  }
+
+  return parentClassName
+}
+
 export function mergeWithParent(element: any, elementName: string, parseData: ParseData) {
+  if(!getElementId(element) && !isCatalogElement(elementName)) {
+    return element
+  }
+
+  let parentName = elementName
   if(!getElementId(element)) {
+    parentName = findParentName(elementName, parseData)
+  }
+
+  if(!parentName) {
     return element
   }
 
   const parentId = getElementAttributes(element).parent || ''
-  let parent = joinElements(getElement(parentId, elementName, parseData.elements))
-  parent = mergeWithParent(parent, elementName, parseData)
+  let parent = joinElements(getElement(parentId, parentName, parseData.elements))
+  parent = mergeWithParent(parent, parentName, parseData)
 
   return mergeElements(parent, element, parseData, ATTRIBUTE_BLACKLIST.concat('parent'))
 }

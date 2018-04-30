@@ -4,16 +4,19 @@ import { spy } from 'sinon'
 import {
   ELEMENT_ATTRIBUTE_KEY,
   ELEMENT_NAME_KEY,
+  buildElement,
   getElementFunction,
   getElementAttributes,
   getElementId,
   getElementName,
+  isCatalogElement,
   getElement,
   findElementNameForId,
   copyElement,
   mergeAttributes,
   mergeElements,
   joinElements,
+  findParentName,
   mergeWithParent,
   reduceElements,
 } from '../src/element'
@@ -73,6 +76,20 @@ describe("getElementId", function() {
 it("getElementName should return the value in $elementName", function() {
   const element = { [ELEMENT_NAME_KEY]: 'thing' }
   expect(getElementName(element)).to.equal('thing')
+})
+
+describe("isCatalogElement", function() {
+  it("should return true if the element name starts with a 'C' and another capitalized letter", function() {
+    expect(isCatalogElement('CTalent')).to.be.true
+  })
+
+  it("should return false if the element does not start with a 'C'", function() {
+    expect(isCatalogElement('Abil')).to.be.false
+  })
+
+  it("should reutrn false if the element starts with a 'C' but the next character is not capitalized", function() {
+    expect(isCatalogElement('Catagory')).to.be.false
+  })
 })
 
 describe("getElement", function() {
@@ -145,6 +162,36 @@ describe("copyElement", function() {
 
   it("should set the element's name", function() {
     expect(copyElement(element)).to.have.property(ELEMENT_NAME_KEY).that.is.eql('testName')
+  })
+})
+
+describe("findParentName", function() {
+  it("should return an empty string if no parent name can be found", function() {
+    const elements = new Map([
+      ['CAbil', ''],
+      ['CAbilEffectInstant', ''],
+    ])
+
+    expect(findParentName('CTalent', { elements } as any)).to.equal("")
+  })
+
+  it("should not return elementName as the parentName", function() {
+    const elements = new Map([
+      ['CAbilEffectInstant', ''],
+    ])
+
+    expect(findParentName('CAbilEffectInstant', { elements } as any)).to.equal("")
+  })
+
+  it("should return the longest element name that 'elementName' starts with", function() {
+    const elements = new Map([
+      ['CAbil', ''],
+      ['CAbilEffectInstant', ''],
+      ['CAbilEffect', ''],
+      ['CAbilEff', ''],
+    ])
+
+    expect(findParentName('CAbilEffectInstant', { elements } as any)).to.equal("CAbilEffect")
   })
 })
 
@@ -231,6 +278,60 @@ describe("mergeWithParent", function() {
       [ELEMENT_NAME_KEY]: 'hero',
       testElement: [ {},  {} ],
     })
+  })
+
+  it("should merge with a parent class if the element does not have an id", function() {
+    const elements = new Map([
+      [
+        'CAbilEffectInstant',
+        new Map([
+          ['', [ buildElement('CAbilEffectInstant', { test: 'value' }) ]]
+        ])
+      ],
+      [
+        'CAbilEffect',
+        new Map([
+          ['', [ buildElement('CAbilEffect', { thing: 'anotherValue' }) ]]
+        ])
+      ],
+    ])
+
+    const element = buildElement('CAbilEffectInstant', { test: 'value' })
+
+    const result = mergeWithParent(element, 'CAbilEffectInstant', { elements } as any)
+    expect(result).to.eql(buildElement('CAbilEffectInstant', { test: 'value', thing: 'anotherValue' }))
+  })
+
+  it("should return the original element if the element does not have an id and there is no parent class", function() {
+    const elements = new Map([
+      [
+        'CAbilEffectInstant',
+        new Map([
+          ['', [ buildElement('CAbilEffectInstant', { test: 'value' }) ]]
+        ])
+      ],
+    ])
+
+    const element = buildElement('CAbilEffectInstant', { test: 'value' })
+
+    const result = mergeWithParent(element, 'CAbilEffectInstant', { elements } as any)
+    expect(result).to.equal(element)
+  })
+
+  it("should return the original element if the element does not have an id and is not a catalog class", function() {
+    const elements = new Map([
+      [
+        'A',
+        new Map([
+          ['', [ buildElement('A', { test: 'value' }) ]]
+        ])
+      ],
+    ])
+
+    const element = buildElement('Abil', { test: 'value' })
+
+    const result = mergeWithParent(element, 'Abil', { elements } as any)
+    expect(result).to.equal(element)
   })
 })
 
