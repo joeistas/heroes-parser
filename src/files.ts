@@ -7,7 +7,7 @@ import * as JSZip from 'jszip'
 
 import { getElementAttributes } from './element'
 import { ParseOptions } from './parse-options'
-import { LOGGER } from './logger'
+import { getLogger } from './logger'
 
 export const ASSET_FILENAME = 'asset-list.txt'
 
@@ -73,6 +73,7 @@ export async function saveJSON(elements: any[], buildNumber: number, options: Pa
     return
   }
 
+  const logger = getLogger()
   const elementName = formatElementName(options)
 
   const json = elements.map(element => {
@@ -85,12 +86,12 @@ export async function saveJSON(elements: any[], buildNumber: number, options: Pa
   if(options.archiveJSON) {
     const archiveName = buildArchiveName(`HOTS-${ elementName }-data`, buildNumber)
     const outputDir = outputPath(options)
-    LOGGER.info(`Saving json to archive ${ archiveName } at ${ outputDir }`)
+    logger.info(`Saving json to archive ${ archiveName } at ${ outputDir }`)
     await saveFilesToArchive(outputDir, archiveName, json)
   }
   else {
     const outputDir = buildNumber ? path.join(outputPath(options), buildNumber.toString()) : outputPath(options)
-    LOGGER.info(`Saving json files in directory ${ outputDir }`)
+    logger.info(`Saving json files in directory ${ outputDir }`)
     await saveFilesToDisk(outputDir, json)
   }
 }
@@ -100,15 +101,17 @@ export async function saveSourceFiles(fileData: [ string, string | Buffer ][], b
     return
   }
 
+  const logger = getLogger()
+
   if(options.archiveSourceFiles) {
     const archiveName = buildArchiveName('HOTS-source-data', buildNumber)
     const outputDir = outputPath(options)
-    LOGGER.info(`Saving source files to archive ${ archiveName } at ${ outputDir }`)
+    logger.info(`Saving source files to archive ${ archiveName } at ${ outputDir }`)
     await saveFilesToArchive(outputDir, archiveName, fileData)
   }
   else {
     const outputDir = buildNumber ? path.join(outputPath(options), buildNumber.toString()) : outputPath(options)
-    LOGGER.info(`Saving source files in directory ${ outputDir }`)
+    logger.info(`Saving source files in directory ${ outputDir }`)
     await saveFilesToDisk(outputDir, fileData)
   }
 }

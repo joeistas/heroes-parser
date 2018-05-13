@@ -228,7 +228,10 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "ChanceArray": functionTemplates.valuesToSingleObject(),
   "Change": functionTemplates.numberValue(),
   "ChangeFraction": functionTemplates.numberValue(),
-  "Charge": functionTemplates.singleElement,
+  "Charge": {
+    ...functionTemplates.singleElement,
+    formatElement: functionTemplates.numberValue().formatElement,
+  },
   "ChargeLink": functionTemplates.singleElement,
   "CItemAbil": functionTemplates.valueFromAttributeIfOnlyKey("abil"),
   "ClampMinimum": functionTemplates.numberValue(),
@@ -276,7 +279,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "Cost": {
     formatArray: arrayFormatters.reduceToSingleObject(),
   },
-  "Count": functionTemplates.booleanValue(),
+  "Count": functionTemplates.numberValue(),
   "CountMax": functionTemplates.numberValue(),
   "CountStart": functionTemplates.numberValue(),
   "CountUse": functionTemplates.numberValue(),
@@ -563,6 +566,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "ImageFacing": functionTemplates.singleElement,
   "ImpactEffect": singleEffect,
   "ImpactFilters": functionTemplates.flags(),
+  "ImpactLocation": functionTemplates.removeIfValue("Unknown"),
   "IncreaseEvents": functionTemplates.valueFromAttributeIfOnlyKey('eventId'),
   "IndexArray": functionTemplates.removeFromOutput,
   "InfoFlags": functionTemplates.flags(true),
@@ -731,6 +735,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "Origin": functionTemplates.removeIfValue("Unknown"),
   "OtherBehavior": functionTemplates.mergeElement(BEHAVIOR_TYPE_FILTER),
   "OtherLocation": functionTemplates.removeIfValue("Unknown"),
+  "OtherPlayer": functionTemplates.removeIfValue("Unknown"),
   "OtherUnit": functionTemplates.removeIfValue("Unknown"),
   "OverlapIndex": functionTemplates.singleElement,
   "ParentAbil": functionTemplates.singleElement,
@@ -886,6 +891,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "SpeedMultiplierCreep": functionTemplates.numberValue(),
   "SplashHistory": functionTemplates.singleElement,
   "SortName": functionTemplates.localeText(),
+  "SortIndex": functionTemplates.numberValue(),
   "Source": functionTemplates.singleElement,
   "SourceButtonFace": functionTemplates.singleElement,
   "SourceEffect": functionTemplates.singleElement,
@@ -912,6 +918,7 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "Target": functionTemplates.removeIfValue("Unknown"),
   "TargetCursorInfo": functionTemplates.removeFromOutput,
   "TargetFilters": {
+    merge: singleElement,
     formatElement: elementFormatters.join(
       elementFormatters.applyFormatterToAttribute("value", elementFormatters.parseFilterString),
       elementFormatters.defaultElementFormatter
@@ -965,6 +972,8 @@ export const DETAILED_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     )
   },
   "UninterruptibleArray": functionTemplates.flags(),
+  "UninterruptibleDelay": functionTemplates.numberValue(),
+  "UninterruptibleDuration": functionTemplates.numberValue(),
   "UnitDamageType": functionTemplates.singleElement,
   "Universe": functionTemplates.singleElement,
   "UniverseIcon": functionTemplates.singleAsset(),

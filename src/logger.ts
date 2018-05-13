@@ -8,28 +8,32 @@ export interface Logger {
   groupEnd: (level?: 'info' | 'debug') => void
 }
 
-export let LOGGER: Logger
+let LOGGER: Logger
 
-export function buildLogger(options: ParseOptions): Logger {
+export function buildLogger(logger: Logger = console, logLevel: string = 'info'): Logger {
   LOGGER = {
-    info: options.logLevel === 'none' ? () => null : options.console.info,
-    debug: options.logLevel !== 'debug' ? () => null : options.console.debug,
-    error: options.console.error,
+    info: logLevel === 'none' ? () => null : logger.info,
+    debug: logLevel !== 'debug' ? () => null : logger.debug,
+    error: logger.error,
     group: (level: string = 'debug'): void => {
-      if(options.logLevel === 'none' || (options.logLevel === 'info' && level === 'debug')) {
+      if(logLevel === 'none' || (logLevel === 'info' && level === 'debug')) {
         return
       }
 
-      options.console.group()
+      logger.group()
     },
     groupEnd: (level: string = 'debug'): void => {
-      if(options.logLevel === 'none' || (options.logLevel === 'info' && level === 'debug')) {
+      if(logLevel === 'none' || (logLevel === 'info' && level === 'debug')) {
         return
       }
 
-      options.console.groupEnd()
+      logger.groupEnd()
     },
   }
 
+  return LOGGER
+}
+
+export function getLogger(): Logger {
   return LOGGER
 }

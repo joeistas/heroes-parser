@@ -20,7 +20,7 @@ import { ParseOptions, buildParseOptions } from './parse-options'
 import { parseElement } from './parsers'
 import { AssetFindCache } from './parsers/asset-parsers'
 import { formatElement } from './formatters'
-import { LOGGER, buildLogger } from './logger'
+import { getLogger } from './logger'
 
 const XML_FILE_GLOB = [ "**", "*.xml" ]
 const TEXT_FILE_GLOB = [ "**", "*.txt" ]
@@ -61,12 +61,14 @@ export async function buildParseData(options: ParseOptions): Promise<ParseData> 
     sourceData = await loadFromDirectory(options)
   }
 
-  LOGGER.info("Building element map...")
+  const logger = getLogger()
+
+  logger.info("Building element map...")
   const elementMap = await fetchElements(sourceData.XML)
-  LOGGER.info("Element map built.")
-  LOGGER.info("Building text map...")
+  logger.info("Element map built.")
+  logger.info("Building text map...")
   const textMap = fetchText(sourceData.text)
-  LOGGER.info("Text map built.")
+  logger.info("Text map built.")
 
   return {
     functions: options.elementFunctions,
@@ -80,7 +82,8 @@ export async function buildParseData(options: ParseOptions): Promise<ParseData> 
 }
 
 async function loadFromDirectory(options: ParseOptions): Promise<SourceData> {
-  LOGGER.info(`Loading source files from directory ${ options.sourceDir }...`)
+  const logger = getLogger()
+  logger.info(`Loading source files from directory ${ options.sourceDir }...`)
   return {
     XML: await loadFiles(options.sourceDir, XML_FILE_GLOB),
     text: await loadFiles(options.sourceDir, TEXT_FILE_GLOB),
@@ -137,27 +140,30 @@ async function loadFromCASC(options: ParseOptions): Promise<SourceData> {
 }
 
 async function loadXMLFilesFromCASC(options: ParseOptions, storageHandle: any) {
-  LOGGER.info("Loading XML files from game storage...")
+  const logger = getLogger()
+  logger.info("Loading XML files from game storage...")
   const sourceXML = await findFiles(options.xmlSearchPatterns, storageHandle)
     .then(filePaths => readFiles(filePaths, storageHandle))
 
-  LOGGER.info("XML files loaded")
+  logger.info("XML files loaded")
   return sourceXML
 }
 
 async function loadTextFilesFromCASC(options: ParseOptions, storageHandle: any) {
-  LOGGER.info("Loading text files from game storage...")
+  const logger = getLogger()
+  logger.info("Loading text files from game storage...")
   const sourceText = await findFiles(options.textSearchPatterns, storageHandle)
     .then(filePaths => readFiles(filePaths, storageHandle))
-  LOGGER.info("Text files loaded")
+  logger.info("Text files loaded")
 
   return sourceText
 }
 
 function loadAssetFilePathsFromCASC(options: ParseOptions, storageHandle: any): Promise<string[]> {
-  LOGGER.info("Loading asset file list from game storage...")
+  const logger = getLogger()
+  logger.info("Loading asset file list from game storage...")
   const assets = findFiles(options.assetSearchPatterns, storageHandle)
-  LOGGER.info("Asset file list loaded.")
+  logger.info("Asset file list loaded.")
   return assets
 }
 

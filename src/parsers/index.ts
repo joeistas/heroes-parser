@@ -14,7 +14,7 @@ import {
 import { ParseData } from '../parse-data'
 import { ElementNameFilter } from './element-name-filters'
 import { attributesToInnerElements } from './add-parsers'
-import { LOGGER } from '../logger'
+import { getLogger } from '../logger'
 
 export type ElementParser = (element: any, outerElement: any, parseData: ParseData, context: ParseContext) => any
 export type ParseContext = { [attribute: string]: string }
@@ -68,12 +68,13 @@ export function parseElement(element: any, outerElement: any, elementName: strin
   if(hasIdBeenSeen(element, idsSeen)) {
     return element
   }
+  const logger = getLogger()
 
   elementName = getElementName(element) || elementName
   element = copyElement(element)
 
   const elementId = getElementId(element)
-  LOGGER.debug(`Preparsing elementName: ${ elementName } id: ${ elementId }`)
+  logger.debug(`Preparsing elementName: ${ elementName } id: ${ elementId }`)
 
   context = Object.assign({}, context, getElementAttributes(element))
   const parsedElement = preParseElement(element, outerElement, elementName, parseData, context)
@@ -82,10 +83,10 @@ export function parseElement(element: any, outerElement: any, elementName: strin
   elementName = getElementName(element)
   addSeenId(element, idsSeen)
 
-  LOGGER.debug(`Preparsing inner elements of elementName: ${ elementName } id: ${ elementId }`)
+  logger.debug(`Preparsing inner elements of elementName: ${ elementName } id: ${ elementId }`)
   context = Object.assign({}, context, getElementAttributes(element))
   element = parseInnerElements(element, outerElement, elementName, parseData, context, idsSeen)
 
-  LOGGER.debug(`Postparsing elementName: ${ elementName } id: ${ elementId }`)
+  logger.debug(`Postparsing elementName: ${ elementName } id: ${ elementId }`)
   return postParseElement(element, outerElement, elementName, parseData, context)
 }

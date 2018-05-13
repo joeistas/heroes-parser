@@ -14,7 +14,7 @@ export function filterKeysFromObject(object: any, keyFilters: string[]) {
 }
 
 export function stringIsNumber(value: string): boolean {
-  const n = parseInt(value)
+  const n = parseFloat(value)
   return !Number.isNaN(n) && value == n.toString()
 }
 

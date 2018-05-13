@@ -8,7 +8,7 @@ import {
 } from '../element'
 import { ParseData } from '../parse-data'
 import { defaultKeyFormatter } from './key-formatters'
-import { LOGGER } from '../logger'
+import { getLogger } from '../logger'
 
 export type ElementFormatter = (formattedElement: any, element: any) => any
 export type ElementKeyFormatter = (key: string) => string
@@ -18,17 +18,18 @@ export function formatElement(element: any, outerElement: any, parseData: ParseD
   const formattedElement: any = {}
   const elementName = getElementName(element)
   const elementId = getElementId(element)
+  const logger = getLogger()
 
-  LOGGER.debug(`Formatting elementName: ${ elementName } id: ${ elementId }`)
+  logger.debug(`Formatting elementName: ${ elementName } id: ${ elementId }`)
   formatAttributes(formattedElement, element)
 
-  LOGGER.debug(`Formatting inner elements of elementName: ${ elementName } id: ${ elementId }`)
+  logger.debug(`Formatting inner elements of elementName: ${ elementName } id: ${ elementId }`)
   for(const key of Object.keys(element)) {
     if([ ELEMENT_NAME_KEY, ELEMENT_ATTRIBUTE_KEY ].includes(key)) {
       continue
     }
 
-    LOGGER.debug(`Formatting key: ${ key }`)
+    logger.debug(`Formatting key: ${ key }`)
     const formatKeyFunction = getElementFunction(key, parseData.functions, 'formatKey')
     let formattedKey = key
     if(typeof formatKeyFunction === 'string') {
@@ -43,7 +44,7 @@ export function formatElement(element: any, outerElement: any, parseData: ParseD
       .filter((e: any) => !!e)
 
 
-    LOGGER.debug(`Formatting array for key: ${ key }`)
+    logger.debug(`Formatting array for key: ${ key }`)
     const formatArrayFunction = getElementFunction(key, parseData.functions, 'formatArray') as ElementArrayFormatter
     const formattedList = formatArrayFunction ? formatArrayFunction(innerElements) : innerElements
     if(formattedList === null) {
@@ -51,7 +52,7 @@ export function formatElement(element: any, outerElement: any, parseData: ParseD
     }
 
     if(formattedList.mergeOntoOuterElement) {
-      LOGGER.debug(`Merging values for ${ key } onto elementName: ${ elementName } id: ${ elementId }`)
+      logger.debug(`Merging values for ${ key } onto elementName: ${ elementName } id: ${ elementId }`)
       delete formattedList.mergeOntoOuterElement
       Object.assign(formattedElement, formattedList)
     }

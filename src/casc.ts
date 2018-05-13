@@ -1,10 +1,10 @@
 import * as casclib from 'casclib'
 
-export async function readFiles(files: string[], storageHandle: any): Promise<[ string, Buffer ][]> {
+export async function readFiles(files: string[], storageHandle: any, stripNull: boolean = true): Promise<[ string, Buffer ][]> {
   const fileData: [ string, Buffer ][] = []
   for(const filePath of files) {
     const data = await casclib.readFile(storageHandle, filePath)
-    fileData.push([ filePath, removeNullValuesFromBuffer(data) ])
+    fileData.push([ filePath, stripNull ? removeNullValuesFromBuffer(data) : data ])
   }
 
   return fileData

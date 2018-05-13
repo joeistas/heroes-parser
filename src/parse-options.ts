@@ -1,4 +1,4 @@
-import { Console } from 'console'
+import { Logger } from './logger'
 import { ElementFunctions } from './element'
 import { DETAILED_FUNCTIONS } from './element-functions/detailed'
 
@@ -19,7 +19,7 @@ export interface ParseOptions {
   archiveJSON: boolean
   outputPath?: string
   logLevel: 'none' | 'info' | 'debug'
-  console: Console
+  logger: Logger
 }
 
 export const DEFAULT_PARSE_OPTIONS: ParseOptions = {
@@ -48,7 +48,7 @@ export const DEFAULT_PARSE_OPTIONS: ParseOptions = {
   archiveJSON: true,
   saveJSON: false,
   logLevel: 'info',
-  console: console
+  logger: console
 }
 
 export function buildParseOptions(options: Partial<ParseOptions>): ParseOptions {

@@ -3,23 +3,23 @@ import { saveJSON } from './files'
 import { ParseOptions, buildParseOptions } from './parse-options'
 import { parseElement } from './parsers'
 import { formatElement } from './formatters'
-import { LOGGER, buildLogger } from './logger'
+import { buildLogger } from './logger'
 import { ParseData, buildParseData } from './parse-data'
 
 export async function parse(options: Partial<ParseOptions> = {}): Promise<any[]> {
   const parseOptions = buildParseOptions(options)
 
-  buildLogger(parseOptions)
+  const logger = buildLogger(parseOptions.logger, options.logLevel)
   let parseData: ParseData
   try {
     parseData = await buildParseData(parseOptions)
   }
   catch(error) {
-    LOGGER.error(error)
+    logger.error(error)
     return null
   }
 
-  LOGGER.info(`Building JSON for ${ parseOptions.rootElementName } ${ parseOptions.parseElementName } elements.`)
+  logger.info(`Building JSON for ${ parseOptions.rootElementName } ${ parseOptions.parseElementName } elements.`)
   let elementList: any[]
   if(parseOptions.parseElementName && parseOptions.parseElementName !== parseOptions.rootElementName) {
     const rootElement = mergeWithParent(
@@ -46,20 +46,20 @@ export async function parse(options: Partial<ParseOptions> = {}): Promise<any[]>
     const attributes = getElementAttributes(element)
     const name = attributes.id || attributes.value
     const elementName = parseOptions.parseElementName || parseOptions.rootElementName
-    LOGGER.info(`Building JSON for ${ name } ${ index + 1 }/${ elementCount }`)
-    LOGGER.group('info')
+    logger.info(`Building JSON for ${ name } ${ index + 1 }/${ elementCount }`)
+    logger.group('info')
 
-    LOGGER.info(`Parsing ${ name }`)
+    logger.info(`Parsing ${ name }`)
     element = parseElement(element, null, elementName, parseData)
 
-    LOGGER.info(`Formatting ${ name }`)
+    logger.info(`Formatting ${ name }`)
     processedElements.push(formatElement(element, null, parseData))
-    LOGGER.groupEnd('info')
+    logger.groupEnd('info')
   })
 
   saveJSON(processedElements, parseData.buildNumber, parseData.options)
 
-  LOGGER.info("Parsing Complete!")
+  logger.info("Parsing Complete!")
 
   return processedElements
 }

@@ -2,7 +2,6 @@ import {
   getElementName,
 } from '../element'
 import { ParseData } from '../parse-data'
-import { LOGGER } from '../logger'
 import { ElementParser, ParseContext } from './'
 import { ElementNameFilter } from './element-name-filters'
 import { getAtPath } from '../utils'
@@ -30,7 +29,7 @@ export function outerElementHasName(outerElementNameOrFilter: ElementNameFilter 
     if(typeof outerElementNameOrFilter === 'string') {
       return outerElementName === outerElementNameOrFilter
     }
-    
+
     const elementNames = outerElementNameOrFilter(parseData)
     return elementNames.includes(outerElementName)
   }
