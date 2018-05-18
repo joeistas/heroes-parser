@@ -22,8 +22,8 @@ import { AssetFindCache } from './parsers/asset-parsers'
 import { formatElement } from './formatters'
 import { getLogger } from './logger'
 
-const XML_FILE_GLOB = [ "**", "*.xml" ]
-const TEXT_FILE_GLOB = [ "**", "*.txt" ]
+export const XML_FILE_GLOB = [ "**", "*.xml" ]
+export const TEXT_FILE_GLOB = [ "**", "*.txt" ]
 
 export interface ParseData {
   buildNumber?: number
@@ -91,7 +91,7 @@ async function loadFromDirectory(options: ParseOptions): Promise<SourceData> {
   }
 }
 
-function loadFiles(dir: string, pattern: string[]): Promise<[ string, Buffer ][]> {
+export function loadFiles(dir: string, pattern: string[]): Promise<[ string, Buffer ][]> {
   return new Promise<string[]>((resolve, reject) => {
     const fileGlob = path.join(dir, ...pattern)
     glob(fileGlob, (error, fileNames) => {
@@ -139,7 +139,7 @@ async function loadFromCASC(options: ParseOptions): Promise<SourceData> {
   }
 }
 
-async function loadXMLFilesFromCASC(options: ParseOptions, storageHandle: any) {
+export async function loadXMLFilesFromCASC(options: ParseOptions, storageHandle: any) {
   const logger = getLogger()
   logger.info("Loading XML files from game storage...")
   const sourceXML = await findFiles(options.xmlSearchPatterns, storageHandle)
@@ -167,7 +167,7 @@ function loadAssetFilePathsFromCASC(options: ParseOptions, storageHandle: any): 
   return assets
 }
 
-function fetchElements(fileData: [string, Buffer][]): Promise<ElementMap> {
+export function fetchElements(fileData: [string, Buffer][]): Promise<ElementMap> {
   const fileText = fileData.map(([ fileName, buffer ]) => bufferToString(buffer))
 
   return Promise.all(fileText.map(xml2Json))
