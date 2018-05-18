@@ -132,7 +132,9 @@ describe("replaceWithLocaleText", function() {
 describe("parseTooltip", function() {
   beforeEach(function() {
     this.element = buildElement('tooltip', {
-      'value': "Beetles have <c val=\"#TooltipNumbers\"><d ref=\"Behavior,AnubarakResilientScarabsBeetleArmorBuffBehavior,ArmorModification.ArmorSet[Hero].ArmorMitigationTable[Ability]\"/></c> Spell Armor."
+      'value': {
+        "enus": "Beetles have <c val=\"#TooltipNumbers\"><d ref=\"Behavior,AnubarakResilientScarabsBeetleArmorBuffBehavior,ArmorModification.ArmorSet[Hero].ArmorMitigationTable[Ability]\"/></c> Spell Armor."
+      }
     })
   })
 
@@ -155,46 +157,50 @@ describe("parseTooltip", function() {
 
   it("should set the attribute to a TooltipData object", function() {
     const result = parseTooltip()(this.element, buildElement(), {} as ParseData, {} as ParseContext)
-    expect(result[ELEMENT_ATTRIBUTE_KEY].value).to.have.keys('text', 'formulas', 'references')
+    expect(result[ELEMENT_ATTRIBUTE_KEY].value.enus).to.have.keys('text', 'formulas', 'references')
   })
 
   describe("TooltipData", function() {
     beforeEach(function() {
       this.element = buildElement('tooltip', {
-        'value': "Increases the range of Symbiote's Spike Burst by <c val=\"#TooltipNumbers\"><d ref=\"(Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray[0].Modifications[0].Value/Effect,AbathurSymbioteSpikeBurstDamageSearch,AreaArray[0].Radius*100)\" player=\"0\"/>%</c> and decreases the cooldown by <c val=\"#TooltipNumbers\"><d ref=\"-Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray[0].Modifications[4].Value\" player=\"0\"/></c> second."
+        'value': {
+          "enus": "Increases the range of Symbiote's Spike Burst by <c val=\"#TooltipNumbers\"><d ref=\"(Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray[0].Modifications[0].Value/Effect,AbathurSymbioteSpikeBurstDamageSearch,AreaArray[0].Radius*100)\" player=\"0\"/>%</c> and decreases the cooldown by <c val=\"#TooltipNumbers\"><d ref=\"-Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray[0].Modifications[4].Value\" player=\"0\"/></c> second."
+        }
       })
     })
 
     describe("text", function() {
       it("should replace every 'c' element with the result of 'templateElement' function", function() {
         const result = parseTooltip()(this.element, buildElement(), {} as ParseData, {} as ParseContext)
-        const $ = cheerio.load(result[ELEMENT_ATTRIBUTE_KEY].value.text)
+        const $ = cheerio.load(result[ELEMENT_ATTRIBUTE_KEY].value.enus.text)
         expect($('span')).to.have.length(2)
       })
 
       it("should replace every 'd' element with the result of 'formulaElement' function", function() {
         const result = parseTooltip()(this.element, buildElement(), {} as ParseData, {} as ParseContext)
-        expect(result[ELEMENT_ATTRIBUTE_KEY].value.text).to.match(/{{ formula0 }}/)
-        expect(result[ELEMENT_ATTRIBUTE_KEY].value.text).to.match(/{{ formula1 }}/)
+        expect(result[ELEMENT_ATTRIBUTE_KEY].value.enus.text).to.match(/{{ formula0 }}/)
+        expect(result[ELEMENT_ATTRIBUTE_KEY].value.enus.text).to.match(/{{ formula1 }}/)
       })
     })
 
     describe("formulas", function() {
       beforeEach(function() {
         this.element = buildElement('tooltip', {
-          'value': "Increases the range of Symbiote's Spike Burst by <c val=\"#TooltipNumbers\"><d ref=\"(Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray[0].Modifications[0].Value/Effect,AbathurSymbioteSpikeBurstDamageSearch,AreaArray[0].Radius*100)\" player=\"0\"/>%</c> and decreases the cooldown by <c val=\"#TooltipNumbers\"><d ref=\"-Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray[0].Modifications[4].Value\" player=\"0\"/></c> second."
+          'value': {
+            "enus": "Increases the range of Symbiote's Spike Burst by <c val=\"#TooltipNumbers\"><d ref=\"(Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray[0].Modifications[0].Value/Effect,AbathurSymbioteSpikeBurstDamageSearch,AreaArray[0].Radius*100)\" player=\"0\"/>%</c> and decreases the cooldown by <c val=\"#TooltipNumbers\"><d ref=\"-Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray[0].Modifications[4].Value\" player=\"0\"/></c> second."
+          }
         })
       })
 
       it("should set a formula for every 'd' element in the tooltip text", function() {
         const result = parseTooltip()(this.element, buildElement(), {} as ParseData, {} as ParseContext)
-        const formulas = result[ELEMENT_ATTRIBUTE_KEY].value.formulas
+        const formulas = result[ELEMENT_ATTRIBUTE_KEY].value.enus.formulas
         expect(Object.keys(formulas)).to.have.length(2)
       })
 
       it("every formula value should be pulled from the 'd' element 'ref' attribute", function() {
         const result = parseTooltip()(this.element, buildElement(), {} as ParseData, {} as ParseContext)
-        const formulas = result[ELEMENT_ATTRIBUTE_KEY].value.formulas
+        const formulas = result[ELEMENT_ATTRIBUTE_KEY].value.enus.formulas
 
         expect(formulas.formula0).to.eql("(ref0/ref1*100)")
         expect(formulas.formula1).to.eql("-ref2")
@@ -202,7 +208,7 @@ describe("parseTooltip", function() {
 
       it("should replace each element reference with an unique variable name", function() {
         const result = parseTooltip()(this.element, buildElement(), {} as ParseData, {} as ParseContext)
-        const formulas = result[ELEMENT_ATTRIBUTE_KEY].value.formulas
+        const formulas = result[ELEMENT_ATTRIBUTE_KEY].value.enus.formulas
 
         expect(formulas.formula0).to.match(/ref0/)
         expect(formulas.formula0).to.match(/ref1/)
@@ -213,11 +219,13 @@ describe("parseTooltip", function() {
     describe("references", function() {
       beforeEach(function() {
         this.element = buildElement('tooltip', {
-          'value': "Increases the range of Symbiote's Spike Burst by <c val=\"#TooltipNumbers\"><d ref=\"(Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray[0].Modifications[0].Value/Effect,AbathurSymbioteSpikeBurstDamageSearch,AreaArray[0].Radius*100)\" player=\"0\"/>%</c> and decreases the cooldown by <c val=\"#TooltipNumbers\"><d ref=\"-Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray[0].Modifications[0].Value\" player=\"0\"/></c> second."
+          'value': {
+            "enus": "Increases the range of Symbiote's Spike Burst by <c val=\"#TooltipNumbers\"><d ref=\"(Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray[0].Modifications[0].Value/Effect,AbathurSymbioteSpikeBurstDamageSearch,AreaArray[0].Radius*100)\" player=\"0\"/>%</c> and decreases the cooldown by <c val=\"#TooltipNumbers\"><d ref=\"-Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray[0].Modifications[0].Value\" player=\"0\"/></c> second."
+          }
         })
 
         const result = parseTooltip()(this.element, buildElement(), {} as ParseData, {} as ParseContext)
-        this.references = result[ELEMENT_ATTRIBUTE_KEY].value.references
+        this.references = result[ELEMENT_ATTRIBUTE_KEY].value.enus.references
         this.ref0 = this.references.ref0
       })
 
@@ -263,9 +271,11 @@ describe("renderTooltip", function() {
   it("should call 'render'", function() {
     const element = buildElement('tooltip', {
       'value': {
-        text: "Increases the range of Symbiote's Spike Burst",
-        formulas: {},
-        references: {},
+        enus:  {
+          text: "Increases the range of Symbiote's Spike Burst",
+          formulas: {},
+          references: {},
+        }
       }
     })
 
@@ -279,16 +289,18 @@ describe("renderTooltip", function() {
   it("should replace each formula reference with the result of the formula", function() {
     const element = buildElement('tooltip', {
       'value': {
-        text: "Increases the range of Symbiote's Spike Burst by {{ formula0 }}",
-        formulas: {
-          formula0: "-30 * 20"
-        },
-        references: {},
+        enus: {
+          text: "Increases the range of Symbiote's Spike Burst by {{ formula0 }}",
+          formulas: {
+            formula0: "-30 * 20"
+          },
+          references: {},
+        }
       }
     })
 
     const result = renderTooltip()(element, buildElement(), {} as ParseData, {} as ParseContext)
-    const tooltip = result[ELEMENT_ATTRIBUTE_KEY].value
+    const tooltip = result[ELEMENT_ATTRIBUTE_KEY].value.enus
     expect(tooltip).to.eql("Increases the range of Symbiote's Spike Burst by -600")
   })
 
@@ -320,22 +332,24 @@ describe("renderTooltip", function() {
 
     const element = buildElement('tooltip', {
       'value': {
-        text: "Increases the range of Symbiote's Spike Burst by {{ formula0 }}",
-        formulas: {
-          formula0: "0 + ref0 * 2"
-        },
-        references: {
-          ref0: {
-            catalog: 'Effect',
-            entry: 'SymbioteRange',
-            field: 'Value'
-          }
-        },
+        enus: {
+          text: "Increases the range of Symbiote's Spike Burst by {{ formula0 }}",
+          formulas: {
+            formula0: "0 + ref0 * 2"
+          },
+          references: {
+            ref0: {
+              catalog: 'Effect',
+              entry: 'SymbioteRange',
+              field: 'Value'
+            }
+          },
+        }
       }
     })
 
     const result = renderTooltip()(element, buildElement(), { elements, functions } as any, {} as ParseContext)
-    const tooltip = result[ELEMENT_ATTRIBUTE_KEY].value
+    const tooltip = result[ELEMENT_ATTRIBUTE_KEY].value.enus
     expect(tooltip).to.eql("Increases the range of Symbiote's Spike Burst by 120")
   })
 })

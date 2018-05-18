@@ -69,7 +69,7 @@ export function replaceWithLocaleText(attribute: string = 'value'): ElementParse
     }
 
     const keys = Object.keys(textObject)
-    elementAttributes[attribute] = keys.length === 1 ? textObject[keys[0]] : textObject
+    elementAttributes[attribute] = textObject
     return element
   }
 }
@@ -85,31 +85,38 @@ export function parseTooltip(
       return element
     }
 
-    const $ = cheerio.load(elementAttributes[attribute])
-    const references = new Map()
-    const formulas: { [index: string]: string } = {}
+    const value = elementAttributes[attribute]
+    const parsedTooltips: { [locale: string]: TooltipData } = {}
 
-    $("d").each((index, element) => {
-      const formulaName = 'formula' + index
-      $(element).replaceWith(formulaElement(formulaName))
-      const formula = parseFormula($(element).attr('ref'), references)
-      formulas[formulaName] = formula
-    })
+    for(const locale of Object.keys(value)) {
+      const $ = cheerio.load(value[locale])
+      const references = new Map()
+      const formulas: { [index: string]: string } = {}
 
-    $("c").each((index, element) => {
-      $(element).replaceWith(templateElement($, element))
-    })
+      $("d").each((index, element) => {
+        const formulaName = 'formula' + index
+        $(element).replaceWith(formulaElement(formulaName))
+        const formula = parseFormula($(element).attr('ref'), references)
+        formulas[formulaName] = formula
+      })
 
-    elementAttributes[attribute] = {
-      text: $("body").html(),
-      formulas,
-      references: [ ...references.values() ].reduce((result, reference) => {
-        const variable = reference.variable
-        delete reference.variable
-        result[variable] = reference
-        return result
-      }, {})
+      $("c").each((index, element) => {
+        $(element).replaceWith(templateElement($, element))
+      })
+
+      parsedTooltips[locale] = {
+        text: $("body").html(),
+        formulas,
+        references: [ ...references.values() ].reduce((result, reference) => {
+          const variable = reference.variable
+          delete reference.variable
+          result[variable] = reference
+          return result
+        }, {})
+      }
     }
+
+    elementAttributes[attribute] = parsedTooltips
 
     return element
   }
@@ -125,19 +132,26 @@ export function renderTooltip(
       return element
     }
 
-    const tooltipData = elementAttributes[attribute] as TooltipData
-    const calculationContext = Object.entries(tooltipData.references).reduce((values, [ variableName, ref ]) => {
-      values[variableName] = getValueForReference(ref, parseData)
-      return values
-    }, {} as any)
+    const value = elementAttributes[attribute]
+    const renderedTooltips: { [locale: string]: string } = {}
 
-    const formulaResults: { [formulaName: string]: string } = {}
-    for(const [ formulaName, formula ] of Object.entries(tooltipData.formulas)) {
-      const evalText = `const result = ${ formula }; exports.result = result`
-      formulaResults[formulaName] = _eval(evalText, calculationContext).result
+    for(const locale of Object.keys(value)) {
+      const tooltipData = value[locale] as TooltipData
+      const calculationContext = Object.entries(tooltipData.references).reduce((values, [ variableName, ref ]) => {
+        values[variableName] = getValueForReference(ref, parseData)
+        return values
+      }, {} as any)
+
+      const formulaResults: { [formulaName: string]: string } = {}
+      for(const [ formulaName, formula ] of Object.entries(tooltipData.formulas)) {
+        const evalText = `const result = ${ formula }; exports.result = result`
+        formulaResults[formulaName] = _eval(evalText, calculationContext).result
+      }
+
+      renderedTooltips[locale] = render(tooltipData, formulaResults)
     }
-    console.log(formulaResults)
-    elementAttributes[attribute] = render(tooltipData, formulaResults)
+
+    elementAttributes[attribute] = renderedTooltips
 
     return element
   }
