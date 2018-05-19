@@ -1,6 +1,6 @@
 import { ElementMap } from './element-map'
 import { ParseData } from './parse-data'
-import { filterKeysFromObject } from './utils'
+import { filterKeysFromObject, stringIsNumber } from './utils'
 import { ElementParser } from './parsers'
 import { ElementMerger } from './merge'
 import { ElementKeyFormatter, ElementFormatter, ElementArrayFormatter } from './formatters'
@@ -166,4 +166,38 @@ export function mergeElements(parent: any, child: any, parseData: ParseData, att
     }
   }
   return mergedElement
+}
+
+export function getAtPath(element: any, path: string, parts: string[] = null): any {
+  if(element === null || element === undefined) {
+    return null
+  }
+
+  if(parts === null) {
+    parts = path.split('.') || [ path ]
+  }
+  const part = parts.shift()
+  let output = element[part]
+  if(output === undefined && Array.isArray(element) && !stringIsNumber(part)) {
+    output = element[0]
+    output = output === undefined ? null : output[part]
+  }
+
+  return parts.length > 0 ? getAtPath(output, path, parts) : getValueFromElement(output)
+}
+
+export function getValueFromElement(element: any): any {
+  if(element === null || element === undefined) {
+    return null
+  }
+
+  if(Array.isArray(element)) {
+    if(element.length === 0) {
+      return null
+    }
+
+    element = element[0]
+  }
+
+  return (typeof element === 'string' ? element : getElementAttributes(element).value)
 }

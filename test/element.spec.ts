@@ -19,6 +19,8 @@ import {
   findParentName,
   mergeWithParent,
   reduceElements,
+  getAtPath,
+  getValueFromElement,
 } from '../src/element'
 import { ElementMap } from '../src/element-map'
 
@@ -580,5 +582,84 @@ describe("joinElements", function() {
 
     const joined = joinElements(elements)
     expect(joined).to.have.property('testElement').with.length(1)
+  })
+})
+
+describe("getAtPath", function() {
+  before(function() {
+    this.element = {
+      ...buildElement(null, { value: '1' }),
+      Element: [
+        {
+          ...buildElement(null, { value: '2' }),
+          Element: [
+            buildElement(null, { value: '3' }),
+            buildElement(null, { value: '4' }),
+          ]
+        },
+        {
+          ...buildElement(null, { value: '5' }),
+          Element: [
+            buildElement(null, { value: '6' }),
+          ]
+        }
+      ]
+    }
+  })
+
+  it("should get the value for a single element path", function() {
+    const path = 'Element'
+    const value = getAtPath(this.element, path)
+    expect(value).to.equal('2')
+  })
+
+  it("should get the value for a multi-element path", function() {
+    const path = 'Element.0.Element'
+    const value = getAtPath(this.element, path)
+    expect(value).to.equal('3')
+  })
+
+  it("should default to the first element in an array if not in the path", function() {
+    const path = 'Element.Element'
+    const value = getAtPath(this.element, path)
+    expect(value).to.equal('3')
+  })
+
+  it("should get the element in array if a number is listed in the path", function() {
+    const path = 'Element.1.Element'
+    const value = getAtPath(this.element, path)
+    expect(value).to.equal('6')
+  })
+
+  it("should return null if the path does not exist", function() {
+    const path = 'Element.1.Thing.Another'
+    const value = getAtPath(this.element, path)
+    expect(value).to.be.null
+  })
+})
+
+describe("getValueFromElement", function() {
+  it("should return null if element is null", function() {
+    expect(getValueFromElement(null)).to.be.null
+  })
+
+  it("should return null if element is undefined", function() {
+    expect(getValueFromElement(undefined)).to.be.null
+  })
+
+  it("should return null if element is an empty array", function() {
+    expect(getValueFromElement([])).to.be.null
+  })
+
+  it("should return element if element is a string", function() {
+    expect(getValueFromElement('test')).to.equal('test')
+  })
+
+  it("should get value from the first element in element if element is an array", function() {
+    expect(getValueFromElement([ buildElement(null, { value: '30' }) ])).to.equal('30')
+  })
+
+  it("should get 'value' from attributes if element is an element", function() {
+    expect(getValueFromElement(buildElement(null, { value: '30' }))).to.equal('30')
   })
 })
