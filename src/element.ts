@@ -174,7 +174,7 @@ export function getAtPath(element: any, path: string, parts: string[] = null): a
   }
 
   if(parts === null) {
-    parts = path.split('.') || [ path ]
+    parts = path.split('.')
   }
   const part = parts.shift()
   let output = element[part]
