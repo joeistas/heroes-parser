@@ -2,13 +2,20 @@ import {
   ElementFormatter,
   ElementKeyFormatter,
 } from './'
+import { defaultKeyFormatter } from './key-formatters'
 import * as utils from '../utils'
 
 export type ElementConditional = (formattedElement: any, element: any) => boolean
 
-export const defaultElementFormatter = conditionallyFormatElement(
-  onlyHasKeys('value'),
-  valueFromAttribute('value')
+export const removeIfEmptyObject = conditionallyFormatElement(isEmpty, removeFromOutput)
+
+export const defaultElementFormatter = join(
+  formatAttributeWithKeyFormatter(defaultKeyFormatter),
+  conditionallyFormatElement(
+    onlyHasKeys('value'),
+    valueFromAttribute('value')
+  ),
+  removeIfEmptyObject
 )
 
 export function join(...formatters: ElementFormatter[]): ElementFormatter {
@@ -34,13 +41,42 @@ export function conditionallyFormatElement(
   }
 }
 
+export function not(conditional: ElementConditional): ElementConditional {
+  return (formattedElement: any, element: any): boolean => {
+    return !conditional(formattedElement, element)
+  }
+}
+
 export function isEmpty(formattedElement: any, element: any): boolean {
-  return Object.keys(formattedElement).length === 0
+  return formattedElement && typeof formattedElement === 'object' && Object.keys(formattedElement).length === 0
+}
+
+export function isAttributeEmpty(attribute: string = 'value') {
+  return (formattedElement: any, element: any): boolean => {
+    return Object.keys(formattedElement[attribute]).length === 0
+  }
 }
 
 export function attributeIsDefined(attribute = 'value'): ElementConditional {
   return (formattedElement: any, element: any): boolean => {
     return formattedElement[attribute] !== null && formattedElement[attribute] !== undefined
+  }
+}
+
+export function attributeIsNotDefined(attribute = 'value'): ElementConditional {
+  return not(attributeIsDefined(attribute))
+}
+
+export function hasKeys(...keys: string[]): ElementConditional {
+  return (formattedElement: any, element: any): boolean => {
+    const keySet = new Set(Object.keys(formattedElement))
+    return keys.every(key => keySet.has(key))
+  }
+}
+
+export function hasNumberOfKeys(length: number): ElementConditional {
+  return (formattedElement: any, element: any): boolean => {
+    return Object.keys(formattedElement).length === length
   }
 }
 
@@ -71,12 +107,26 @@ export function passThrough(formattedElement: any, element: any) {
   return formattedElement
 }
 
-export const removeIfEmptyObject = conditionallyFormatElement(isEmpty, removeFromOutput)
+export function selectAttributes(...attributes: string[]): ElementFormatter {
+  return (formattedElement: any, element: any): any => {
+    const attributeSet = new Set(attributes)
+    return Object.keys(formattedElement)
+      .filter(key => attributeSet.has(key))
+      .reduce((result: any, key: string) => {
+        result[key] = formattedElement[key]
+        return result
+      }, {})
+  }
+}
 
 export function valueFromAttribute(attribute: string = 'value'): ElementFormatter {
   return (formattedElement: any, element: any): string => {
     return formattedElement[attribute]
   }
+}
+
+export function valueFromFirstKey(formattedElement: any, element: any): string {
+  return formattedElement[Object.keys(formattedElement)[0]]
 }
 
 export function valueToBoolean(trueValue: string = '1', falseValue: string = '0'): ElementFormatter {

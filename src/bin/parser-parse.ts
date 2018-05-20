@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import { resolve } from 'path'
-
 import *  as program from 'commander'
-import { parse, DETAILED_FUNCTIONS, BASIC_FUNCTIONS, ParseOptions } from '../index'
+
+import { parse, BASE_FUNCTIONS, DETAILED_FUNCTIONS, BASIC_FUNCTIONS, ParseOptions } from '../index'
 
 program
   .description("Generate JSON from Heroes of the Storm data")
@@ -18,7 +18,7 @@ program
     "Friendly name for elements to parse. Sets root-element and parse-element [hero]",
     /^heroes|maps|mounts$/
   )
-  .option("-p <name>, --profile <name>", "Profile to use for parsing elements [basic]")
+  .option("--profile <name>", "Profile to use for parsing elements [basic]")
   .option("-s, --save-source-files", "Save source files (XML, txt, etc.) to out directory")
   .option("-S, --archive-source-files", "Bundle source files into a zip file")
   .option("-a, --archive-json", "Bundle JSON into a zip file")
@@ -97,9 +97,12 @@ switch(program.elements) {
 }
 
 switch(program.profile) {
+  case 'base':
+    options.elementFunctions = BASE_FUNCTIONS
+    break;
+
   case 'detailed':
     options.elementFunctions = DETAILED_FUNCTIONS
-    console.log('detailed')
     break;
 
   case 'skins':

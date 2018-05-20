@@ -29,11 +29,12 @@ export function singleElementWithReplacement(attribute: string = 'value'): Eleme
   }
 }
 
-export function valueFromAttributeIfOnlyKey(attribute: string = 'value'): ElementFunctions {
+export function valueFromAttributeIfOnlyHasKeys(attribute: string = 'value', ...keys: string[]): ElementFunctions {
   return {
     formatElement: elementFormatters.conditionallyFormatElement(
-      elementFormatters.onlyHasKeys(attribute),
-      elementFormatters.valueFromAttribute(attribute)
+      elementFormatters.onlyHasKeys(attribute, ...keys),
+      elementFormatters.valueFromAttribute(attribute),
+      elementFormatters.defaultElementFormatter
     )
   }
 }
@@ -61,9 +62,9 @@ export function numberValue(attribute: string = 'value'): ElementFunctions {
   return {
     merge: elementMergers.singleElement,
     formatElement: elementFormatters.join(
-      elementFormatters.attributeToNumber(attribute),
-      elementFormatters.defaultElementFormatter,
-    ),
+        elementFormatters.attributeToNumber(attribute),
+        elementFormatters.defaultElementFormatter,
+      )
   }
 }
 
@@ -124,7 +125,31 @@ export function localeText(attribute: string = 'value'): ElementFunctions {
     ),
     formatElement: elementFormatters.join(
       elementFormatters.defaultElementFormatter,
-      elementFormatters.removeIfEmptyObject,
+      elementFormatters.conditionallyFormatElement(
+        elementFormatters.hasNumberOfKeys(1),
+        elementFormatters.valueFromFirstKey,
+      )
+    ),
+  }
+}
+
+export function parseTooltip(attribute: string = 'value'): ElementFunctions {
+  return {
+    ...localeText(attribute),
+    preParse: parsers.join(
+      localeText(attribute).preParse,
+      textParsers.parseTooltip(attribute)
+    ),
+  }
+}
+
+export function renderTooltip(attribute: string = 'value'): ElementFunctions {
+  return {
+    ...localeText(attribute),
+    preParse: parsers.join(
+      localeText(attribute).preParse,
+      textParsers.parseTooltip(attribute),
+      textParsers.renderTooltip(attribute)
     ),
   }
 }
@@ -180,13 +205,24 @@ export function arrayOfNumberValues(attribute: string ='value'): ElementFunction
   }
 }
 
-export function filters(attribute: string = 'value'): ElementFunctions {
+export function filters(attribute: string = 'value', index: string = 'index'): ElementFunctions {
   return {
-    ...singleElement,
-    formatElement: elementFormatters.join(
-      elementFormatters.valueFromAttribute(attribute),
-      elementFormatters.parseFilterString,
+    formatElement: elementFormatters.conditionallyFormatElement(
+      elementFormatters.attributeIsDefined(index),
+      elementFormatters.join(
+        elementFormatters.formatAttributeWithKeyFormatter(keyFormatters.defaultKeyFormatter),
+        elementFormatters.attributeToBoolean(),
+      ),
+      elementFormatters.join(
+        elementFormatters.applyFormatterToAttribute(attribute, elementFormatters.parseFilterString),
+        elementFormatters.defaultElementFormatter
+      )
     ),
+    formatArray: arrayFormatters.conditionallyFormatArray(
+      arrayFormatters.elementsAreObjects,
+      arrayFormatters.reduceToSingleObject(),
+      arrayFormatters.defaultArrayFormatter,
+    )
   }
 }
 
@@ -196,6 +232,11 @@ export function mergeElement(elementNameOrFilter: ElementNameFilter | string, at
       parsers.defaultPreParser,
       textParsers.attributeValueReplacement(attribute),
       mergeParsers.mergeElement(elementNameOrFilter, attribute)
+    ),
+    formatElement: elementFormatters.conditionallyFormatElement(
+      elementFormatters.onlyHasKeys('value'),
+      elementFormatters.removeFromOutput,
+      elementFormatters.defaultElementFormatter
     )
   }
 }
