@@ -19,7 +19,8 @@ import {
   findParentName,
   mergeWithParent,
   reduceElements,
-  getAtPath,
+  getElementAtPath,
+  getValueAtPath,
   getValueFromElement,
 } from '../src/element'
 import { ElementMap } from '../src/element-map'
@@ -585,7 +586,7 @@ describe("joinElements", function() {
   })
 })
 
-describe("getAtPath", function() {
+describe("getElementAtPath", function() {
   before(function() {
     this.element = {
       ...buildElement(null, { value: '1' }),
@@ -609,31 +610,37 @@ describe("getAtPath", function() {
 
   it("should get the value for a single element path", function() {
     const path = 'Element'
-    const value = getAtPath(this.element, path)
-    expect(value).to.equal('2')
+    const value = getElementAtPath(this.element, path)
+    expect(value).to.eql(this.element.Element)
   })
 
   it("should get the value for a multi-element path", function() {
     const path = 'Element.0.Element'
-    const value = getAtPath(this.element, path)
-    expect(value).to.equal('3')
+    const value = getElementAtPath(this.element, path)
+    expect(value).to.eql(this.element.Element[0].Element)
   })
 
   it("should default to the first element in an array if not in the path", function() {
     const path = 'Element.Element'
-    const value = getAtPath(this.element, path)
-    expect(value).to.equal('3')
+    const value = getElementAtPath(this.element, path)
+    expect(value).to.eql(this.element.Element[0].Element)
   })
 
   it("should get the element in array if a number is listed in the path", function() {
     const path = 'Element.1.Element'
-    const value = getAtPath(this.element, path)
-    expect(value).to.equal('6')
+    const value = getElementAtPath(this.element, path)
+    expect(value).to.eql(this.element.Element[1].Element)
   })
 
   it("should return null if the path does not exist", function() {
     const path = 'Element.1.Thing.Another'
-    const value = getAtPath(this.element, path)
+    const value = getElementAtPath(this.element, path)
+    expect(value).to.be.null
+  })
+
+  it("should return null if array index does not exist", function() {
+    const path = 'Element.2'
+    const value = getElementAtPath(this.element, path)
     expect(value).to.be.null
   })
 })

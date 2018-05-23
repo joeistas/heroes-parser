@@ -2,6 +2,7 @@ import {
   ElementFormatter,
   ElementKeyFormatter,
 } from './'
+import { LEVEL_SCALING_ATTRIBUTE } from '../parsers/element-parsers'
 import { defaultKeyFormatter } from './key-formatters'
 import * as utils from '../utils'
 
@@ -11,6 +12,7 @@ export const removeIfEmptyObject = conditionallyFormatElement(isEmpty, removeFro
 
 export const defaultElementFormatter = join(
   formatAttributeWithKeyFormatter(defaultKeyFormatter),
+  attributeToNumber(LEVEL_SCALING_ATTRIBUTE),
   conditionallyFormatElement(
     onlyHasKeys('value'),
     valueFromAttribute('value')
@@ -227,9 +229,22 @@ export function parseFilterString(formattedElement: any, element: any) {
   return filters
 }
 
-export function removeKeyFromElement(key: string): ElementFormatter {
+export function removeAttributeFromElement(key: string): ElementFormatter {
   return (formattedElement: any, element: any): any => {
     delete formattedElement[key]
+    return formattedElement
+  }
+}
+
+export function combineAttributes(newAttribute: string, ...attributesToMerge: string[]) {
+  return (formattedElement: any, element: any): any => {
+    const combined = attributesToMerge.reduce((combined, attribute) => {
+      combined = combined.concat(formattedElement[attribute])
+      delete formattedElement[attribute]
+      return combined
+    }, [])
+
+    formattedElement[newAttribute] = combined.filter(e => e !== undefined)
     return formattedElement
   }
 }

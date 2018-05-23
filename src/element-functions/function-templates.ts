@@ -124,11 +124,14 @@ export function localeText(attribute: string = 'value'): ElementFunctions {
       textParsers.replaceWithLocaleText(attribute)
     ),
     formatElement: elementFormatters.join(
+      elementFormatters.applyFormatterToAttribute(
+        attribute,
+        elementFormatters.conditionallyFormatElement(
+          elementFormatters.hasNumberOfKeys(1),
+          elementFormatters.valueFromFirstKey,
+        )
+      ),
       elementFormatters.defaultElementFormatter,
-      elementFormatters.conditionallyFormatElement(
-        elementFormatters.hasNumberOfKeys(1),
-        elementFormatters.valueFromFirstKey,
-      )
     ),
   }
 }
@@ -158,6 +161,10 @@ export function localeTextToSingleObject(keyAttribute: string = 'index', valueAt
   return {
     ...localeText(valueAttribute),
     ...valuesToSingleObject(keyAttribute, valueAttribute),
+    formatElement: elementFormatters.join(
+      localeText(valueAttribute).formatElement,
+      valuesToSingleObject(keyAttribute, valueAttribute).formatElement
+    )
   }
 }
 

@@ -9,7 +9,7 @@ import {
   joinElements,
   mergeWithParent,
   getElement,
-  getAtPath,
+  getValueAtPath,
 } from './element'
 import { startsWith } from './parsers/element-name-filters'
 import { ParseData } from './parse-data'
@@ -101,7 +101,7 @@ export function parseTooltipLocaleText(
       return result
     }, {})
   }
-  
+
   return tooltipData
 }
 
@@ -208,7 +208,7 @@ export function parseVariable(variable: string, variables: Map<string, TooltipVa
 
 export function parseVariableReference(catalog: string, entry: string, field: string, parseData: ParseData): TooltipVariable {
   const element = getEntry(catalog, entry, parseData)
-  const accumulatorValue = getAtPath(element, field + '.AccumulatorArray')
+  const accumulatorValue = getValueAtPath(element, field + '.AccumulatorArray')
 
   let accumulator
   if(accumulatorValue) {
@@ -226,7 +226,7 @@ export function parseVariableToken(catalogField: string, entry: string, parseDat
   const [ catalog, ...fieldParts ] = parts
 
   const element = getEntry(catalog, entry, parseData)
-  const accumulatorValue = getAtPath(element, fieldParts.join('') + 'Accumulator')
+  const accumulatorValue = getValueAtPath(element, fieldParts.join('') + 'Accumulator')
   let accumulator
   if(accumulatorValue) {
     accumulator = getEntry('Accumulator', accumulatorValue, parseData)
@@ -256,7 +256,7 @@ function getVariableValues(element: any, accumulator: any): Partial<TooltipVaria
 }
 
 function getValue(element: any, field: string, defaultValue: number = 0): number {
-  let value = getAtPath(element, field)
+  let value = getValueAtPath(element, field)
   if(!value) {
     return defaultValue
   }
@@ -296,5 +296,5 @@ function getValueForReference(ref: TooltipReference, parseData: ParseData): any 
     return null
   }
 
-  return getAtPath(element, ref.field)
+  return getValueAtPath(element, ref.field)
 }

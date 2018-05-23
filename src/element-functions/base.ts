@@ -3,6 +3,7 @@ import { ParseData } from "../parse-data"
 import * as parsers from "../parsers"
 import * as addParsers from "../parsers/add-parsers"
 import * as assetParsers from "../parsers/asset-parsers"
+import * as elementParsers from "../parsers/element-parsers"
 import * as mergeParsers from "../parsers/merge-parsers"
 import * as textParsers from "../parsers/text-parsers"
 import * as conditionalParsers from '../parsers/conditional-parsers'
@@ -34,7 +35,7 @@ const singleEffect = {
 
 const returnEffectOrRemove = {
   formatElement: elementFormatters.join(
-    elementFormatters.removeKeyFromElement('value'),
+    elementFormatters.removeAttributeFromElement('value'),
     elementFormatters.conditionallyFormatElement(
       elementFormatters.onlyHasKeys('effect'),
       elementFormatters.valueFromAttribute('effect'),
@@ -101,7 +102,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     formatKey: "categories"
   },
   "AbilityModificationArray": {
-    ...functionTemplates.valueFromAttributeIfOnlyHasKeys('Modifications'),
+    ...functionTemplates.valueFromAttributeIfOnlyHasKeys('modifications'),
     formatKey: "modifications"
   },
   "AbilityStage": functionTemplates.singleElement,
@@ -112,6 +113,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "AbilSetId": functionTemplates.removeFromOutput,
   "Acceleration": functionTemplates.numberValue(),
   "AccelerationBonus": functionTemplates.numberValue(),
+  "Accumulator": functionTemplates.mergeElement(ACCUMULATOR_TYPE_FILTER),
   "AccumulatorArray": functionTemplates.mergeElement(ACCUMULATOR_TYPE_FILTER),
   "Activity": functionTemplates.removeFromOutput,
   "ActorKey": functionTemplates.removeFromOutput,
@@ -193,10 +195,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     ...functionTemplates.valueFromAttributeIfOnlyHasKeys("link"),
     formatKey: "behaviors"
   },
-  "BehaviorCategories": {
-    ...functionTemplates.flags(),
-    formatKey: "categories",
-  },
+  "BehaviorCategories": functionTemplates.flags(true),
   "BehaviorClass": functionTemplates.removeFromOutput,
   "BehaviorFlags": functionTemplates.flags(true),
   "BehaviorLink": functionTemplates.singleElementWithReplacement(),
@@ -239,6 +238,20 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "CBehaviorTrail": functionTemplates.removeFromOutput,
   "CBehaviorThreat": functionTemplates.removeFromOutput,
   "CBehaviorTimeStamp": functionTemplates.removeFromOutput,
+  "CValidatorUnitCompareBehaviorCount": {
+    ...functionTemplates.addAttribute("type", "compareBehaviorCount"),
+    formatElement: elementFormatters.join(
+      elementFormatters.conditionallyFormatElement(
+        elementFormatters.attributeIsDefined('value'),
+        elementFormatters.passThrough,
+        (formattedElement: any): any => {
+          formattedElement.value = 1
+          return formattedElement
+        }
+      ),
+      elementFormatters.defaultElementFormatter
+    )
+  },
   "CBehaviorUnitTracker": functionTemplates.removeFromOutput,
   "CBehaviorWander": functionTemplates.removeFromOutput,
   "CEffectAbortMissle": functionTemplates.addAttribute('effectType', 'abortMissle'),
@@ -250,6 +263,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "CEffectLaunchMissle": functionTemplates.addAttribute('effectType', 'launchMissle'),
   "CEffectLaunchMissleAdvanced": functionTemplates.addAttribute('effectType', 'launchMissle'),
   "CEffectModifyBehaviorBuffDuration": functionTemplates.addAttribute('effectType', 'modifyDuration'),
+  "CEffectModifyTokenCount": functionTemplates.addAttribute('effectType', 'modifyToken'),
   "CEffectRemoveBehavior": functionTemplates.addAttribute('effectType', 'removeBehavior'),
   "CEffectRemoveKinetic": functionTemplates.addAttribute('effectType', 'removeBehavior'),
   "CEffectSet": {
@@ -269,15 +283,38 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   },
   "ChargeLink": functionTemplates.singleElement,
   "CHero": {
-    formatElement: (formattedElement: any, element: any): any => {
-      if(formattedElement.levelScaling) {
-        for(const levelScaling of formattedElement.levelScaling) {
-          const ability = levelScaling.ability
+    postParse: elementParsers.levelScalingParser,
+    formatElement: elementFormatters.join(
+      elementFormatters.defaultElementFormatter,
+      elementFormatters.combineAttributes('units', 'unit', 'alternateUnit'),
+      (formattedElement: any, element: any): any => {
+        if(!formattedElement.talentTier || !formattedElement.talentTree) {
+          return formattedElement
         }
-      }
 
-      return formattedElement
-    }
+        const tierMap = formattedElement.talentTier.reduce((map: Map<number, number>, tier: any) => {
+          map.set(tier.tier, tier.level)
+          return map
+        }, new Map())
+
+        const talentTree: { [level: number]: any } = {}
+
+        formattedElement.talentTree.forEach((element: any) => {
+          const tier = tierMap.get(element.tier)
+          const talentTier = talentTree[tier] || []
+
+          talentTier[element.column - 1] = element.talent
+          talentTree[tier] = talentTier
+        })
+
+        delete formattedElement.talentTier
+        delete formattedElement.talentTree
+
+        formattedElement.talents = talentTree
+
+        return formattedElement
+      }
+    )
   },
   "CItemAbil": functionTemplates.valueFromAttributeIfOnlyHasKeys("abil"),
   "ClampMinimum": functionTemplates.numberValue(),
@@ -323,9 +360,6 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "CooldownFraction": functionTemplates.numberValue(),
   "CooldownOperation": functionTemplates.singleElement,
   "Copy": functionTemplates.booleanValue(),
-  "Cost": {
-    formatArray: arrayFormatters.reduceToSingleObject(),
-  },
   "Count": functionTemplates.numberValue(),
   "CountMax": functionTemplates.numberValue(),
   "CountStart": functionTemplates.numberValue(),
@@ -358,16 +392,6 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   },
   "CursorEffect": singleEffect,
   "CursorRangeMode": functionTemplates.singleElement,
-  "CValidatorIsUnitTracked": {
-    // formatElement: elementFormatters.join(
-    //   (formattedElement: any, element: any) => {
-    //     formattedElement.tracked = formattedElement.find
-    //     delete formattedElement.find
-    //     return formattedElement
-    //   },
-    //   elementFormatters.defaultElementFormatter
-    // )
-  },
   "CValidatorPlayerAI": functionTemplates.removeFromOutput,
   "CValidatorPlayerTalent": {
     formatElement: elementFormatters.join(
@@ -403,7 +427,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
       elementFormatters.defaultElementFormatter
     )
   },
-  "CValidatorUnitIsHero": functionTemplates.addAttribute('isHero', true),
+  "CValidatorUnitIsHero": functionTemplates.addAttribute('targetIsHero', true),
   "CValidatorUnitMover": {
     formatElement: elementFormatters.join(
       (formattedElement: any, element: any) => {
@@ -475,10 +499,11 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "DisableValidatorArray": {
     formatKey: "disableValidators"
   },
-  "DisplayDuration": functionTemplates.flags(),
   "DisplayAttackCount": functionTemplates.numberValue(),
+  "DisplayDuration": functionTemplates.flags(),
   "DisplayEffect": singleEffect,
   "DisplayModel": functionTemplates.removeFromOutput,
+  "DisplayPriority": functionTemplates.numberValue(),
   "Distance": functionTemplates.numberValue(),
   "DistanceMax": functionTemplates.numberValue(),
   "DistanceMin": functionTemplates.numberValue(),
@@ -544,7 +569,10 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "Face": {
     merge: singleElement,
     preParse: conditionalParsers.conditionallyParseElement(
-      conditionalParsers.outerElementHasName('TooltipAppender'),
+      conditionalParsers.outerElementHasName(elementNameFilters.join(
+        ITEM_TYPE_FILTER,
+        elementNameFilters.inList('CUnit', 'TooltipAppender')
+      )),
       parsers.defaultPreParser,
       functionTemplates.mergeElement("CButton").preParse
     ),
@@ -674,9 +702,6 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "LeechScoreArray": functionTemplates.removeFromOutput,
   "LegacyOptions": functionTemplates.flags(),
   "Level": functionTemplates.numberValue(),
-  "LevelScalingArray": {
-
-  },
   "LifeMax": functionTemplates.numberValue(),
   "LifeRegenMax": functionTemplates.numberValue(),
   "LifeRegenRate": functionTemplates.numberValue(),
@@ -832,6 +857,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "RangeSlop": functionTemplates.numberValue(),
   "Rarity": functionTemplates.singleElement,
   "Ratings": functionTemplates.singleElement,
+  "RankArray": functionTemplates.valueFromAttributeIfOnlyHasKeys('item'),
   "Ratio": functionTemplates.numberValue(),
   "RechargeVital": functionTemplates.singleElement,
   "RechargeVitalRate": {
@@ -843,6 +869,8 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     )
   },
   "RechargeVitalFraction": functionTemplates.numberValue(),
+  "RectangleHeight": functionTemplates.numberValue(),
+  "RectangleWidth": functionTemplates.numberValue(),
   "Reference": {
     merge: singleElement,
     formatElement: elementFormatters.join(

@@ -299,8 +299,8 @@ describe("parseFilterString", function() {
   })
 })
 
-it("removeKeyFromElement should remove the specified key from the returned object", function() {
+it("removeAttributeFromElement should remove the specified key from the returned object", function() {
   const formattedElement = { test: 'value', another: 'thing' }
 
-  expect(elementFormatters.removeKeyFromElement('another')(formattedElement, {})).to.eql({ test: 'value' })
+  expect(elementFormatters.removeAttributeFromElement('another')(formattedElement, {})).to.eql({ test: 'value' })
 })

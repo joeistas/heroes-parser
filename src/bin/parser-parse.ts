@@ -109,7 +109,6 @@ switch(program.profile) {
   case 'vo':
   case 'basic':
   default:
-    console.log('basic')
     options.elementFunctions = BASIC_FUNCTIONS
 }
 

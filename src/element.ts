@@ -168,7 +168,7 @@ export function mergeElements(parent: any, child: any, parseData: ParseData, att
   return mergedElement
 }
 
-export function getAtPath(element: any, path: string, parts: string[] = null): any {
+export function getElementAtPath(element: any, path: string, parts: string[] = null): any {
   if(element === null || element === undefined) {
     return null
   }
@@ -183,7 +183,19 @@ export function getAtPath(element: any, path: string, parts: string[] = null): a
     output = output === undefined ? null : output[part]
   }
 
-  return parts.length > 0 ? getAtPath(output, path, parts) : getValueFromElement(output)
+  if(output === undefined) {
+    return null
+  }
+
+  if(parts.length === 0) {
+    return output
+  }
+
+  return getElementAtPath(output, path, parts)
+}
+
+export function getValueAtPath(element: any, path: string): any {
+  return getValueFromElement(getElementAtPath(element, path))
 }
 
 export function getValueFromElement(element: any): any {

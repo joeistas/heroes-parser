@@ -17,7 +17,6 @@ import { BASE_FUNCTIONS } from './base'
 export const DETAILED_FUNCTIONS = {
   ...BASE_FUNCTIONS,
   "AbilityCategories": functionTemplates.removeFromOutput,
-  "AbilLinkDisableArray": functionTemplates.removeFromOutput,
   "AcquireFilters": functionTemplates.removeFromOutput,
   "AcquireLeashRadius": functionTemplates.removeFromOutput,
   "AcquirePlayer": functionTemplates.removeFromOutput,
@@ -41,7 +40,6 @@ export const DETAILED_FUNCTIONS = {
   "AutoCastAcquireLevel": functionTemplates.removeFromOutput,
   "AutoCastFilters": functionTemplates.removeFromOutput,
   "AutoQueueArray": functionTemplates.removeFromOutput,
-  "BehaviorCategories": functionTemplates.removeFromOutput,
   "BehaviorFlags": functionTemplates.removeFromOutput,
   "BehaviorLink": functionTemplates.removeFromOutput,
   "BehaviorLinkDisableArray": functionTemplates.removeFromOutput,
@@ -53,6 +51,7 @@ export const DETAILED_FUNCTIONS = {
   "CAccumulatorToken": {
     formatElement: (formattedElement: any, element: any): any => {
       const newElement: any = {
+        id: formattedElement.id,
         scale: formattedElement.scale,
         min: formattedElement.minAccumulation || 0,
         max: formattedElement.maxAccumulation,
@@ -67,6 +66,7 @@ export const DETAILED_FUNCTIONS = {
   "CAccumulatorVitals": {
     formatElement: (formattedElement: any, element: any): any => {
       const newElement: any = {
+        id: formattedElement.id,
         ratio: formattedElement.ratio,
         vital: formattedElement.vitalType,
         min: formattedElement.minAccumulation,
@@ -101,12 +101,18 @@ export const DETAILED_FUNCTIONS = {
   "CargoSize": functionTemplates.removeFromOutput,
   "CEffectAbortMissle": functionTemplates.removeFromOutput,
   "CEffectAddTrackedUnit": functionTemplates.removeFromOutput,
-  "CEffectApplyBehavior": functionTemplates.removeFromOutput,
   "CEffectApplyForce": functionTemplates.removeFromOutput,
   "CEffectApplyKinetic": functionTemplates.removeFromOutput,
   "CEffectApplyOffset": functionTemplates.removeFromOutput,
   "CEffectCancelOrder": functionTemplates.removeFromOutput,
   "CEffectClearTrackedUnits": functionTemplates.removeFromOutput,
+  "CEffectCreatePersistent": {
+    formatElement: elementFormatters.conditionallyFormatElement(
+      elementFormatters.onlyHasKeys('id', 'chance'),
+      elementFormatters.removeFromOutput,
+      elementFormatters.defaultElementFormatter
+    )
+  },
   "CEffectDestroyPersistent": functionTemplates.removeFromOutput,
   "CEffectEnumTrackedUnits": functionTemplates.removeFromOutput,
   "CEffectIssueOrder": functionTemplates.removeFromOutput,
@@ -137,7 +143,8 @@ export const DETAILED_FUNCTIONS = {
   "Cooldown": {
     ...functionTemplates.valueFromAttributeIfOnlyHasKeys('timeUse'),
     formatElement: elementFormatters.join(
-      elementFormatters.removeKeyFromElement('link'),
+      elementFormatters.attributeToNumber(),
+      elementFormatters.removeAttributeFromElement('link'),
       functionTemplates.valueFromAttributeIfOnlyHasKeys('timeUse').formatElement
     ),
   },
@@ -148,7 +155,8 @@ export const DETAILED_FUNCTIONS = {
   "CValidatorCombine": {
     formatElement: elementFormatters.conditionallyFormatElement(
       elementFormatters.attributeIsNotDefined('validators'),
-      elementFormatters.removeFromOutput
+      elementFormatters.removeFromOutput,
+      elementFormatters.defaultElementFormatter
     )
   },
   "CValidatorCondition": functionTemplates.removeFromOutput,
@@ -200,7 +208,6 @@ export const DETAILED_FUNCTIONS = {
   "CValidatorUnitInventoryContainsItem": functionTemplates.removeFromOutput,
   "CValidatorUnitType": functionTemplates.removeFromOutput,
   "CValidatorUnitFlying": functionTemplates.removeFromOutput,
-  "CValidatorUnitIsHero": functionTemplates.removeFromOutput,
   "CValidatorUnitLastDamagePlayer": functionTemplates.removeFromOutput,
   "CValidatorUnitKinetic": functionTemplates.removeFromOutput,
   "CValidatorUnitMissileNullified": functionTemplates.removeFromOutput,
@@ -254,7 +261,9 @@ export const DETAILED_FUNCTIONS = {
   "DeathTime": functionTemplates.removeFromOutput,
   "DisableValidatorArray": functionTemplates.removeFromOutput,
   "DisplayAttackCount": functionTemplates.removeFromOutput,
+  "DisplayDuration": functionTemplates.removeFromOutput,
   "DisplayEffect": functionTemplates.removeFromOutput,
+  "DisplayPriority": functionTemplates.removeFromOutput,
   "DurationBonusMax": functionTemplates.removeFromOutput,
   "DurationBonusMin": functionTemplates.removeFromOutput,
   "EffectHistoryLimit": functionTemplates.removeFromOutput,
@@ -287,6 +296,7 @@ export const DETAILED_FUNCTIONS = {
   "PartyFrameImage": functionTemplates.removeFromOutput,
   "PartyPanelButtonImage": functionTemplates.removeFromOutput,
   "PauseableArray": functionTemplates.removeFromOutput,
+  "Player": functionTemplates.removeFromOutput,
   "PreemptableArray": functionTemplates.removeFromOutput,
   "PushPriority": functionTemplates.removeFromOutput,
   "RangeSlop": functionTemplates.removeFromOutput,
@@ -307,6 +317,8 @@ export const DETAILED_FUNCTIONS = {
   "SharedFlags": functionTemplates.removeFromOutput,
   "ShowProgressArray": functionTemplates.removeFromOutput,
   "SkinArray": functionTemplates.removeFromOutput,
+  "SortIndex": functionTemplates.removeFromOutput,
+  "SourceButtonFace": functionTemplates.removeFromOutput,
   "SpawnOffset": functionTemplates.removeFromOutput,
   "SplashHistory": functionTemplates.removeFromOutput,
   "SmartValidatorArray": functionTemplates.removeFromOutput,
@@ -314,12 +326,13 @@ export const DETAILED_FUNCTIONS = {
   "SubgroupPriority": functionTemplates.removeFromOutput,
   "TacticalAIFilters": functionTemplates.removeFromOutput,
   "TalentAIBuildsArray": functionTemplates.removeFromOutput,
-  "TargetFilters": functionTemplates.removeFromOutput,
   "TargetMessage": functionTemplates.removeFromOutput,
   "TauntDuration": functionTemplates.removeFromOutput,
   "TauntDoesntStopUnit": functionTemplates.removeFromOutput,
   "TechPlayer": functionTemplates.removeFromOutput,
   "TeleportResetRange": functionTemplates.removeFromOutput,
+  "TooltipFlags": functionTemplates.removeFromOutput,
+  "TooltipVitalName": functionTemplates.removeFromOutput,
   "TrackingBehavior": functionTemplates.removeFromOutput,
   "TurningRate": functionTemplates.removeFromOutput,
   "TypeFallbackUnit": functionTemplates.removeFromOutput,
