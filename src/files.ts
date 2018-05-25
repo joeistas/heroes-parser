@@ -4,6 +4,7 @@ import { writeFile, readFile, createWriteStream } from 'fs'
 import * as mkdirp from 'mkdirp'
 import { parseString } from 'xml2js'
 import * as JSZip from 'jszip'
+import * as pluralize from 'pluralize'
 
 import { getElementAttributes } from './element'
 import { ParseOptions } from './parse-options'
@@ -68,64 +69,45 @@ export function saveFilesToArchive(outputDir: string, archiveName: string, fileD
   })
 }
 
-export async function saveJSON(elements: any[], buildNumber: number, options: ParseOptions) {
-  if(!options.saveJSON) {
-    return
-  }
-
-  const logger = getLogger()
-  const elementName = formatElementName(options)
-
-  const json = elements.map(element => {
+function elementsToJSON(elements: any[]): [ string, string ][] {
+  return elements.map(element => {
     return [
-      path.join(elementName, element.id + ".json"),
+      (element.name || element.id) + ".json",
       JSON.stringify(element, null, 4)
     ] as [ string, string ]
   })
-
-  if(options.archiveJSON) {
-    const archiveName = buildArchiveName(`HOTS-${ elementName }-data`, buildNumber)
-    const outputDir = outputPath(options)
-    logger.info(`Saving json to archive ${ archiveName } at ${ outputDir }`)
-    await saveFilesToArchive(outputDir, archiveName, json)
-  }
-  else {
-    const outputDir = buildNumber ? path.join(outputPath(options), buildNumber.toString()) : outputPath(options)
-    logger.info(`Saving json files in directory ${ outputDir }`)
-    await saveFilesToDisk(outputDir, json)
-  }
 }
 
-export async function saveSourceFiles(fileData: [ string, string | Buffer ][], buildNumber: number, options: ParseOptions) {
-  if(!options.saveSourceFiles) {
-    return
-  }
-
+export async function saveJSON(elements: any[], outputPath: string) {
   const logger = getLogger()
+  const json = elementsToJSON(elements)
 
-  if(options.archiveSourceFiles) {
-    const archiveName = buildArchiveName('HOTS-source-data', buildNumber)
-    const outputDir = outputPath(options)
-    logger.info(`Saving source files to archive ${ archiveName } at ${ outputDir }`)
-    await saveFilesToArchive(outputDir, archiveName, fileData)
-  }
-  else {
-    const outputDir = buildNumber ? path.join(outputPath(options), buildNumber.toString()) : outputPath(options)
-    logger.info(`Saving source files in directory ${ outputDir }`)
-    await saveFilesToDisk(outputDir, fileData)
-  }
+  logger.info(`Saving json files in directory ${ path.resolve(outputPath) }`)
+  await saveFilesToDisk(outputPath, json)
+}
+
+export async function saveJSONArchive(elements: any[], outputPath: string, archiveName: string) {
+  const logger = getLogger()
+  const json = elementsToJSON(elements)
+
+  logger.info(`Saving json to archive ${ archiveName } at ${ path.resolve(outputPath) }`)
+  await saveFilesToArchive(outputPath, archiveName, json)
+}
+
+export async function saveSourceFiles(fileData: [ string, string | Buffer ][], outputPath: string) {
+  const logger = getLogger()
+  logger.info(`Saving source files in directory ${ path.resolve(outputPath) }`)
+  await saveFilesToDisk(outputPath, fileData)
+}
+
+export async function saveSourceArchive(fileData: [ string, string | Buffer ][], outputPath: string, archiveName: string) {
+  const logger = getLogger()
+  logger.info(`Saving source files to archive ${ archiveName } at ${ path.resolve(outputPath) }`)
+  await saveFilesToArchive(outputPath, archiveName, fileData)
 }
 
 export function buildAssetListFileData(assetList: string[]): [ string, string ] {
   return [ ASSET_FILENAME, assetList.join(EOL) ]
-}
-
-function outputPath(options: ParseOptions): string {
-  return options.outputPath || process.cwd()
-}
-
-function buildArchiveName(name: string, buildNumber: number) {
-  return buildNumber ? `${ name }-${ buildNumber }.zip` : `${ name }.zip`
 }
 
 export function xml2Json(fileXml: string): Promise<any> {
@@ -140,9 +122,9 @@ export function xml2Json(fileXml: string): Promise<any> {
   })
 }
 
-function formatElementName(options: ParseOptions) {
+export function formatElementName(options: ParseOptions) {
   let elementName = options.parseElementName || options.rootElementName
   elementName = elementName.startsWith('C') ? elementName.substring(1) : elementName
   elementName = elementName.replace('Array', '')
-  return elementName.split(/(?=[A-Z])/g).join('-').toLowerCase()
+  return pluralize(elementName.split(/(?=[A-Z])/g).join('-').toLowerCase())
 }

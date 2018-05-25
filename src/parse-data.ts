@@ -35,32 +35,14 @@ export interface ParseData {
   options: ParseOptions
 }
 
-interface SourceData {
+export interface SourceData {
   XML: [ string, Buffer ][]
   text: [ string, Buffer ][]
   assets: string[]
   buildNumber?: number
 }
 
-export async function buildParseData(options: ParseOptions): Promise<ParseData> {
-  let sourceData: SourceData
-  if(options.sourceCASCStorage) {
-    sourceData = await loadFromCASC(options)
-
-    await saveSourceFiles(
-      [
-        ...sourceData.XML,
-        ...sourceData.text,
-        buildAssetListFileData(sourceData.assets),
-      ],
-      sourceData.buildNumber,
-      options
-    )
-  }
-  else {
-    sourceData = await loadFromDirectory(options)
-  }
-
+export async function buildParseData(sourceData: SourceData, options: ParseOptions): Promise<ParseData> {
   const logger = getLogger()
 
   logger.info("Building element map...")
@@ -78,6 +60,15 @@ export async function buildParseData(options: ParseOptions): Promise<ParseData> 
     buildNumber: sourceData.buildNumber,
     assets: sourceData.assets,
     options,
+  }
+}
+
+export async function loadSourceData(options: ParseOptions): Promise<SourceData> {
+  if(options.sourceCASCStorage) {
+    return loadFromCASC(options)
+  }
+  else {
+    return loadFromDirectory(options)
   }
 }
 

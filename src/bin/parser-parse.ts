@@ -1,9 +1,39 @@
 #!/usr/bin/env node
 
-import { resolve } from 'path'
+import { resolve, join } from 'path'
 import *  as program from 'commander'
 
-import { parse, BASE_FUNCTIONS, DETAILED_FUNCTIONS, BASIC_FUNCTIONS, ParseOptions } from '../index'
+import {
+  ParseData,
+  BASE_FUNCTIONS,
+  DETAILED_FUNCTIONS,
+  BASIC_FUNCTIONS,
+  ParseOptions,
+  buildParseOptions,
+  buildParseData,
+  loadSourceData,
+  buildLogger,
+  initialElements,
+  parseElements,
+} from '../index'
+import {
+  saveJSON,
+  saveJSONArchive,
+  saveSourceFiles,
+  saveSourceArchive,
+  buildAssetListFileData,
+  formatElementName,
+} from '../files'
+
+interface ParseCommandOptions extends ParseOptions {
+  saveSourceFiles: boolean
+  saveJSON: boolean
+  archiveSourceFiles: boolean
+  archiveJSON: boolean
+  outputPath: string
+  profileName: string
+  buildNumber: number,
+}
 
 program
   .description("Generate JSON from Heroes of the Storm data")
@@ -33,8 +63,9 @@ if(args.length === 0) {
   process.exit(1)
 }
 
-const options: Partial<ParseOptions> = {
+const options: Partial<ParseCommandOptions> = {
   sourceDir: args[0],
+  outputPath: process.cwd(),
   sourceCASCStorage: true,
   saveSourceFiles: false,
   archiveSourceFiles: false,
@@ -98,10 +129,12 @@ switch(program.elements) {
 
 switch(program.profile) {
   case 'base':
+    options.profileName = 'base'
     options.elementFunctions = BASE_FUNCTIONS
     break;
 
   case 'detailed':
+    options.profileName = 'detailed'
     options.elementFunctions = DETAILED_FUNCTIONS
     break;
 
@@ -109,6 +142,7 @@ switch(program.profile) {
   case 'vo':
   case 'basic':
   default:
+    options.profileName = 'basic'
     options.elementFunctions = BASIC_FUNCTIONS
 }
 
@@ -118,3 +152,63 @@ if(program.configFile) {
 
 parse(options)
   .catch(error => console.error(error))
+
+async function parse(options: Partial<ParseCommandOptions>): Promise<any[]> {
+  const parseOptions = buildParseOptions(options) as ParseCommandOptions
+
+  const logger = buildLogger(parseOptions.logger, options.logLevel)
+
+  const elementName = formatElementName(parseOptions)
+  let parseData: ParseData
+  let buildNumber: number
+  try {
+    const sourceData = await loadSourceData(parseOptions)
+    buildNumber = sourceData.buildNumber || options.buildNumber
+
+    if(options.sourceCASCStorage && options.saveSourceFiles && options.archiveSourceFiles) {
+      saveSourceArchive(
+        [
+          ...sourceData.XML,
+          ...sourceData.text,
+          buildAssetListFileData(sourceData.assets)
+        ],
+        options.outputPath,
+        `HOTS-${ buildNumber }-source.zip`
+      )
+    }
+
+    if(options.sourceCASCStorage && options.saveSourceFiles) {
+      saveSourceFiles(
+        [
+          ...sourceData.XML,
+          ...sourceData.text,
+          buildAssetListFileData(sourceData.assets)
+        ],
+        join(options.outputPath, buildNumber.toString(), 'source')
+      )
+    }
+
+    parseData = await buildParseData(sourceData, parseOptions)
+  }
+  catch(error) {
+    logger.error(error)
+    return null
+  }
+
+  logger.info(`Building JSON for ${ parseOptions.rootElementName } ${ parseOptions.parseElementName } elements.`)
+  const elements: any[] = initialElements(parseData)
+  const parsedElements = parseElements(
+    parseOptions.parseElementName || parseOptions.rootElementName,
+    elements,
+    parseData
+  )
+
+  if(parseOptions.archiveJSON) {
+    await saveJSONArchive(parsedElements, options.outputPath, `HOTS-${ elementName }-${ buildNumber }-${ options.profileName }.zip`)
+  }
+  else {
+    await saveJSON(parsedElements, join(options.outputPath, buildNumber.toString(), options.profileName, elementName))
+  }
+
+  logger.info("Parsing Complete!")
+}

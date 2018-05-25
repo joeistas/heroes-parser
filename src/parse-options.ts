@@ -5,7 +5,6 @@ import { DETAILED_FUNCTIONS } from './element-functions/detailed'
 export interface ParseOptions {
   sourceDir: string
   sourceCASCStorage: boolean
-  buildNumber?: number,
   xmlSearchPatterns: string[]
   textSearchPatterns: string[]
   assetSearchPatterns: string[]
@@ -13,11 +12,6 @@ export interface ParseOptions {
   rootElementId: string
   parseElementName?: string
   elementFunctions: { [elementName: string]: ElementFunctions }
-  saveSourceFiles: boolean
-  saveJSON: boolean
-  archiveSourceFiles: boolean
-  archiveJSON: boolean
-  outputPath?: string
   logLevel: 'none' | 'info' | 'debug'
   logger: Logger
 }
@@ -43,14 +37,10 @@ export const DEFAULT_PARSE_OPTIONS: ParseOptions = {
   rootElementId: 'Config',
   parseElementName: 'HeroArray',
   elementFunctions: DETAILED_FUNCTIONS,
-  archiveSourceFiles: true,
-  saveSourceFiles: false,
-  archiveJSON: true,
-  saveJSON: false,
   logLevel: 'info',
   logger: console
 }
 
-export function buildParseOptions(options: Partial<ParseOptions>): ParseOptions {
+export function buildParseOptions<Options extends ParseOptions>(options: Partial<Options>): ParseOptions {
   return Object.assign({}, DEFAULT_PARSE_OPTIONS, options)
 }

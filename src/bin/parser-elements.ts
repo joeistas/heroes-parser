@@ -36,10 +36,6 @@ if(args.length === 0) {
 const options: Partial<ParseOptions> = {
   sourceDir: args[0],
   sourceCASCStorage: true,
-  saveSourceFiles: false,
-  archiveSourceFiles: false,
-  archiveJSON: false,
-  saveJSON: false,
   logLevel: 'info',
 }
 

@@ -6,33 +6,6 @@ import { formatElement } from './formatters'
 import { buildLogger, getLogger } from './logger'
 import { ParseData, buildParseData } from './parse-data'
 
-export async function parse(options: Partial<ParseOptions> = {}): Promise<any[]> {
-  const parseOptions = buildParseOptions(options)
-
-  const logger = buildLogger(parseOptions.logger, options.logLevel)
-  let parseData: ParseData
-  try {
-    parseData = await buildParseData(parseOptions)
-  }
-  catch(error) {
-    logger.error(error)
-    return null
-  }
-
-  logger.info(`Building JSON for ${ parseOptions.rootElementName } ${ parseOptions.parseElementName } elements.`)
-  const elements: any[] = initialElements(parseData)
-  const parsedElements = parseElements(
-    parseOptions.parseElementName || parseOptions.rootElementName,
-    elements,
-    parseData
-  )
-  saveJSON(parsedElements, parseData.buildNumber, parseData.options)
-
-  logger.info("Parsing Complete!")
-
-  return parsedElements
-}
-
 export function initialElements(parseData: ParseData) {
   const options = parseData.options
   if(options.parseElementName && options.parseElementName !== options.rootElementName) {
