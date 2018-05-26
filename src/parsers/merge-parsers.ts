@@ -8,7 +8,7 @@ import {
 } from '../element'
 import { ParseData } from '../parse-data'
 import { ElementNameFilter } from './element-name-filters'
-import { preParseElement, ElementParser, ParseContext } from './'
+import { preParseElement, ElementParser, ParseContext, rebuildContext } from './'
 import { getAtPath, setAtPath } from '../utils'
 
 export function mergeElement(elementNameOrFilter: string | ElementNameFilter, attribute: string = 'value'): ElementParser {
@@ -25,7 +25,7 @@ export function mergeElement(elementNameOrFilter: string | ElementNameFilter, at
 
     let replacementElement = joinElements(getElement(attributes[attribute], elementName, parseData.elements))
     replacementElement = mergeElements(element, replacementElement, parseData, ATTRIBUTE_BLACKLIST.concat(attribute))
-    context = Object.assign({}, context, getElementAttributes(replacementElement))
+    context = rebuildContext(context, replacementElement)
 
     return preParseElement(replacementElement, outerElement, elementName, parseData, context)
   }
@@ -57,7 +57,7 @@ export function mergeElementFromInnerElementValue(
 
     let replacementElement = joinElements(getElement(elementId, elementName, parseData.elements))
     replacementElement = mergeElements(element, replacementElement, parseData)
-    context = Object.assign({}, context, getElementAttributes(replacementElement))
+    context = rebuildContext(context, replacementElement)
 
     return preParseElement(replacementElement, outerElement, elementName, parseData, context)
   }

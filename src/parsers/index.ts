@@ -17,13 +17,26 @@ import { attributesToInnerElements } from './add-parsers'
 import { getLogger } from '../logger'
 
 export type ElementParser = (element: any, outerElement: any, parseData: ParseData, context: ParseContext) => any
-export type ParseContext = { [attribute: string]: string }
+export interface ParseContext {
+  attributes: { [attributeName: string]: string }
+  [index: string]: any
+}
 
 export const defaultPreParser = attributesToInnerElements(/^[A-Z]/)
 
 export function join(...processors: ElementParser[]) {
   return (element: any, outerElement: any, parseData: ParseData, context: ParseContext): any => {
     return processors.reduce((e, processor) => processor(e, outerElement, parseData, context), element)
+  }
+}
+
+export function rebuildContext(context: ParseContext, element: any): ParseContext {
+  return {
+    ...context,
+    attributes: {
+      ...context.attributes,
+      ...getElementAttributes(element),
+    }
   }
 }
 
@@ -64,7 +77,7 @@ export function postParseElement(element: any, outerElement: any, elementName: s
   return func ? func(element, outerElement, parseData, context) : element
 }
 
-export function parseElement(element: any, outerElement: any, elementName: string, parseData: ParseData, context: { [attributeName: string]: string } = {}, idsSeen: Set<string> = new Set()) {
+export function parseElement(element: any, outerElement: any, elementName: string, parseData: ParseData, context: ParseContext = { attributes: {} }, idsSeen: Set<string> = new Set()) {
   if(hasIdBeenSeen(element, idsSeen)) {
     return element
   }
@@ -76,7 +89,7 @@ export function parseElement(element: any, outerElement: any, elementName: strin
   const elementId = getElementId(element)
   logger.debug(`Preparsing elementName: ${ elementName } id: ${ elementId }`)
 
-  context = Object.assign({}, context, getElementAttributes(element))
+  context = rebuildContext(context, element)
   const parsedElement = preParseElement(element, outerElement, elementName, parseData, context)
 
   element = hasIdBeenSeen(parsedElement, idsSeen) ? element : parsedElement
@@ -84,7 +97,7 @@ export function parseElement(element: any, outerElement: any, elementName: strin
   addSeenId(element, idsSeen)
 
   logger.debug(`Preparsing inner elements of elementName: ${ elementName } id: ${ elementId }`)
-  context = Object.assign({}, context, getElementAttributes(element))
+  context = rebuildContext(context, element)
   element = parseInnerElements(element, outerElement, elementName, parseData, context, idsSeen)
 
   logger.debug(`Postparsing elementName: ${ elementName } id: ${ elementId }`)

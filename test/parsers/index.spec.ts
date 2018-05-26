@@ -74,7 +74,7 @@ describe("parseElement", function() {
     expect(processSpy).to.have.been.called
   })
 
-  it("should call the 'preParse' function with a context the contains the attributes of the element", function() {
+  it("should call the 'preParse' function with a context that contains the attributes of the element", function() {
     const element = {
       [ELEMENT_ATTRIBUTE_KEY]: { id: 'test', value: 'thing' },
       testElement: [ { [ELEMENT_ATTRIBUTE_KEY]: { id: 'inner2' }, } ]
@@ -83,7 +83,7 @@ describe("parseElement", function() {
     const processSpy = spy(this.parseData.functions.hero, 'preParse')
     const parsedElement = parseElement(element, null, 'hero', this.parseData)
 
-    expect(processSpy.args[0][3]).to.eql({ id: 'test', value: 'thing' })
+    expect(processSpy.args[0][3]).to.eql({ attributes: { id: 'test', value: 'thing' } })
   })
 
   it("should call 'preParse' on all of the element's inner elements", function() {
@@ -108,7 +108,7 @@ describe("parseElement", function() {
     const processSpy = spy(this.parseData.functions.testElement, 'preParse')
     const parsedElement =  parseElement(element, null, 'hero', this.parseData)
 
-    expect(processSpy.args[1][3]).to.eql({ value: "otherThing", another: "value", id: "test", tier: '1' })
+    expect(processSpy.args[1][3]).to.eql({ attributes: { value: "otherThing", another: "value", id: "test", tier: '1' } })
   })
 
   it("should call 'preParse' on inner elements with an updated context if the attributes of the outer element where changed during 'preParse'", function() {
@@ -124,7 +124,7 @@ describe("parseElement", function() {
     const processSpy = spy(this.parseData.functions.testElement, 'preParse')
     const parsedElement =  parseElement(element, null, 'change', this.parseData)
 
-    expect(processSpy.args[0][3]).to.eql({ value: "otherThing", another: "value", id: "test", addition: "thing" })
+    expect(processSpy.args[0][3]).to.eql({ attributes: { value: "otherThing", another: "value", id: "test", addition: "thing" } })
   })
 
   it("should call the 'postParse' function on the element", function() {

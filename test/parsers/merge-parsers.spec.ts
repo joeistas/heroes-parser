@@ -67,7 +67,7 @@ describe("mergeElement", function() {
       }
     }
 
-    const result = mergeElement('Hero', 'test')(element, {}, {} as any, {})
+    const result = mergeElement('Hero', 'test')(element, {}, {} as any, {} as any)
     expect(result).to.eql(element)
   })
 
@@ -78,7 +78,7 @@ describe("mergeElement", function() {
       }
     }
 
-    const result = mergeElement('Hero', 'value')(element, {}, parseData, {})
+    const result = mergeElement('Hero', 'value')(element, {}, parseData, {} as any)
     expect(result).to.eql(element)
   })
 
@@ -95,7 +95,7 @@ describe("mergeElement", function() {
       ]
     }
 
-    const result = mergeElement('Hero', 'value')(element, {}, parseData, {})
+    const result = mergeElement('Hero', 'value')(element, {}, parseData, {} as any)
     expect(result).to.eql(
       {
         [ELEMENT_ATTRIBUTE_KEY]: {
@@ -126,7 +126,7 @@ describe("mergeElement", function() {
       ]
     }
 
-    const result = mergeElement(() => [ 'Hero', 'Skin' ], 'value')(element, {}, parseData, {})
+    const result = mergeElement(() => [ 'Hero', 'Skin' ], 'value')(element, {}, parseData, {} as any)
     expect(result).to.eql(
       {
         [ELEMENT_ATTRIBUTE_KEY]: {
@@ -161,7 +161,7 @@ describe("mergeElement", function() {
       }
     }
 
-    mergeElement('Hero', 'value')(element, {}, data, {})
+    mergeElement('Hero', 'value')(element, {}, data, {} as any)
     expect(data.functions.Hero.preParse).to.have.been.called
   })
 
@@ -172,7 +172,7 @@ describe("mergeElement", function() {
       },
     }
 
-    const result = mergeElement('Hero', 'value')(element, {}, parseData, {})
+    const result = mergeElement('Hero', 'value')(element, {}, parseData, {} as any)
     expect(result).to.have.property(ELEMENT_NAME_KEY).that.is.eql('Hero')
   })
 
@@ -183,7 +183,7 @@ describe("mergeElement", function() {
       },
     }
 
-    const result = mergeElement('Hero', 'value')(element, {}, parseData, {})
+    const result = mergeElement('Hero', 'value')(element, {}, parseData, {} as any)
     expect(result[ELEMENT_ATTRIBUTE_KEY]).to.not.have.property('value')
   })
 })
@@ -231,7 +231,7 @@ describe("mergeElementFromInnerElementValue", function() {
       ]
     }
 
-    const result = mergeElementFromInnerElementValue('Skin', "Variation", 'test')(element, {}, parseData, {})
+    const result = mergeElementFromInnerElementValue('Skin', "Variation", 'test')(element, {}, parseData, {} as any)
     expect(result).to.eql(element)
   })
 
@@ -250,7 +250,7 @@ describe("mergeElementFromInnerElementValue", function() {
       ]
     }
 
-    const result = mergeElementFromInnerElementValue('Skin', 'Variation', 'value')(element, {}, parseData, {})
+    const result = mergeElementFromInnerElementValue('Skin', 'Variation', 'value')(element, {}, parseData, {} as any)
     expect(result).to.eql(element)
   })
 
@@ -269,7 +269,7 @@ describe("mergeElementFromInnerElementValue", function() {
       ]
     }
 
-    const result = mergeElementFromInnerElementValue('Skin', 'Variation', 'value', false)(element, {}, parseData, {})
+    const result = mergeElementFromInnerElementValue('Skin', 'Variation', 'value', false)(element, {}, parseData, {} as any)
     expect(result).to.eql(
       {
         [ELEMENT_ATTRIBUTE_KEY]: {
@@ -304,7 +304,7 @@ describe("mergeElementFromInnerElementValue", function() {
       ]
     }
 
-    const result = mergeElementFromInnerElementValue(() => [ 'Skin' ], 'Variation', 'value', false)(element, {}, parseData, {})
+    const result = mergeElementFromInnerElementValue(() => [ 'Skin' ], 'Variation', 'value', false)(element, {}, parseData, {} as any)
     expect(result).to.eql(
       {
         [ELEMENT_ATTRIBUTE_KEY]: {
@@ -349,7 +349,7 @@ describe("mergeElementFromInnerElementValue", function() {
       }
     }
 
-    mergeElementFromInnerElementValue('Skin', 'Variation', 'value')(element, {}, data, {})
+    mergeElementFromInnerElementValue('Skin', 'Variation', 'value')(element, {}, data, {} as any)
     expect(data.functions.Skin.preParse).to.have.been.called
   })
 
@@ -368,7 +368,7 @@ describe("mergeElementFromInnerElementValue", function() {
       ]
     }
 
-    const result = mergeElementFromInnerElementValue('Skin', 'Variation', 'value')(element, {}, parseData, {})
+    const result = mergeElementFromInnerElementValue('Skin', 'Variation', 'value')(element, {}, parseData, {} as any)
     expect(result).to.have.property(ELEMENT_NAME_KEY).that.is.eql('Skin')
   })
 
@@ -387,7 +387,7 @@ describe("mergeElementFromInnerElementValue", function() {
       ]
     }
 
-    const result = mergeElementFromInnerElementValue('Skin', 'Variation', 'value', true)(element, {}, parseData, {})
+    const result = mergeElementFromInnerElementValue('Skin', 'Variation', 'value', true)(element, {}, parseData, {} as any)
 
     expect(result).to.not.have.property('Variation')
   })
@@ -407,7 +407,7 @@ describe("mergeElementFromInnerElementValue", function() {
       ]
     }
 
-    const result = mergeElementFromInnerElementValue('Skin', 'Variation', 'value', false)(element, {}, parseData, {})
+    const result = mergeElementFromInnerElementValue('Skin', 'Variation', 'value', false)(element, {}, parseData, {} as any)
 
     expect(result).to.have.property('Variation')
   })

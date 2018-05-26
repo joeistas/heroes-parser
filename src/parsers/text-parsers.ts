@@ -36,7 +36,7 @@ export function attributeValueReplacement(attribute: string = 'value'): ElementP
       return element
     }
 
-    const replacement = context[match[2]]
+    const replacement = context.attributes[match[2]]
     if(replacement) {
       element[ELEMENT_ATTRIBUTE_KEY][attribute] = value.replace(match[1], replacement)
     }

@@ -21,7 +21,7 @@ describe("attributeValueReplacement", function() {
       }
     }
 
-    const result = attributeValueReplacement('value')(element, {}, {} as any, {})
+    const result = attributeValueReplacement('value')(element, {}, {} as any, {} as any)
     expect(result).to.eql(element)
   })
 
@@ -33,7 +33,7 @@ describe("attributeValueReplacement", function() {
       }
     }
 
-    const result = attributeValueReplacement('another')(element, {}, {} as any, {})
+    const result = attributeValueReplacement('another')(element, {}, {} as any, {} as any)
     expect(result).to.eql(element)
   })
 
@@ -46,7 +46,7 @@ describe("attributeValueReplacement", function() {
       }
     }
 
-    const result = attributeValueReplacement('value')(element, {}, {} as any, { test: "thing" })
+    const result = attributeValueReplacement('value')(element, {}, {} as any, { attributes: { test: "thing" } })
     expect(result[ELEMENT_ATTRIBUTE_KEY]).to.have.property('value').that.is.eql('thing_thing')
   })
 
@@ -59,7 +59,7 @@ describe("attributeValueReplacement", function() {
       }
     }
 
-    const result = attributeValueReplacement('value')(element, {}, {} as any, { test: "thing" })
+    const result = attributeValueReplacement('value')(element, {}, {} as any, { attributes: { test: "thing" } })
     expect(result[ELEMENT_ATTRIBUTE_KEY]).to.have.property('value').that.is.eql("thing_##another##")
   })
 })
@@ -96,7 +96,7 @@ describe("replaceWithLocaleText", function() {
       }
     }
 
-    const result = replaceWithLocaleText('text')(element, {}, {} as any, {})
+    const result = replaceWithLocaleText('text')(element, {}, {} as any, {} as any)
     expect(result).to.eql(element)
   })
 
@@ -107,7 +107,7 @@ describe("replaceWithLocaleText", function() {
       }
     }
 
-    const result = replaceWithLocaleText('text')(element, {}, {} as any, {})
+    const result = replaceWithLocaleText('text')(element, {}, {} as any, {} as any)
     expect(result).to.eql(element)
   })
 
@@ -118,7 +118,7 @@ describe("replaceWithLocaleText", function() {
       }
     }
 
-    const result = replaceWithLocaleText('value')(element, {}, parseData, {})
+    const result = replaceWithLocaleText('value')(element, {}, parseData, {} as any)
     expect(result[ELEMENT_ATTRIBUTE_KEY]).to.have.property('value').that.is.eql({
       'enus': "This is some text",
       'dede': "This is some text for another locale"
