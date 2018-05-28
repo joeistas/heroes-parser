@@ -645,6 +645,35 @@ describe("getElementAtPath", function() {
   })
 })
 
+describe("getValueAtPath", function() {
+  before(function() {
+    this.element = {
+      ...buildElement(null, { value: '1' }),
+      Element: [
+        {
+          ...buildElement(null, { value: '2' }),
+          Element: [
+            buildElement(null, { value: '3', thing: '5' }),
+            buildElement(null, { value: '4' }),
+          ]
+        },
+      ]
+    }
+  })
+
+  it("should return the value in the element at path", function() {
+    const path = 'Element.0.Element.1'
+    const value = getValueAtPath(this.element, path)
+    expect(value).to.eql('4')
+  })
+
+  it("should return the correct value if the last part in the path is an attribute", function() {
+    const path = 'Element.0.Element.0.thing'
+    const value = getValueAtPath(this.element, path)
+    expect(value).to.eql('5')
+  })
+})
+
 describe("getValueFromElement", function() {
   it("should return null if element is null", function() {
     expect(getValueFromElement(null)).to.be.null

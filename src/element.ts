@@ -7,6 +7,7 @@ import { ElementKeyFormatter, ElementFormatter, ElementArrayFormatter } from './
 
 export const ATTRIBUTE_BLACKLIST: string[] = [ 'default' ]
 export const ELEMENT_ATTRIBUTE_KEY: string = '$'
+export const ELEMENT_TEXT_KEY: string = '_'
 export const ELEMENT_NAME_KEY: string = '$elementName'
 
 export interface ElementFunctions {
@@ -58,7 +59,7 @@ export function isCatalogElement(elementName: string): boolean {
 }
 
 export function getInnerElementKeys(element: any): string[] {
-  return Object.keys(element).filter(key => ![ELEMENT_ATTRIBUTE_KEY, ELEMENT_NAME_KEY].includes(key))
+  return Object.keys(element).filter(key => ![ELEMENT_ATTRIBUTE_KEY, ELEMENT_NAME_KEY, ELEMENT_TEXT_KEY].includes(key))
 }
 
 export function getElement(elementId: string, elementName: string, elementMap: ElementMap) {
@@ -195,10 +196,19 @@ export function getElementAtPath(element: any, path: string, parts: string[] = n
 }
 
 export function getValueAtPath(element: any, path: string): any {
-  return getValueFromElement(getElementAtPath(element, path))
+  let attribute = 'value'
+  let value = getElementAtPath(element, path)
+
+  if(value === null) {
+    const parts = path.split('.')
+    attribute = parts.pop()
+    value = getElementAtPath(element, path, parts)
+  }
+
+  return getValueFromElement(value, attribute)
 }
 
-export function getValueFromElement(element: any): any {
+export function getValueFromElement(element: any, attribute: string = 'value'): any {
   if(element === null || element === undefined) {
     return null
   }
@@ -211,5 +221,5 @@ export function getValueFromElement(element: any): any {
     element = element[0]
   }
 
-  return (typeof element === 'string' ? element : getElementAttributes(element).value)
+  return (typeof element === 'string' ? element : getElementAttributes(element)[attribute])
 }

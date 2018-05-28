@@ -7,6 +7,8 @@ import {
   ParseData,
   BASE_FUNCTIONS,
   DETAILED_FUNCTIONS,
+  SKIN_FUNCTIONS,
+  VO_FUNCTIONS,
   BASIC_FUNCTIONS,
   ParseOptions,
   buildParseOptions,
@@ -44,7 +46,7 @@ program
   .option("--root-id <element-id>", "Root XML element Id")
   .option("--parse-element <element-name>", "Name of XML element to JSON")
   .option(
-    "-e <name>, --elements <name>",
+    "--elements <name>",
     "Friendly name for elements to parse. Sets root-element and parse-element [hero]",
     /^heroes|maps|mounts$/
   )
@@ -139,7 +141,15 @@ switch(program.profile) {
     break;
 
   case 'skins':
+    options.profileName = 'skins'
+    options.elementFunctions = SKIN_FUNCTIONS
+    break;
+
   case 'vo':
+    options.profileName = 'vo'
+    options.elementFunctions = VO_FUNCTIONS
+    break;
+
   case 'basic':
   default:
     options.profileName = 'basic'

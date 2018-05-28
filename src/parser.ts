@@ -44,7 +44,7 @@ export function parseElements(elementName: string, elementList: any[], parseData
 
   elementList.forEach((element, index) => {
     const attributes = getElementAttributes(element)
-    const name = attributes.id || attributes.value
+    const name = attributes.id || attributes.value || attributes.Mount
     logger.info(`Building JSON for ${ name } ${ index + 1 }/${ elementCount }`)
     logger.group('info')
 

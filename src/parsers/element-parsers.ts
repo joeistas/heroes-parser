@@ -6,6 +6,7 @@ import {
   getElementName,
   getElementAtPath,
   getValueAtPath,
+  getInnerElementKeys,
 } from '../element'
 import { ParseData } from '../parse-data'
 import { ElementNameFilter } from './element-name-filters'
@@ -50,11 +51,7 @@ export function levelScalingParser(element: any, outerElement: any, parseData: P
 function applyModifications(element: any, modificationMap: Map<string, Map<string, any>>) {
   applyModificationsToElement(element, modificationMap)
 
-  for(const name of Object.keys(element)) {
-    if([ELEMENT_ATTRIBUTE_KEY, ELEMENT_NAME_KEY].includes(name)) {
-      continue
-    }
-
+  for(const name of getInnerElementKeys(element)) {
     element[name].forEach((innerElement: any) => applyModifications(innerElement, modificationMap))
   }
 }

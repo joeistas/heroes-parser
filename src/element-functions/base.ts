@@ -387,9 +387,6 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "CRequirementXor": functionTemplates.addAttribute('operator', "xor"),
   "CritStep": functionTemplates.numberValue(),
   "CritValidatorArray": functionTemplates.mergeElement(VALIDATOR_TYPE_FILTER),
-  "CSkin": {
-
-  },
   "CursorEffect": singleEffect,
   "CursorRangeMode": functionTemplates.singleElement,
   "CValidatorPlayerAI": functionTemplates.removeFromOutput,
@@ -615,6 +612,10 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   },
   "HeroArray": functionTemplates.mergeElement("CHero"),
   "HeroPlaystyleFlags": functionTemplates.flags(),
+  "HeroPoseAnimGroup": {
+    ...functionTemplates.singleElement,
+    formatKey: "heroPose"
+  },
   "HeroSelectCutsceneFile": functionTemplates.removeFromOutput,
   "HeroSpecificUIArray": functionTemplates.removeFromOutput,
   "HeroTierAchievementId": functionTemplates.removeFromOutput,
@@ -780,6 +781,16 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "ModifyOwnerPlayer": returnEffectOrRemove,
   "ModifyScoreArray": functionTemplates.arrayOfNumberValues("Value"),
   "Month": functionTemplates.numberValue(),
+  "MountArray": {
+    preParse: parsers.join(
+      parsers.defaultPreParser,
+      mergeParsers.mergeElementFromInnerElementValue("CMount", "Mount")
+    ),
+  },
+  "MountCategory": {
+    ...functionTemplates.singleElement,
+    formatKey: "category",
+  },
   "Mover": functionTemplates.singleElement,
   "MoveFilters": functionTemplates.filters(),
   "MoveSpeedBonus": functionTemplates.numberValue(),
@@ -1017,7 +1028,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "TeleportEffect": singleEffect,
   "TeleportFlags": functionTemplates.flags(true),
   "TeleportResetRange": functionTemplates.numberValue(),
-  "Text": functionTemplates.localeText(),
+  "Text": functionTemplates.parseTooltip(),
   "Tier": functionTemplates.numberValue(),
   "TileCutsceneFile": functionTemplates.removeFromOutput,
   "TimeScaleSource": returnEffectOrRemove,
@@ -1107,6 +1118,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
       keyFormatters.pluralizeKey
     ),
   },
+  "WalkAnimMoveSpeed": functionTemplates.numberValue(),
   "WeaponArray": {
     ...functionTemplates.mergeElement(WEAPON_TYPE_FILTER),
     formatElement: elementFormatters.join(

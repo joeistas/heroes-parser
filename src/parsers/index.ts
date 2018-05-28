@@ -10,6 +10,7 @@ import {
   getElementAttributes,
   copyElement,
   mergeWithParent,
+  getInnerElementKeys
 } from '../element'
 import { ParseData } from '../parse-data'
 import { ElementNameFilter } from './element-name-filters'
@@ -61,11 +62,7 @@ export function preParseElement(element: any, outerElement: any, elementName: st
 }
 
 export function parseInnerElements(element: any, outerElement: any, elementName: string, parseData: ParseData, context: ParseContext, idsSeen: Set<string>) {
-  for(const name of Object.keys(element)) {
-    if([ELEMENT_ATTRIBUTE_KEY, ELEMENT_NAME_KEY].includes(name)) {
-      continue
-    }
-
+  for(const name of getInnerElementKeys(element)) {
     element[name] = element[name].map((innerElement: any) => parseElement(innerElement, element, name, parseData, context, new Set(idsSeen)))
   }
 

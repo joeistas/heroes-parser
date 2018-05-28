@@ -5,6 +5,7 @@ import {
   getElementFunction,
   getElementName,
   getElementId,
+  getInnerElementKeys,
 } from '../element'
 import { ParseData } from '../parse-data'
 import { defaultKeyFormatter } from './key-formatters'
@@ -24,11 +25,7 @@ export function formatElement(element: any, outerElement: any, parseData: ParseD
   formatAttributes(formattedElement, element)
 
   logger.debug(`Formatting inner elements of elementName: ${ elementName } id: ${ elementId }`)
-  for(const key of Object.keys(element)) {
-    if([ ELEMENT_NAME_KEY, ELEMENT_ATTRIBUTE_KEY ].includes(key)) {
-      continue
-    }
-
+  for(const key of getInnerElementKeys(element)) {
     logger.debug(`Formatting key: ${ key }`)
     const formatKeyFunction = getElementFunction(key, parseData.functions, 'formatKey')
     let formattedKey = key
