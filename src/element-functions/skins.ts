@@ -11,6 +11,7 @@ export const SKIN_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     formatElement: elementFormatters.removeFromOutput
   },
   "CHero": BASE_FUNCTIONS.default,
+  "CMount": BASE_FUNCTIONS.default,
   "CSkin": BASE_FUNCTIONS.default,
 }
 
@@ -22,6 +23,7 @@ const names = [
   "HeroArray",
   "InfoText",
   "Month",
+  "MountArray",
   "Name",
   "Rarity",
   "ReleaseDate",

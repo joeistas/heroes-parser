@@ -116,6 +116,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "Accumulator": functionTemplates.mergeElement(ACCUMULATOR_TYPE_FILTER),
   "AccumulatorArray": functionTemplates.mergeElement(ACCUMULATOR_TYPE_FILTER),
   "Activity": functionTemplates.removeFromOutput,
+  "Actor": functionTemplates.removeFromOutput,
   "ActorKey": functionTemplates.removeFromOutput,
   "AcquireFilters": functionTemplates.filters(),
   "AcquireLeashRadius": functionTemplates.numberValue(),
@@ -570,7 +571,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
         ITEM_TYPE_FILTER,
         elementNameFilters.inList('CUnit', 'TooltipAppender')
       )),
-      parsers.defaultPreParser,
+      functionTemplates.singleElementWithReplacement().preParse,
       functionTemplates.mergeElement("CButton").preParse
     ),
     formatKey: "button",

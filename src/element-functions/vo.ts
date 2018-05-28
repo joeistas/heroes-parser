@@ -11,11 +11,13 @@ export const VO_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     formatElement: elementFormatters.removeFromOutput
   },
   "CHero": BASE_FUNCTIONS.default,
+  "CMount": BASE_FUNCTIONS.default,
 }
 
 const names = [
   "Name",
   "HeroArray",
+  "MountArray",
   "VOArray",
   "VODefinition",
   "VoiceLineArray",

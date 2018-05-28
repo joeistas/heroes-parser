@@ -273,6 +273,7 @@ export const DETAILED_FUNCTIONS = {
   "Exhausted": functionTemplates.removeFromOutput,
   "Height": functionTemplates.removeFromOutput,
   "HeroPlaystyleFlags": functionTemplates.removeFromOutput,
+  "ImageFacing": functionTemplates.removeFromOutput,
   "InfoTooltipPriority": functionTemplates.removeFromOutput,
   "InitialOffset": functionTemplates.removeFromOutput,
   "InnerRadiusSafetyMultiplier": functionTemplates.removeFromOutput,
