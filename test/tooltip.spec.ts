@@ -48,6 +48,15 @@ describe("parseTooltipLocaleText", function() {
     expect(result.localeText.enus).to.match(/{{ formula1 }}/)
   })
 
+  it("should remove every 'n' element", function() {
+    const localeText = {
+      "enus": "Increases <n/><n>stuff <c>things</c><n/>"
+    }
+
+    const result = parseTooltipLocaleText(localeText, {} as ParseData)
+    expect(result.localeText.enus).to.eql("Increases stuff <span>things</span>")
+  })
+
   it("should set a formula for every 'd' element in the tooltip text", function() {
     const result = parseTooltipLocaleText(localeText, {} as ParseData)
     const formulas = result.formulas
@@ -192,7 +201,7 @@ describe("parseFormula", function() {
   it("should replace references with 'ref' identifiers", function() {
     const formula = "Effect,RaynorAdrenalineRushHealer,RechargeVitalRate.Value[0]"
     const result = parseFormula(formula, new Map(), new Map(), {} as ParseData)
-    expect(result).to.match(/ref0/)
+    expect(result).to.eql("ref0")
   })
 
   it("should convert sequences that begin and end with a '$' and contain letters and '.,[]:' characters to a variable", function() {
@@ -270,7 +279,7 @@ describe("parseFormula", function() {
     const variables = new Map()
 
     const result = parseFormula(formula, new Map(), variables, parseData as any)
-    expect(result).to.match(/var0/)
+    expect(result).to.eql("var0")
   })
 
   it("should handle sub d elements ([d ref='' ]) in the tooltip text", function() {
@@ -287,6 +296,18 @@ describe("parseFormula", function() {
       field: "PeriodCount",
       name: 'ref1'
     })
+  })
+
+  it("should remove unmatched open parentheses", function() {
+    const formula = "(100 * ((30 + 2)"
+    const result = parseFormula(formula, new Map(), new Map(), {} as ParseData)
+    expect(result).to.eql("100 * (30 + 2)")
+  })
+
+  it("should remove unmatched close parentheses", function() {
+    const formula = "(30 + 2)) * 100)"
+    const result = parseFormula(formula, new Map(), new Map(), {} as ParseData)
+    expect(result).to.eql("(30 + 2) * 100")
   })
 })
 

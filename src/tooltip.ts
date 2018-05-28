@@ -13,6 +13,7 @@ import {
 } from './element'
 import { startsWith } from './parsers/element-name-filters'
 import { ParseData } from './parse-data'
+import { getLogger } from './logger'
 import { splitOnCaps } from './utils'
 
 const _eval = require('eval')
@@ -65,6 +66,10 @@ export function parseTooltipLocaleText(
 
     const $ = cheerio.load(localeText[locale])
 
+    $("n").each((index, element) => {
+      $(element).replaceWith(removeNElements($, element))
+    })
+
     $("d").each((index, element) => {
       const formulaName = 'formula' + index
       $(element).replaceWith(formulaElement(formulaName))
@@ -111,6 +116,9 @@ export function renderTooltipData(
   render: TooltipRenderFunction = renderTooltipWithHandlebars,
   variableValues: { [variableName: string]: number } = {},
 ): { [locale: string]: string } {
+  if(!tooltipData.formulas) {
+    return tooltipData.localeText || {}
+  }
 
   const calculationContext = Object.entries(tooltipData.references || {}).reduce((values, [ refName, ref ]) => {
     values[refName] = getValueForReference(ref, parseData)
@@ -125,7 +133,15 @@ export function renderTooltipData(
   const formulaResults: { [formulaName: string]: string } = {}
   for(const [ formulaName, formula ] of Object.entries(tooltipData.formulas)) {
     const evalText = `exports.result = ${ formula }`
-    formulaResults[formulaName] = _eval(evalText, calculationContext).result
+
+    try{
+      formulaResults[formulaName] = _eval(evalText, calculationContext).result
+    }
+    catch(e) {
+      const logger = getLogger()
+      logger.error(e)
+      formulaResults[formulaName] = 'NaN'
+    }
   }
 
   const localeText = tooltipData.localeText
@@ -168,7 +184,7 @@ export function parseFormula(formula: string, references: Map<string, TooltipRef
       parseVariable(variable, variables, parseData)
 
       const variableName = variables.get(variable).name
-      replacements.unshift([ match.index, variable, variableName ])
+      replacements.unshift([ match.index, match[1], variableName ])
     }
     else {
       const reference = match[3]
@@ -183,7 +199,7 @@ export function parseFormula(formula: string, references: Map<string, TooltipRef
     formula = formula.slice(0, index) + replacement + formula.slice(index + replace.length)
   }
 
-  return formula
+  return removeUnmatchedParens(formula)
 }
 
 export function parseVariable(variable: string, variables: Map<string, TooltipVariable>, parseData: ParseData) {
@@ -297,4 +313,40 @@ function getValueForReference(ref: TooltipReference, parseData: ParseData): any 
   }
 
   return getValueAtPath(element, ref.field)
+}
+
+function removeNElements($: CheerioStatic, element: CheerioElement): string {
+  $('n', element).each((index, e) => {
+    $(e).replaceWith(removeNElements($, e))
+  })
+
+  return $(element).html()
+}
+
+function removeUnmatchedParens(formula: string): string {
+  const unmatchedOpenParens: number[] = []
+  const unmatchedCloseParens: number[] = []
+
+  for(let i = 0; i < formula.length; i++) {
+    const char = formula[i]
+    if(char === '(') {
+      unmatchedOpenParens.push(i)
+    }
+
+    if(char === ')' && unmatchedOpenParens.length === 0) {
+      unmatchedCloseParens.push(i)
+      continue
+    }
+
+    if(char === ')') {
+      unmatchedOpenParens.pop()
+    }
+  }
+
+  const remove = unmatchedOpenParens.concat(unmatchedCloseParens).sort((a, b) => b - a)
+  for(const i of remove) {
+    formula = formula.slice(0, i) + formula.slice(i + 1)
+  }
+
+  return formula
 }
