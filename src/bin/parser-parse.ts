@@ -38,20 +38,23 @@ interface ParseCommandOptions extends ParseOptions {
 }
 
 program
+  .name("heroes-parser parse")
   .description("Generate JSON from Heroes of the Storm data")
+  .usage("<game-directory>")
   .option("--out-dir <dir>", "Directory to save JSON and source files")
-  .option("--no-game-dir", "Source directory is not the Heroes of the Storm install directory")
+  .option("--no-game-dir", "Game directory is not the Heroes of the Storm install directory")
   .option("--build-number <number>", "Build number to use if the source is not a game directory")
   .option("--root-element <element-name>", "Root XML element")
   .option("--root-id <element-id>", "Root XML element Id")
   .option("--parse-element <element-name>", "Name of XML element to JSON")
   .option(
     "--elements <name>",
-    "Friendly name for elements to parse. Sets root-element and parse-element [hero]",
-    /^heroes|maps|mounts$/
+    "Friendly name for elements to parse. Sets root-element and parse-element",
+    /^heroes|mounts$/,
+    "heroes"
   )
-  .option("--profile <name>", "Profile to use for parsing elements [basic]")
-  .option("-s, --save-source-files", "Save source files (XML, txt, etc.) to out directory")
+  .option("--profile <name>", "Profile to use for parsing elements", /^basic|skins|vo|detailed|base$/, "basic")
+  .option("-s, --save-source-files", "Save source files (XML, txt, etc.) to output directory")
   .option("-S, --archive-source-files", "Bundle source files into a zip file")
   .option("-a, --archive-json", "Bundle JSON into a zip file")
   .option("--log-level <level>", "Log level (none|info|debug)", /^none|info|debug$/, 'info')

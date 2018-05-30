@@ -13,7 +13,9 @@ interface ExtractCommandOptions extends ExtractOptions {
 }
 
 program
+  .name("heroes-parser extract")
   .description("Extract asset files from Heroes of the Storm game data")
+  .usage("extract <game-directory> [filePaths...]")
   .option("--out-dir <dir>", "Directory to save extracted file")
   .option("--asset-type <asset-type>", "Type of assets to extract (all|audio|images)", /^all|audio|images$/, 'all')
   .option("--from-json <json-file>", "Extract assests referenced in json file")

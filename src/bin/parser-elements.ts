@@ -6,23 +6,30 @@ import { inspect } from 'util'
 import *  as program from 'commander'
 import { openStorage, closeStorage } from 'casclib'
 
-import { ParseOptions } from '../index'
-import { buildLogger } from '../logger'
-import { buildParseOptions } from '../parse-options'
-import { XML_FILE_GLOB, ParseData, loadXMLFilesFromCASC, loadFiles, fetchElements } from '../parse-data'
-import { ELEMENT_NAME_KEY, findElementNameForId, getElement, joinElements, mergeWithParent } from '../element'
-import { DETAILED_FUNCTIONS } from '../element-functions/detailed'
+import {
+  ParseOptions,
+  buildLogger,
+  buildParseOptions,
+  element,
+  DETAILED_FUNCTIONS,
+  ParseData,
+} from '../index'
+import { XML_FILE_GLOB, loadXMLFilesFromCASC, loadFiles, fetchElements } from '../parse-data'
+
+const { ELEMENT_NAME_KEY, findElementNameForId, getElement, joinElements, mergeWithParent } = element
 
 program
-  .description("View element in Heroes of the Storm XML files")
+  .name("heroes-parser elements")
+  .description("View elements in Heroes of the Storm XML files")
+  .usage("<game-directory>")
   .option("--no-game-dir", "Source directory is not the Heroes of the Storm install directory")
-  .option("--type <name>", "List elements with element name")
+  .option("--name <name>", "Only return elements with element name")
   .option("--starts-with <name>", "Filter elements by element names that start with 'name'")
-  .option("-n, --names", "Only display element names")
-  .option("-i, --ids", "Only display element ids")
-  .option("--find <id>", "Find element ")
-  .option("-c, --count", "Number of elements")
-  .option("--number <number>", "Number of elements to display")
+  .option("-n, --names-only", "Only display element names")
+  .option("-i, --ids-only", "Only display element ids")
+  .option("--find <id>", "Find element by id")
+  .option("-c, --count", "Only display the count of matching elements")
+  .option("--number <number>", "Max number of elements to display.", "50")
   .option("--config-file <fileName>", "Use config file. Can be JSON or Javascript")
   .parse(process.argv)
 

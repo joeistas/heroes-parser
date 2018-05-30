@@ -4,6 +4,7 @@ import *  as program from 'commander'
 
 program
   .version("1.0.0")
+  .name("heroes-parser")
   .command("parse <source-dir>", "Convert XML elements to JSON", { isDefault: true })
   .command("extract <game-directory> [filePaths...]", "Extract asset files from game data")
   .command("elements <game-directory>", "View element in Heroes of the Storm XML files")
