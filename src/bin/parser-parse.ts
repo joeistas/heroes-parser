@@ -71,7 +71,7 @@ if(args.length === 0) {
 const options: Partial<ParseCommandOptions> = {
   sourceDir: args[0],
   outputPath: process.cwd(),
-  sourceCASCStorage: true,
+  sourceCASCStorage: program.gameDir,
   saveSourceFiles: false,
   archiveSourceFiles: false,
   archiveJSON: false,
@@ -81,10 +81,6 @@ const options: Partial<ParseCommandOptions> = {
 
 if(program.outDir) {
   options.outputPath = program.outDir
-}
-
-if(program.gameDir) {
-  options.sourceCASCStorage = program.gameDir
 }
 
 if(program.buildNumber) {

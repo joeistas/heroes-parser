@@ -40,16 +40,19 @@
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "rimraf": "^2.6.2",
-    "sinon": "^5.0.10",
+    "sinon": "^4.5",
     "sinon-chai": "^3.1.0",
     "typedoc": "^0.11.1",
+    "typedoc-plugin-markdown": "^1.1.12",
     "typescript": "^2.8.3"
   },
   "scripts": {
     "prepublishOnly": "npm run-script build",
     "clean": "rimraf -r ./dist",
+    "clean:doc": "rimraf -r ./doc",
     "test": "npm run-script build:test && mocha \"dist/**/*.spec.js\"",
     "build": "npm run-script clean && tsc -p tsconfig.prod.json",
-    "build:test": "npm run-script clean && tsc -p tsconfig.test.json"
+    "build:test": "npm run-script clean && tsc -p tsconfig.test.json",
+    "doc": "npm run-script clean:doc && typedoc --excludeExternals src/"
   }
 }

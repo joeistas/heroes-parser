@@ -2,8 +2,10 @@ import { ELEMENT_ATTRIBUTE_KEY, mergeElements, copyElement, reduceElements, getE
 import { ParseData } from './parse-data'
 import { stringIsNumber } from './utils'
 
+/** @hidden */
 export type ElementMerger = (parentElements: any[], childElements: any[], mergedAttributes: any, parseData: ParseData) => any[]
 
+/** @hidden */
 export function defaultMerge(parentElements: any[], childElements: any[], mergedAttributes: any, parseData: ParseData): any[] {
   const elements = [ ...parentElements, ...childElements ]
   const parentIndexedElements = parentElements.filter(isElementIndexed)
@@ -17,7 +19,7 @@ export function defaultMerge(parentElements: any[], childElements: any[], merged
       childStringIndexed.push(element)
       return
     }
-    
+
     delete element[ELEMENT_ATTRIBUTE_KEY].index
     unindexed[index] = element
   })
@@ -26,6 +28,7 @@ export function defaultMerge(parentElements: any[], childElements: any[], merged
   return unindexed.concat([ ...new Map(indexedElements.map(e => [ getElementIndex(e), e ]) as [string, any][]).values() ])
 }
 
+/** @hidden */
 export function singleElement(parentElements: any[], childElements: any[], mergedAttributes: any, parseData: ParseData): any[] {
   return [ reduceElements(parentElements.concat(childElements), parseData) ]
 }

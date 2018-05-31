@@ -24,6 +24,8 @@ export { ExtractOptions, extractAssets } from './extract'
 export { getLogger, buildLogger } from './logger'
 export { ParseData, SourceData, buildParseData, loadSourceData } from './parse-data'
 export { ParseOptions, DEFAULT_PARSE_OPTIONS, buildParseOptions } from './parse-options'
+export { ElementTypeMap, ElementMap } from './element-map'
+export { LocaleTextMap, TextMap } from './text'
 export {
   element,
   merge,
@@ -46,6 +48,9 @@ export namespace tooltips {
 }
 
 export namespace parsers {
+  export type ElementParser = baseParsers.ElementParser
+  export type ParseContext = baseParsers.ParseContext
+  
   export const join = baseParsers.join
   export const defaultPreParser = baseParsers.defaultPreParser
 

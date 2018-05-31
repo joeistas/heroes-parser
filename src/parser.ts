@@ -6,6 +6,11 @@ import { formatElement } from './formatters'
 import { buildLogger, getLogger } from './logger'
 import { ParseData, buildParseData } from './parse-data'
 
+/**
+  get initial elements from `parseData`
+
+  @returns list of elements
+ */
 export function initialElements(parseData: ParseData) {
   const options = parseData.options
   if(options.parseElementName && options.parseElementName !== options.rootElementName) {
@@ -15,6 +20,7 @@ export function initialElements(parseData: ParseData) {
   return rootElements(parseData)
 }
 
+/** @hidden */
 export function innerRootElements(parseData: ParseData) {
   const options = parseData.options
   const rootElement = mergeWithParent(
@@ -26,6 +32,7 @@ export function innerRootElements(parseData: ParseData) {
   return rootElement[options.parseElementName]
 }
 
+/** @hidden */
 export function rootElements(parseData: ParseData) {
   const rootElements = parseData.elements.get(parseData.options.rootElementName) || new Map()
   return [ ...rootElements.values() ].map(elements => joinElements(elements))
@@ -35,7 +42,11 @@ export function rootElements(parseData: ParseData) {
     })
 }
 
+/**
+  Parse and format elements in `elementList`
 
+  @returns json from parsed elements
+ */
 export function parseElements(elementName: string, elementList: any[], parseData: ParseData): any[] {
   const logger = getLogger()
   const parsedElements: any[] = []

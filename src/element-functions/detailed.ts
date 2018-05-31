@@ -14,6 +14,7 @@ import * as functionTemplates from './function-templates'
 
 import { BASE_FUNCTIONS } from './base'
 
+/** @hidden */
 export const DETAILED_FUNCTIONS = {
   ...BASE_FUNCTIONS,
   "AbilityCategories": functionTemplates.removeFromOutput,

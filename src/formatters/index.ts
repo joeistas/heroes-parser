@@ -15,6 +15,7 @@ export type ElementFormatter = (formattedElement: any, element: any) => any
 export type ElementKeyFormatter = (key: string) => string
 export type ElementArrayFormatter = (elements: any[]) => any
 
+/** @hidden */
 export function formatElement(element: any, outerElement: any, parseData: ParseData): any {
   const formattedElement: any = {}
   const elementName = getElementName(element)

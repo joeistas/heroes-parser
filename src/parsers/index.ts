@@ -31,6 +31,7 @@ export function join(...processors: ElementParser[]) {
   }
 }
 
+/** @hidden */
 export function rebuildContext(context: ParseContext, element: any): ParseContext {
   return {
     ...context,
@@ -53,6 +54,7 @@ function addSeenId(element: any, idsSeen: Set<string>) {
   }
 }
 
+/** @hidden */
 export function preParseElement(element: any, outerElement: any, elementName: string, parseData: ParseData, context: ParseContext) {
   element = mergeWithParent(element, elementName, parseData)
   element[ELEMENT_NAME_KEY] = elementName
@@ -61,6 +63,7 @@ export function preParseElement(element: any, outerElement: any, elementName: st
   return (func ? func(element, outerElement, parseData, context) : element)
 }
 
+/** @hidden */
 export function parseInnerElements(element: any, outerElement: any, elementName: string, parseData: ParseData, context: ParseContext, idsSeen: Set<string>) {
   for(const name of getInnerElementKeys(element)) {
     element[name] = element[name].map((innerElement: any) => parseElement(innerElement, element, name, parseData, context, new Set(idsSeen)))
@@ -69,11 +72,13 @@ export function parseInnerElements(element: any, outerElement: any, elementName:
   return element
 }
 
+/** @hidden */
 export function postParseElement(element: any, outerElement: any, elementName: string, parseData: ParseData, context: ParseContext) {
   const func = getElementFunction(elementName, parseData.functions, 'postParse') as ElementParser
   return func ? func(element, outerElement, parseData, context) : element
 }
 
+/** @hidden */
 export function parseElement(element: any, outerElement: any, elementName: string, parseData: ParseData, context: ParseContext = { attributes: {} }, idsSeen: Set<string> = new Set()) {
   if(hasIdBeenSeen(element, idsSeen)) {
     return element

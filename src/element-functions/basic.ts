@@ -14,6 +14,7 @@ import * as functionTemplates from './function-templates'
 
 import { DETAILED_FUNCTIONS } from './detailed'
 
+/** @hidden */
 export const BASIC_FUNCTIONS = {
   ...DETAILED_FUNCTIONS,
   "AbilityModificationArray": functionTemplates.removeFromOutput,

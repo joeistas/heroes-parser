@@ -1,5 +1,6 @@
 import * as casclib from 'casclib'
 
+/** @hidden */
 export async function readFiles(files: string[], storageHandle: any, stripNull: boolean = true): Promise<[ string, Buffer ][]> {
   const fileData: [ string, Buffer ][] = []
   for(const filePath of files) {
@@ -10,6 +11,7 @@ export async function readFiles(files: string[], storageHandle: any, stripNull: 
   return fileData
 }
 
+/** @hidden */
 export function findFiles(searchPatterns: string[], storageHandle: any): Promise<string[]> {
   return Promise.all(searchPatterns.map(pattern => casclib.findFiles(storageHandle, pattern)))
     .then(results => results.reduce((combined, findResults) => combined.concat(findResults), []))

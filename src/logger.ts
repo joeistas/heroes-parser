@@ -10,6 +10,9 @@ export interface Logger {
 
 let LOGGER: Logger
 
+/**
+  Build heroes parser logger. Must be run at least once before [[getLogger]] is called
+ */
 export function buildLogger(logger: Logger = console, logLevel: string = 'info'): Logger {
   LOGGER = {
     info: logLevel === 'none' ? () => null : logger.info,
@@ -34,6 +37,9 @@ export function buildLogger(logger: Logger = console, logLevel: string = 'info')
   return LOGGER
 }
 
+/**
+  Get heroes parser logger. [[buildLogger]] must be run before this function can be used
+ */
 export function getLogger(): Logger {
   return LOGGER
 }

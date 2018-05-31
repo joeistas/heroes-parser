@@ -167,6 +167,7 @@ export function renderTooltipWithHandlebars(text: string, formulaResults: { [for
   return template(formulaResults)
 }
 
+/** @hidden */
 export function parseFormula(formula: string, references: Map<string, TooltipReference>, variables: Map<string, TooltipVariable>, parseData: ParseData): string {
   if(!formula) {
     return '0'
@@ -202,6 +203,7 @@ export function parseFormula(formula: string, references: Map<string, TooltipRef
   return removeUnmatchedParens(formula)
 }
 
+/** @hidden */
 export function parseVariable(variable: string, variables: Map<string, TooltipVariable>, parseData: ParseData) {
   if(variables.has(variable)) {
     return
@@ -222,6 +224,7 @@ export function parseVariable(variable: string, variables: Map<string, TooltipVa
   variables.set(variable, variableData as TooltipVariable)
 }
 
+/** @hidden */
 export function parseVariableReference(catalog: string, entry: string, field: string, parseData: ParseData): TooltipVariable {
   const element = getEntry(catalog, entry, parseData)
   const accumulatorValue = getValueAtPath(element, field + '.AccumulatorArray')
@@ -237,6 +240,7 @@ export function parseVariableReference(catalog: string, entry: string, field: st
   } as TooltipVariable
 }
 
+/** @hidden */
 export function parseVariableToken(catalogField: string, entry: string, parseData: ParseData): TooltipVariable {
   const parts = splitOnCaps(catalogField).split(' ')
   const [ catalog, ...fieldParts ] = parts
@@ -280,6 +284,7 @@ function getValue(element: any, field: string, defaultValue: number = 0): number
   return isNaN(value) ? defaultValue : value
 }
 
+/** @hidden */
 export function parseReference(reference: string, references: Map<string, TooltipReference>) {
   if(references.has(reference)) {
     return

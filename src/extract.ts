@@ -6,13 +6,25 @@ import { saveFilesToDisk } from './files'
 const AUDIO_FILE_TYPES = [ 'wav', 'ogg' ]
 const IMAGE_FILE_TYPES = [ 'dds' ]
 
+/**
+  Options used by [[extractAssets]]
+ */
 export interface ExtractOptions {
+  /** directory where extracted assets will be saved. */
   outputDir: string
+  /** file paths of assets to extract from game storage */
   filePaths: string[]
+  /** type of assets to extract */
   type: 'all' | 'audio' | 'images'
+  /** extract assets found in json data instead of [[ExtractOptions.filePaths]]*/
   jsonData?: any,
 }
 
+/**
+  Extracts and saves assets from Heroes of the Storm game storage to disk.
+
+  @param storageHandle casclib storage handle
+ */
 export function extractAssets(storageHandle: any, options: ExtractOptions): Promise<void[]> {
   let assets: string[]
   if(options.jsonData) {

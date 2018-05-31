@@ -22,9 +22,14 @@ import { AssetFindCache } from './parsers/asset-parsers'
 import { formatElement } from './formatters'
 import { getLogger } from './logger'
 
+/** @hidden */
 export const XML_FILE_GLOB = [ "**", "*.xml" ]
+/** @hidden */
 export const TEXT_FILE_GLOB = [ "**", "*.txt" ]
 
+/**
+  Data to be used during element parsing and formating
+ */
 export interface ParseData {
   buildNumber?: number
   functions: ElementFunctionsMap
@@ -35,6 +40,9 @@ export interface ParseData {
   options: ParseOptions
 }
 
+/**
+  XML and text data extracted from game directory or file data
+ */
 export interface SourceData {
   XML: [ string, Buffer ][]
   text: [ string, Buffer ][]
@@ -42,6 +50,9 @@ export interface SourceData {
   buildNumber?: number
 }
 
+/**
+  Build ParseData from `sourceData` and [[ParseOptions]]
+ */
 export async function buildParseData(sourceData: SourceData, options: ParseOptions): Promise<ParseData> {
   const logger = getLogger()
 
@@ -63,6 +74,9 @@ export async function buildParseData(sourceData: SourceData, options: ParseOptio
   }
 }
 
+/**
+  Load source data from game directory or files at `outDir`
+ */
 export async function loadSourceData(options: ParseOptions): Promise<SourceData> {
   if(options.sourceCASCStorage) {
     return loadFromCASC(options)
@@ -82,6 +96,7 @@ async function loadFromDirectory(options: ParseOptions): Promise<SourceData> {
   }
 }
 
+/** @hidden */
 export function loadFiles(dir: string, pattern: string[]): Promise<[ string, Buffer ][]> {
   return new Promise<string[]>((resolve, reject) => {
     const fileGlob = path.join(dir, ...pattern)
@@ -130,6 +145,7 @@ async function loadFromCASC(options: ParseOptions): Promise<SourceData> {
   }
 }
 
+/** @hidden */
 export async function loadXMLFilesFromCASC(options: ParseOptions, storageHandle: any) {
   const logger = getLogger()
   logger.info("Loading XML files from game storage...")
@@ -158,6 +174,7 @@ function loadAssetFilePathsFromCASC(options: ParseOptions, storageHandle: any): 
   return assets
 }
 
+/** @hidden */
 export function fetchElements(fileData: [string, Buffer][]): Promise<ElementMap> {
   const fileText = fileData.map(([ fileName, buffer ]) => bufferToString(buffer))
 

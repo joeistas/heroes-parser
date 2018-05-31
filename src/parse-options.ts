@@ -3,15 +3,38 @@ import { ElementFunctions } from './element'
 import { DETAILED_FUNCTIONS } from './element-functions/detailed'
 
 export interface ParseOptions {
+  /** path to CASC directory or xml files */
   sourceDir: string
+  /** true if [[ParseOptions.sourceDir]] is a CASC directory */
   sourceCASCStorage: boolean
+  /** patterns of xml files to load from CASC directory. */
   xmlSearchPatterns: string[]
+  /** patterns of text files to load from CASC directory. */
   textSearchPatterns: string[]
+  /** patterns of asset files to load from CASC directory. */
   assetSearchPatterns: string[]
+  /** element name of element to start parsing */
   rootElementName: string
+  /**
+    element id of element to start parsing. Only used if elements to parse are inner elements of root element
+   */
   rootElementId: string
+  /**
+    inner elmement name of elements to parse. Only used if elements to parse are inner elements of root element
+   */
   parseElementName?: string
+  /**
+    Functions used to define how to parse elements.
+
+    Default profiles:
+      [[BASIC_FUNCTIONS]]
+      [[SKIN_FUNCTIONS]]
+      [[VO_FUNCTIONS]]
+      [[DETAILED_FUNCTIONS]]
+      [[BASE_FUNCTIONS]]
+   */
   elementFunctions: { [elementName: string]: ElementFunctions }
+  /** set log level */
   logLevel: 'none' | 'info' | 'debug'
   logger: Logger
 }
@@ -41,6 +64,9 @@ export const DEFAULT_PARSE_OPTIONS: ParseOptions = {
   logger: console
 }
 
+/**
+  Build parse options. Merges `options` with [[DEFAULT_PARSE_OPTIONS]]
+ */
 export function buildParseOptions<Options extends ParseOptions>(options: Partial<Options>): ParseOptions {
   return Object.assign({}, DEFAULT_PARSE_OPTIONS, options)
 }

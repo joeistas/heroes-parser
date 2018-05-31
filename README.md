@@ -117,7 +117,5 @@ To convert Hero data into JSON:
         // Your program
       })
 
-API
+[API](doc/README.md)
 -----------
-
-  TODO

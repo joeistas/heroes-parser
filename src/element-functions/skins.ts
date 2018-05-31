@@ -5,6 +5,7 @@ import * as functionTemplates from '../element-functions/function-templates'
 
 import { BASE_FUNCTIONS } from './base'
 
+/** @hidden */
 export const SKIN_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "default": {
     ...BASE_FUNCTIONS.default,

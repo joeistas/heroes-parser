@@ -10,8 +10,10 @@ import { getElementAttributes } from './element'
 import { ParseOptions } from './parse-options'
 import { getLogger } from './logger'
 
+/** @hidden */
 export const ASSET_FILENAME = 'asset-list.txt'
 
+/** @hidden */
 export function bufferToString(buffer: Buffer): string {
   return buffer.toString('utf8')
 }
@@ -20,6 +22,7 @@ function formatFilePath(baseDir: string, filePath: string): string {
   return path.join(baseDir, ...filePath.split("\\"))
 }
 
+/** @hidden */
 export function loadFile(filePath: string): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     readFile(filePath, (error, buffer) => {
@@ -47,6 +50,7 @@ function saveFile(filePath: string, data: Buffer): Promise<void> {
   })
 }
 
+/** @hidden */
 export function saveFilesToDisk(outputDir: string, fileData: [string, Buffer | string][]): Promise<void[]> {
   return Promise.all(
     fileData.map(([ filePath, data ]) => [ formatFilePath(outputDir, filePath), data])
@@ -54,6 +58,7 @@ export function saveFilesToDisk(outputDir: string, fileData: [string, Buffer | s
   )
 }
 
+/** @hidden */
 export function saveFilesToArchive(outputDir: string, archiveName: string, fileData: [string, Buffer | string][]) {
   const archive = new JSZip()
 
@@ -78,6 +83,7 @@ function elementsToJSON(elements: any[]): [ string, string ][] {
   })
 }
 
+/** @hidden */
 export async function saveJSON(elements: any[], outputPath: string) {
   const logger = getLogger()
   const json = elementsToJSON(elements)
@@ -86,6 +92,7 @@ export async function saveJSON(elements: any[], outputPath: string) {
   await saveFilesToDisk(outputPath, json)
 }
 
+/** @hidden */
 export async function saveJSONArchive(elements: any[], outputPath: string, archiveName: string) {
   const logger = getLogger()
   const json = elementsToJSON(elements)
@@ -94,22 +101,26 @@ export async function saveJSONArchive(elements: any[], outputPath: string, archi
   await saveFilesToArchive(outputPath, archiveName, json)
 }
 
+/** @hidden */
 export async function saveSourceFiles(fileData: [ string, string | Buffer ][], outputPath: string) {
   const logger = getLogger()
   logger.info(`Saving source files in directory ${ path.resolve(outputPath) }`)
   await saveFilesToDisk(outputPath, fileData)
 }
 
+/** @hidden */
 export async function saveSourceArchive(fileData: [ string, string | Buffer ][], outputPath: string, archiveName: string) {
   const logger = getLogger()
   logger.info(`Saving source files to archive ${ archiveName } at ${ path.resolve(outputPath) }`)
   await saveFilesToArchive(outputPath, archiveName, fileData)
 }
 
+/** @hidden */
 export function buildAssetListFileData(assetList: string[]): [ string, string ] {
   return [ ASSET_FILENAME, assetList.join(EOL) ]
 }
 
+/** @hidden */
 export function xml2Json(fileXml: string): Promise<any> {
   return new Promise((resolve, reject) => {
     parseString(fileXml, (error, json) => {
@@ -122,6 +133,7 @@ export function xml2Json(fileXml: string): Promise<any> {
   })
 }
 
+/** @hidden */
 export function formatElementName(options: ParseOptions) {
   let elementName = options.parseElementName || options.rootElementName
   elementName = elementName.startsWith('C') ? elementName.substring(1) : elementName

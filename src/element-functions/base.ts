@@ -44,6 +44,7 @@ const returnEffectOrRemove = {
   ),
 }
 
+/** @hidden */
 export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "default": {
     merge: defaultMerge,

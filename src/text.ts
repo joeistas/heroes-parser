@@ -1,9 +1,21 @@
+/** @hidden */
 export const LINE_REGEXP = /([^\r\n]+)/g
 const KEY_VALUE_REGEXP = /(.*?)=(.*)/
 
 export type LocaleTextMap = Map<string, string>
+
+/**
+  Map containing all of the text from parsed text files
+
+  Structure:
+
+    Text key ->
+
+      locale -> text
+ */
 export type TextMap = Map<string, LocaleTextMap>
 
+/** @hidden */
 export function buildTextMap(fileData: [string, string][]): TextMap {
   const textMap: TextMap = new Map()
   for(const [ filePath, text ] of fileData) {
@@ -14,6 +26,7 @@ export function buildTextMap(fileData: [string, string][]): TextMap {
   return textMap
 }
 
+/** @hidden */
 export function addTextToTextMap(text: string, locale: string, textMap: TextMap): void {
   const lineRegExp = new RegExp(LINE_REGEXP)
   let lineMatch
