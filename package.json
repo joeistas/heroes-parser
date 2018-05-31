@@ -6,6 +6,7 @@
   "types": "./dist/index.d.ts",
   "author": "Joe Istas <joe.istas@istastech.com>",
   "license": "MIT",
+  "repository": "github:joeistas/heroes-parser",
   "private": false,
   "bin": {
     "heroes-parser": "./dist/bin/parser.js"
