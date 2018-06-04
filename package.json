@@ -12,6 +12,7 @@
     "heroes-parser": "./dist/bin/parser.js"
   },
   "dependencies": {
+    "@types/cheerio": "^0.22.7",
     "casclib": "^1.0.0",
     "cheerio": "^1.0.0-rc.2",
     "commander": "^2.15.1",
@@ -27,7 +28,6 @@
   },
   "devDependencies": {
     "@types/chai": "^4.1.3",
-    "@types/cheerio": "^0.22.7",
     "@types/deepmerge": "^2.1.0",
     "@types/glob": "^5.0.35",
     "@types/handlebars": "^4.0.37",
