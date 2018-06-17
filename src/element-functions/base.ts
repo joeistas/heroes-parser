@@ -797,7 +797,10 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "MoveFilters": functionTemplates.filters(),
   "MoveSpeedBonus": functionTemplates.numberValue(),
   "MultiplierPerStep": functionTemplates.numberValue(),
-  "Name": functionTemplates.localeText(),
+  "Name": {
+    ...functionTemplates.localeText(),
+    merge: singleElement,
+  },
   "Negate": functionTemplates.booleanValue(),
   "OccludeHeight": functionTemplates.numberValue(),
   "OffCost": {
