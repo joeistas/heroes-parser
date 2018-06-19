@@ -6,7 +6,7 @@ import { existsSync } from 'fs'
 import { readFiles, findFiles } from './casc'
 import { ELEMENT_ATTRIBUTE_KEY, ElementFunctionsMap, getElementAttributes } from './element'
 import { ElementMap, buildElementMap } from './element-map'
-import { TextMap, buildTextMap, LINE_REGEXP } from './text'
+import { TextMap, buildTextMap } from './text'
 import {
   ASSET_FILENAME,
   loadFile,
@@ -126,7 +126,7 @@ async function loadAssetListFromDir(sourceDir: string, assetFileName: string): P
 
   return loadFile(assetFilePath)
     .then(buffer => bufferToString(buffer))
-    .then(fileData => fileData.split(LINE_REGEXP))
+    .then(fileData => fileData.split(/[\n\r]+/))
 }
 
 async function loadFromCASC(options: ParseOptions): Promise<SourceData> {
