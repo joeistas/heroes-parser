@@ -390,6 +390,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "CritStep": functionTemplates.numberValue(),
   "CritValidatorArray": functionTemplates.mergeElement(VALIDATOR_TYPE_FILTER),
   "CursorEffect": singleEffect,
+  "CursorRangeFlags": functionTemplates.flags(),
   "CursorRangeMode": functionTemplates.singleElement,
   "CValidatorPlayerAI": functionTemplates.removeFromOutput,
   "CValidatorPlayerTalent": {
@@ -613,6 +614,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     formatKey: "abilities",
   },
   "HeroArray": functionTemplates.mergeElement("CHero"),
+  "HeroicAbilArray": functionTemplates.valueFromAttributeIfOnlyHasKeys('ability'),
   "HeroPlaystyleFlags": functionTemplates.flags(),
   "HeroPoseAnimGroup": {
     ...functionTemplates.singleElement,
