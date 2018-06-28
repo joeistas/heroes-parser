@@ -137,7 +137,7 @@ async function loadFromCASC(options: ParseOptions): Promise<SourceData> {
       XML: await loadXMLFilesFromCASC(options, storageHandle),
       text: await loadTextFilesFromCASC(options, storageHandle),
       assets: await loadAssetFilePathsFromCASC(options, storageHandle),
-      buildNumber: casclib.getStorageInfo(storageHandle).gameBuild,
+      buildNumber: formatBuildNumber(casclib.getStorageInfo(storageHandle).gameBuild),
     }
   }
   finally {
@@ -186,4 +186,14 @@ export function fetchElements(fileData: [string, Buffer][]): Promise<ElementMap>
 function fetchText(fileData: [string, Buffer][]): TextMap {
   const fileText = fileData.map(([ fileName, buffer ]) => [ fileName, bufferToString(buffer) ] as [ string, string ])
   return buildTextMap(fileText)
+}
+
+/*
+  Removing a one at the beginning of the buildNumber
+  version 1.10 of CascLib (1.0.4 node-casclib)
+  started adding a one to the begining of the buildNumber
+  */
+function formatBuildNumber(buildNumber: number) {
+  const buildString = buildNumber.toString()
+  return buildString.startsWith('1') ? parseInt(buildString.slice(1)) : buildNumber
 }
