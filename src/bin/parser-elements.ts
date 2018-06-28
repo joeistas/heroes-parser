@@ -23,7 +23,7 @@ program
   .description("View elements in Heroes of the Storm XML files")
   .usage("<game-directory>")
   .option("--no-game-dir", "Source directory is not the Heroes of the Storm install directory")
-  .option("--name <name>", "Only return elements with element name")
+  .option("--type <name>", "Only return elements with element name")
   .option("--starts-with <name>", "Filter elements by element names that start with 'name'")
   .option("-n, --names-only", "Only display element names")
   .option("-i, --ids-only", "Only display element ids")

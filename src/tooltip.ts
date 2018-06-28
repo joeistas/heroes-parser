@@ -177,7 +177,7 @@ export function parseFormula(formula: string, references: Map<string, TooltipRef
   formula = formula.replace(/\[d\sref='(.*?)'.*\]/, "$1")
 
   const replacements: [ number, string, string ][] = []
-  const regExp = /(\$([\w,\.\[\]\:]+)\$)|([A-Za-z][\w,\.\[\]]+)/g
+  const regExp = /(\$([\w,'\.\[\]\:]+)\$)|([A-Za-z][\w,'\.\[\]]+)/g
   let match: RegExpExecArray
   while((match = regExp.exec(formula)) !== null) {
     if(match[1]) {
