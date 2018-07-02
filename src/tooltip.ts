@@ -53,7 +53,7 @@ export function parseTooltipLocaleText(
   if(Object.keys(localeText).length === 0) {
     return {}
   }
-
+  
   const parsedTooltips: { [locale: string]: string } = {}
   const references = new Map()
   const variables = new Map()
@@ -175,6 +175,8 @@ export function parseFormula(formula: string, references: Map<string, TooltipRef
 
   // convert [d ref='' ] style elements
   formula = formula.replace(/\[d\sref='(.*?)'.*\]/, "$1")
+  // remove trailing operators
+  formula = formula.replace(/[/*\-+]+$/, "")
 
   const replacements: [ number, string, string ][] = []
   const regExp = /(\$([\w,'\.\[\]\:]+)\$)|([A-Za-z][\w,'\.\[\]]+)/g

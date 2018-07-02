@@ -484,7 +484,10 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "Delay": functionTemplates.numberValue(),
   "DelayMax": functionTemplates.numberValue(),
   "DelayMin": functionTemplates.numberValue(),
-  "Description": functionTemplates.localeText(),
+  "Description": {
+    ...functionTemplates.localeText(),
+    merge: singleElement,
+  },
   "DestructionFunction": functionTemplates.removeFromOutput,
   "Detect": functionTemplates.numberValue(),
   "Detected": functionTemplates.booleanValue(),

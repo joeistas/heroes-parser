@@ -2,9 +2,8 @@ import { expect } from 'chai'
 import * as sinon from 'sinon'
 import * as cheerio from 'cheerio'
 
-import { ELEMENT_NAME_KEY, ELEMENT_ATTRIBUTE_KEY, buildElement } from '../src/element'
+import { buildElement } from '../src/element'
 import {
-  TooltipData,
   handleBarsTemplateReplacement,
   toSpanElement,
   renderTooltipWithHandlebars,
@@ -16,7 +15,6 @@ import {
   parseReference,
   renderTooltipData,
 } from '../src/tooltip'
-import { ParseContext } from '../src/parsers/'
 import { ParseData } from '../src/parse-data'
 
 describe("parseTooltipLocaleText", function() {
@@ -194,7 +192,7 @@ describe("parseFormula", function() {
     const formula = "Effect,RaynorAdrenalineRushHealer,RechargeVitalRate.Value[0]"
     const references = new Map()
 
-    const result = parseFormula(formula, references, new Map(), {} as ParseData)
+    parseFormula(formula, references, new Map(), {} as ParseData)
     expect(references.has("Effect,RaynorAdrenalineRushHealer,RechargeVitalRate.Value[0]")).to.be.true
   })
 
@@ -308,6 +306,30 @@ describe("parseFormula", function() {
     const formula = "(30 + 2)) * 100)"
     const result = parseFormula(formula, new Map(), new Map(), {} as ParseData)
     expect(result).to.eql("(30 + 2) * 100")
+  })
+
+  it("should remove trailing '/' operators", function() {
+    const formula = "30 * 100/"
+    const result = parseFormula(formula, new Map(), new Map(), {} as ParseData)
+    expect(result).to.eql("30 * 100")
+  })
+
+  it("should remove trailing '*' operators", function() {
+    const formula = "30 * 100*"
+    const result = parseFormula(formula, new Map(), new Map(), {} as ParseData)
+    expect(result).to.eql("30 * 100")
+  })
+
+  it("should remove trailing '-' operators", function() {
+    const formula = "30 * 100-"
+    const result = parseFormula(formula, new Map(), new Map(), {} as ParseData)
+    expect(result).to.eql("30 * 100")
+  })
+
+  it("should remove trailing '+' operators", function() {
+    const formula = "30 * 100+"
+    const result = parseFormula(formula, new Map(), new Map(), {} as ParseData)
+    expect(result).to.eql("30 * 100")
   })
 })
 
