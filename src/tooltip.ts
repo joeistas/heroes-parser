@@ -2,9 +2,6 @@ import * as cheerio from 'cheerio'
 import * as Handlebars from 'handlebars'
 
 import {
-  ELEMENT_ATTRIBUTE_KEY,
-  getElementAttributes,
-  mergeAttributes,
   findElementNameForId,
   joinElements,
   mergeWithParent,
@@ -53,7 +50,7 @@ export function parseTooltipLocaleText(
   if(Object.keys(localeText).length === 0) {
     return {}
   }
-  
+
   const parsedTooltips: { [locale: string]: string } = {}
   const references = new Map()
   const variables = new Map()
@@ -121,7 +118,8 @@ export function renderTooltipData(
   }
 
   const calculationContext = Object.entries(tooltipData.references || {}).reduce((values, [ refName, ref ]) => {
-    values[refName] = getValueForReference(ref, parseData)
+    const value = getValueForReference(ref, parseData)
+    values[refName] = value ? parseFloat(value) : value
     return values
   }, {} as any)
 

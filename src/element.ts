@@ -266,10 +266,21 @@ export function getElementAtPath(element: any, path: string, parts: string[] = n
     parts = path.split('.')
   }
   const part = parts.shift()
-  let output = element[part]
-  if(output === undefined && Array.isArray(element) && !stringIsNumber(part)) {
-    output = element[0]
-    output = output === undefined ? null : output[part]
+  let output
+
+  if(Array.isArray(element)) {
+    if(element.every(value => 'index' in getElementAttributes(value))) {
+      output = element.find((value: any) => getElementAttributes(value).index === part)
+    }
+
+    if(output === undefined && Array.isArray(element) && !stringIsNumber(part)) {
+      output = element.slice(-1)[0]
+      output = output === undefined ? null : output[part]
+    }
+  }
+
+  if(output === undefined) {
+    output = element[part]
   }
 
   if(output === undefined) {
@@ -305,7 +316,7 @@ export function getValueAtPath(element: any, path: string): any {
 }
 
 /**
-  Get value in elmeent.
+  Get value in element.
   If element is an array with get value from the first element in the array.
 
   @param attribute attribute to get value from element
@@ -321,7 +332,7 @@ export function getValueFromElement(element: any, attribute: string = 'value'): 
       return null
     }
 
-    element = element[0]
+    element = element.slice(-1)[0]
   }
 
   return (typeof element === 'string' ? element : getElementAttributes(element)[attribute])

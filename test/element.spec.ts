@@ -603,7 +603,14 @@ describe("getElementAtPath", function() {
           Element: [
             buildElement(null, { value: '6' }),
           ]
-        }
+        },
+        {
+          ...buildElement(null, { value: '7' }),
+          Element: [
+            buildElement(null, { index: 'first', value: '8' }),
+            buildElement(null, { index: 'second', value: '9' }),
+          ]
+        },
       ]
     }
   })
@@ -620,16 +627,22 @@ describe("getElementAtPath", function() {
     expect(value).to.eql(this.element.Element[0].Element)
   })
 
-  it("should default to the first element in an array if not in the path", function() {
+  it("should default to the last element in an array if not in the path", function() {
     const path = 'Element.Element'
     const value = getElementAtPath(this.element, path)
-    expect(value).to.eql(this.element.Element[0].Element)
+    expect(value).to.eql(this.element.Element[2].Element)
   })
 
   it("should get the element in array if a number is listed in the path", function() {
     const path = 'Element.1.Element'
     const value = getElementAtPath(this.element, path)
     expect(value).to.eql(this.element.Element[1].Element)
+  })
+
+  it("should get find an element in array by 'index' if every element of the array has an 'index' attribute", function() {
+    const path = 'Element.2.Element.second'
+    const value = getElementAtPath(this.element, path)
+    expect(value).to.eql(this.element.Element[2].Element[1])
   })
 
   it("should return null if the path does not exist", function() {
@@ -639,7 +652,7 @@ describe("getElementAtPath", function() {
   })
 
   it("should return null if array index does not exist", function() {
-    const path = 'Element.2'
+    const path = 'Element.30'
     const value = getElementAtPath(this.element, path)
     expect(value).to.be.null
   })
