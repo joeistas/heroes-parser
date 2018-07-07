@@ -643,7 +643,10 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "IndexArray": functionTemplates.removeFromOutput,
   "InfoFlags": functionTemplates.flags(true),
   "InfoIcon": functionTemplates.singleAsset(),
-  "InfoText": functionTemplates.localeText(),
+  "InfoText": {
+    ...functionTemplates.localeText(),
+    merge: singleElement,
+  },
   "InfoTooltipPriority": functionTemplates.numberValue(),
   "InGameUnitStatusCutsceneFile": functionTemplates.removeFromOutput,
   "Init": functionTemplates.numberValue(),
