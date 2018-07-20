@@ -387,6 +387,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "CRequirementOr": functionTemplates.addAttribute('operator', "or"),
   "CRequirementSum": functionTemplates.addAttribute('operator', "sum"),
   "CRequirementXor": functionTemplates.addAttribute('operator', "xor"),
+  "Crit": functionTemplates.booleanValue(),
   "CritStep": functionTemplates.numberValue(),
   "CritValidatorArray": functionTemplates.mergeElement(VALIDATOR_TYPE_FILTER),
   "CursorEffect": singleEffect,
@@ -782,6 +783,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
       elementFormatters.removeFromOutput
     ),
   },
+  "Modifier": functionTemplates.numberValue(),
   "ModifyFlags": functionTemplates.flags(true),
   "ModifyFraction": functionTemplates.numberValue(),
   "ModifyLimit": functionTemplates.numberValue(),
