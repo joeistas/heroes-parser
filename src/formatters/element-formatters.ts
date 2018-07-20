@@ -101,6 +101,12 @@ export function some(...conditionals: ElementConditional[]) {
   }
 }
 
+export function every(...conditionals: ElementConditional[]) {
+  return (formattedElement: any, element: any): boolean => {
+    return conditionals.every(conditional => conditional(formattedElement, element))
+  }
+}
+
 export function removeFromOutput(formattedElement: any, element: any): null {
   return null
 }

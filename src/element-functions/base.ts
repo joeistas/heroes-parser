@@ -221,7 +221,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     ),
   },
   "CaseDefault": {
-    ...functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
+    ...singleEffect,
     formatKey: "default",
   },
   "CastIntroTime": functionTemplates.numberValue(),
@@ -522,8 +522,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "EditorCategories": functionTemplates.removeFromOutput,
   "EditorFlags": functionTemplates.removeFromOutput,
   "Effect": {
-    ...functionTemplates.mergeElement(EFFECT_TYPE_FILTER),
-    merge: singleElement,
+    ...singleEffect,
     formatKey: keyFormatters.join(
       keyFormatters.defaultKeyFormatter,
       keyFormatters.pluralizeKey
