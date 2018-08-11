@@ -68,6 +68,24 @@ describe("parseTooltipLocaleText", function() {
     expect(formulas.formula0).to.eql("(ref0/ref1*100)")
     expect(formulas.formula1).to.eql("-ref2")
   })
+
+  it("should not convert unicode characters to html entities", function() {
+    const localeText = {
+      "enus": "대지파괴자"
+    }
+
+    const result = parseTooltipLocaleText(localeText, {} as ParseData)
+    expect(result.localeText.enus).to.eql("대지파괴자")
+  })
+
+  it("should preserve html entities", function() {
+    const localeText = {
+      "enus": "&amp; &lt;"
+    }
+
+    const result = parseTooltipLocaleText(localeText, {} as ParseData)
+    expect(result.localeText.enus).to.eql("&amp; &lt;")
+  })
 })
 
 describe("renderTooltipData", function() {
@@ -86,6 +104,34 @@ describe("renderTooltipData", function() {
     renderTooltipData(tooltipData, {} as ParseData, renderSpy)
 
     expect(renderSpy).to.have.been.calledOnce
+  })
+
+  it("should not convert unicode characters to html entities", function() {
+    const tooltipData = {
+      localeText: {
+        enus: "대지파괴자"
+      },
+      formulas: {},
+      references: {},
+      variables: {},
+    }
+
+    const result = renderTooltipData(tooltipData, {} as ParseData)
+    expect(result.enus).to.eql("대지파괴자")
+  })
+
+  it("should preserve html entities", function() {
+    const tooltipData = {
+      localeText: {
+        enus: "&amp; &lt;"
+      },
+      formulas: {},
+      references: {},
+      variables: {},
+    }
+
+    const result = renderTooltipData(tooltipData, {} as ParseData)
+    expect(result.enus).to.eql("&amp; &lt;")
   })
 
   it("should replace each reference with the values found in the element map", function() {

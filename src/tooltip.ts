@@ -1,5 +1,6 @@
 import * as cheerio from 'cheerio'
 import * as Handlebars from 'handlebars'
+import * as sanitizeHtml from 'sanitize-html'
 
 import {
   findElementNameForId,
@@ -78,7 +79,13 @@ export function parseTooltipLocaleText(
       $(element).replaceWith(templateElement($, element))
     })
 
-    parsedTooltips[locale] = $("body").html()
+    // Added sanitize-html to fix issue with cherrio converting non-latin text to html entities
+    // sanitize-html converts the non-latin text to unicode while preserving html entities
+    // https://github.com/cheeriojs/cheerio/issues/866
+    parsedTooltips[locale] = sanitizeHtml($("body").html(), {
+      allowedTags: false,
+      allowedAttributes: false,
+    })
   }
 
   const tooltipData: Partial<TooltipData> = { localeText: parsedTooltips }
