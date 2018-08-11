@@ -1053,6 +1053,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "TokenId": functionTemplates.singleElementWithReplacement(),
   "Tooltip": functionTemplates.parseTooltip(),
   "TooltipAddendum": functionTemplates.parseTooltip(),
+  "TooltipCooldownOverrideText": functionTemplates.parseTooltip(),
   "TooltipFlags": functionTemplates.flags(),
   "TooltipVitalName": functionTemplates.localeTextToSingleObject(),
   "TotalCargoSpace": functionTemplates.numberValue(),

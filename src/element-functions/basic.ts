@@ -54,6 +54,7 @@ export const BASIC_FUNCTIONS = {
   "Tooltip": functionTemplates.renderTooltip(),
   "TooltipAddendum": functionTemplates.renderTooltip(),
   "TooltipAppender": functionTemplates.valueFromAttributeIfOnlyHasKeys("button"),
+  "TooltipCooldownOverrideText": functionTemplates.renderTooltip(),
   "UnloadCargoEffect": functionTemplates.removeFromOutput,
   "Validator": functionTemplates.removeFromOutput,
   "ValidatorArray": functionTemplates.removeFromOutput,
