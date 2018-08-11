@@ -1,8 +1,5 @@
-import { ElementFunctions, getElement } from "../element"
-import { ParseData } from "../parse-data"
+import { ElementFunctions } from "../element"
 import * as parsers from "../parsers"
-import * as addParsers from "../parsers/add-parsers"
-import * as assetParsers from "../parsers/asset-parsers"
 import * as elementParsers from "../parsers/element-parsers"
 import * as mergeParsers from "../parsers/merge-parsers"
 import * as textParsers from "../parsers/text-parsers"
@@ -240,20 +237,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "CBehaviorTrail": functionTemplates.removeFromOutput,
   "CBehaviorThreat": functionTemplates.removeFromOutput,
   "CBehaviorTimeStamp": functionTemplates.removeFromOutput,
-  "CValidatorUnitCompareBehaviorCount": {
-    ...functionTemplates.addAttribute("type", "compareBehaviorCount"),
-    formatElement: elementFormatters.join(
-      elementFormatters.conditionallyFormatElement(
-        elementFormatters.attributeIsDefined('value'),
-        elementFormatters.passThrough,
-        (formattedElement: any): any => {
-          formattedElement.value = 1
-          return formattedElement
-        }
-      ),
-      elementFormatters.defaultElementFormatter
-    )
-  },
+  "CBehaviorVeterancy": functionTemplates.addAttribute("type", "veterancy"),
   "CBehaviorUnitTracker": functionTemplates.removeFromOutput,
   "CBehaviorWander": functionTemplates.removeFromOutput,
   "CEffectAbortMissle": functionTemplates.addAttribute('effectType', 'abortMissle'),
@@ -409,6 +393,20 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     )
   },
   "CValidatorUnitArmorLevel": functionTemplates.addAttribute('validates', 'armorAmount'),
+  "CValidatorUnitCompareBehaviorCount": {
+    ...functionTemplates.addAttribute("type", "compareBehaviorCount"),
+    formatElement: elementFormatters.join(
+      elementFormatters.conditionallyFormatElement(
+        elementFormatters.attributeIsDefined('value'),
+        elementFormatters.passThrough,
+        (formattedElement: any): any => {
+          formattedElement.value = 1
+          return formattedElement
+        }
+      ),
+      elementFormatters.defaultElementFormatter
+    )
+  },
   "CValidatorUnitCompareDamageTakenTime": functionTemplates.addAttribute('validates', 'damageTakenTime'),
   "CValidatorUnitCompareField": functionTemplates.addAttribute('validates', 'compareField'),
   "CValidatorUnitCompareKillCount": functionTemplates.addAttribute('validates', 'hasKills'),
@@ -975,6 +973,13 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "ShapeExpansion": functionTemplates.numberValue(),
   "SharedFlags": functionTemplates.flags(),
   "SharedListPersistsForever": functionTemplates.booleanValue(),
+  "ShareFilters": {
+    merge: singleElement,
+    formatElement: elementFormatters.join(
+      elementFormatters.applyFormatterToAttribute("value", elementFormatters.parseFilterString),
+      elementFormatters.defaultElementFormatter
+    )
+  },
   "ShieldRegenDelay": functionTemplates.numberValue(),
   "ShieldRegenRate": functionTemplates.numberValue(),
   "ShowInUI": functionTemplates.booleanValue("value", "True", "False"),
@@ -1116,6 +1121,10 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
     formatKey: "vitalMaxModification"
   },
   "VitalMaxIncreaseAffectsCurrentArray": functionTemplates.flags(),
+  "VitalRegenArray": {
+    ...functionTemplates.valuesToSingleObjectOfNumbers(),
+    formatKey: "vitalRegenModification"
+  },
   "VitalType": functionTemplates.singleElement,
   "VOArray": {
     ...functionTemplates.assetArrayToSingleObject(),

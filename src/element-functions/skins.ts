@@ -1,7 +1,6 @@
 import { ElementFunctions } from '../element'
 
 import * as elementFormatters from '../formatters/element-formatters'
-import * as functionTemplates from '../element-functions/function-templates'
 
 import { BASE_FUNCTIONS } from './base'
 

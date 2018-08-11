@@ -1,15 +1,3 @@
-import { ELEMENT_ATTRIBUTE_KEY, ElementFunctions, getElementAttributes } from '../element'
-import { ParseData } from '../parse-data'
-import * as parsers from '../parsers'
-import * as addParsers from '../parsers/add-parsers'
-import * as assetParsers from '../parsers/asset-parsers'
-import * as mergeParsers from '../parsers/merge-parsers'
-import * as textParsers from '../parsers/text-parsers'
-import * as elementNameFilters from '../parsers/element-name-filters'
-import * as arrayFormatters from '../formatters/array-formatters'
-import * as elementFormatters from '../formatters/element-formatters'
-import * as keyFormatters from '../formatters/key-formatters'
-import { defaultMerge, singleElement } from '../merge'
 import * as functionTemplates from './function-templates'
 
 import { DETAILED_FUNCTIONS } from './detailed'
@@ -43,6 +31,7 @@ export const BASIC_FUNCTIONS = {
   "LaunchMissileEffect": functionTemplates.removeFromOutput,
   "LevelScalingArray": functionTemplates.removeFromOutput,
   "LoadCargoEffect": functionTemplates.removeFromOutput,
+  "MinVeterancyXP": functionTemplates.removeFromOutput,
   "PeriodicEffect": functionTemplates.removeFromOutput,
   "PeriodicEffectArray": functionTemplates.removeFromOutput,
   "PrepEffect": functionTemplates.removeFromOutput,
