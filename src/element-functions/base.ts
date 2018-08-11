@@ -956,7 +956,6 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "ReviveInfoBase": functionTemplates.removeFromOutput,
   "ReviveType": functionTemplates.singleElementWithReplacement(),
   "Role": functionTemplates.singleElement,
-  "RolesMultiClass": functionTemplates.singleElement,
   "RoleScoreValueOverride": functionTemplates.singleElement,
   "Row": functionTemplates.numberValue(),
   "Scale": functionTemplates.numberValue(),
