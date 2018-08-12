@@ -6,7 +6,6 @@ import { parseString } from 'xml2js'
 import * as JSZip from 'jszip'
 import * as pluralize from 'pluralize'
 
-import { getElementAttributes } from './element'
 import { ParseOptions } from './parse-options'
 import { getLogger } from './logger'
 
@@ -39,6 +38,10 @@ function saveFile(filePath: string, data: Buffer): Promise<void> {
   return new Promise((resolve, reject) => {
     const dirname = path.dirname(filePath)
     mkdirp(dirname, (error) => {
+      if(error) {
+        reject(error)
+      }
+      
       writeFile(filePath, data, (error) => {
         if(error) {
           reject(error)
@@ -77,7 +80,7 @@ export function saveFilesToArchive(outputDir: string, archiveName: string, fileD
 function elementsToJSON(elements: any[]): [ string, string ][] {
   return elements.map(element => {
     return [
-      (element.name || element.id) + ".json",
+      element.id + ".json",
       JSON.stringify(element, null, 4)
     ] as [ string, string ]
   })

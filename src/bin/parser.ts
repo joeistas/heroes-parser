@@ -2,8 +2,10 @@
 
 import *  as program from 'commander'
 
+const packageSetup = require("../../package.json")
+
 program
-  .version("1.0.0")
+  .version(packageSetup.version)
   .name("heroes-parser")
   .command("parse <source-dir>", "Convert XML elements to JSON", { isDefault: true })
   .command("extract <game-directory> [filePaths...]", "Extract asset files from game data")
