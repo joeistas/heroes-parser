@@ -46,13 +46,22 @@ describe("parseTooltipLocaleText", function() {
     expect(result.localeText.enus).to.match(/{{ formula1 }}/)
   })
 
-  it("should remove every 'n' element", function() {
+  it("should replace every 'n' element with <br />", function() {
     const localeText = {
       "enus": "Increases <n/><n>stuff <c>things</c><n/>"
     }
 
     const result = parseTooltipLocaleText(localeText, {} as ParseData)
-    expect(result.localeText.enus).to.eql("Increases stuff <span>things</span>")
+    expect(result.localeText.enus).to.eql("Increases <br /><br />stuff <span>things</span><br />")
+  })
+
+  it("should correct malformed 'n' elements", function() {
+    const localeText = {
+      "enus": "Increases </n></n>stuff <c>things</c></n>"
+    }
+
+    const result = parseTooltipLocaleText(localeText, {} as ParseData)
+    expect(result.localeText.enus).to.eql("Increases <br /><br />stuff <span>things</span><br />")
   })
 
   it("should set a formula for every 'd' element in the tooltip text", function() {

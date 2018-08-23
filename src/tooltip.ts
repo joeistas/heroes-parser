@@ -62,10 +62,13 @@ export function parseTooltipLocaleText(
       continue
     }
 
-    const $ = cheerio.load(localeText[locale])
+    //Fix for Blizzard's sloppy XML errors
+    const localeTextString = localeText[locale].replace(/<\/n>/g, '<n/>');
+
+    const $ = cheerio.load(localeTextString)
 
     $("n").each((index, element) => {
-      $(element).replaceWith(removeNElements($, element))
+      $(element).replaceWith(replaceNWithBrElements($, element))
     })
 
     $("d").each((index, element) => {
@@ -327,12 +330,12 @@ function getValueForReference(ref: TooltipReference, parseData: ParseData): any 
   return getValueAtPath(element, ref.field)
 }
 
-function removeNElements($: CheerioStatic, element: CheerioElement): string {
+function replaceNWithBrElements($: CheerioStatic, element: CheerioElement): string {
   $('n', element).each((index, e) => {
-    $(e).replaceWith(removeNElements($, e))
+    $(e).replaceWith(replaceNWithBrElements($, e))
   })
 
-  return $(element).html()
+  return '<br/>' + $(element).html()
 }
 
 function removeUnmatchedParens(formula: string): string {
