@@ -141,6 +141,16 @@ export function renderTooltipData(
 
     try{
       formulaResults[formulaName] = _eval(evalText, calculationContext).result
+
+      //If the formula consists of a single refName, assume that it can have a
+      //levelScaling value.
+      const ref = (tooltipData.references || {})[formula]
+      if (ref) {
+        const levelScaling = getLevelScalingValueForReference(ref, parseData)
+        if (levelScaling) {
+          formulaResults[formulaName] += `(+${ parseFloat(levelScaling) * 100 }%)`
+        }
+      }
     }
     catch(e) {
       const logger = getLogger()
@@ -325,6 +335,24 @@ function getValueForReference(ref: TooltipReference, parseData: ParseData): any 
   }
 
   return getValueAtPath(element, ref.field)
+}
+
+/**
+ * Retrieves the levelScaling value of `ref` from `elements.`
+ * If `ref` is not found, returns `null`.
+ */
+function getLevelScalingValueForReference(ref: TooltipReference, parseData: ParseData): any {
+  for (const [heroCatalog] of parseData.elements.get('CHero').values()) {
+    for (const levelScalingArray of heroCatalog.LevelScalingArray || []) {
+      for (const mod of levelScalingArray.Modifications || []) {
+        if (getValueAtPath(mod, 'Entry') === ref.entry && getValueAtPath(mod, 'Field') === ref.field) {
+          return getValueAtPath(mod, 'Value')
+        }
+      }
+    }
+  }
+
+  return null
 }
 
 function removeNElements($: CheerioStatic, element: CheerioElement): string {
