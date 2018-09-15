@@ -64,24 +64,28 @@ export function parseTooltipLocaleText(
       continue
     }
 
-    //Fix for Blizzard's sloppy XML errors
+    //Fix for newline XML errors
     const localeTextString = localeText[locale].replace(/<\/n>/g, '<n/>');
 
     const $ = cheerio.load(localeTextString)
+    console.log($("body").html())
 
     $("n").each((index, element) => {
       $(element).replaceWith(replaceNWithBrElements($, element))
     })
 
     $("d").each((index, element) => {
-      const formulaName = 'formula' + index
-      $(element).replaceWith(formulaElement(formulaName))
       const formula = parseFormula($(element).attr('ref'), references, variables, parseData)
+      const formulaName = Object.keys(formulas).find(f => formulas[f] === formula) || 'formula' + Object.keys(formulas).length
+
+      $(element).replaceWith(formulaElement(formulaName) + $(element).html())
       formulas[formulaName] = formula
     })
 
     $("c").each((index, element) => {
+      console.log($("body").html())
       $(element).replaceWith(templateElement($, element))
+      console.log($("body").html())
     })
 
     // Added sanitize-html to fix issue with cherrio converting non-latin text to html entities

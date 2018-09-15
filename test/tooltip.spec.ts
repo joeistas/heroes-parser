@@ -102,6 +102,37 @@ describe("parseTooltipLocaleText", function() {
     const result = parseTooltipLocaleText(localeText, parseData)
     expect(result.localeText.enus).to.eql("&amp; &lt;")
   })
+
+  it("should maintain the correct formula values over multiple formulas and locales", function() {
+    const localeText = {
+      "enus": "<c><d ref='Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray/Effect,AbathurSymbioteSpikeBurstDamageSearch,AreaArray' /></c><c><d ref='-Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray' /></c>",
+      "frfr": "<c><d ref='-Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray' /></c><c><d ref='Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray/Effect,AbathurSymbioteSpikeBurstDamageSearch,AreaArray' /></c>",
+    }
+
+    const result = parseTooltipLocaleText(localeText, parseData)
+    expect(result.localeText.enus).to.equal("<span>{{ formula0 }}</span><span>{{ formula1 }}</span>")
+    expect(result.localeText.frfr).to.equal("<span>{{ formula1 }}</span><span>{{ formula0 }}</span>")
+    expect(result.formulas.formula0).to.equal("ref0/ref1")
+    expect(result.formulas.formula1).to.equal("-ref0")
+  })
+
+  it("should not remove '%' characters inside 'c' elements", function() {
+    const localeText = {
+      "enus": "<c><d ref='Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray/Effect,AbathurSymbioteSpikeBurstDamageSearch,AreaArray' />%</c>",
+    }
+
+    const result = parseTooltipLocaleText(localeText, parseData)
+    expect(result.localeText.enus).to.equal("<span>{{ formula0 }}%</span>")
+  })
+
+  it("should not remove non element text inside 'c' elements", function() {
+    const localeText = {
+      "enus": "<c><d ref='Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray/Effect,AbathurSymbioteSpikeBurstDamageSearch,AreaArray' /> text</c>",
+    }
+
+    const result = parseTooltipLocaleText(localeText, parseData)
+    expect(result.localeText.enus).to.equal("<span>{{ formula0 }} text</span>")
+  })
 })
 
 describe("computeTooltipDataFormulas", function() {
