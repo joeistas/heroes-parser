@@ -2,6 +2,13 @@ import {
   ElementFormatter,
   ElementKeyFormatter,
 } from './'
+import {
+  TooltipRenderFunction,
+  TooltipData,
+  computeTooltipDataFormulas,
+  renderTooltipData,
+  renderTooltipWithHandlebars,
+} from '../tooltip'
 import { LEVEL_SCALING_ATTRIBUTE } from '../parsers/element-parsers'
 import { defaultKeyFormatter } from './key-formatters'
 import * as utils from '../utils'
@@ -251,6 +258,38 @@ export function combineAttributes(newAttribute: string, ...attributesToMerge: st
     }, [])
 
     formattedElement[newAttribute] = combined.filter(e => e !== undefined)
+    return formattedElement
+  }
+}
+
+export function computeTooltipFormulas(
+  attribute: string = 'value',
+  variableValues: { [variableName: string]: number } = {},
+) {
+  return (formattedElement: any, element: any): any => {
+    if(!formattedElement[attribute]) {
+      return formattedElement
+    }
+
+    const value = formattedElement[attribute]
+    formattedElement[attribute] = computeTooltipDataFormulas(value as TooltipData, variableValues)
+
+    return formattedElement
+  }
+}
+
+export function renderTooltip(
+  attribute: string = 'value',
+  render: TooltipRenderFunction = renderTooltipWithHandlebars
+) {
+  return (formattedElement: any, element: any): any => {
+    if(!formattedElement[attribute]) {
+      return formattedElement
+    }
+
+    const value = formattedElement[attribute]
+    formattedElement[attribute] = renderTooltipData(value as TooltipData, render)
+
     return formattedElement
   }
 }

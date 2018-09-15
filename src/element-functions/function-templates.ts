@@ -151,8 +151,11 @@ export function renderTooltip(attribute: string = 'value'): ElementFunctions {
     preParse: parsers.join(
       localeText(attribute).preParse,
       textParsers.parseTooltip(attribute),
-      textParsers.renderTooltip(attribute)
     ),
+    formatElement: elementFormatters.join(
+      elementFormatters.computeTooltipFormulas(attribute),
+      elementFormatters.renderTooltip(attribute),
+    )
   }
 }
 
@@ -183,8 +186,8 @@ export function assets(attribute: string = 'value'): ElementFunctions {
   return {
     preParse: parsers.join(
       parsers.defaultPreParser,
-      textParsers.attributeValueReplacement(),
-      assetParsers.processAsset()
+      textParsers.attributeValueReplacement(attribute),
+      assetParsers.processAsset(attribute)
     ),
   }
 }

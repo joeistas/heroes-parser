@@ -267,13 +267,13 @@ export function getElementAtPath(element: any, path: string, parts: string[] = n
   }
   const part = parts.shift()
   let output
-
+  
   if(Array.isArray(element)) {
     if(element.every(value => 'index' in getElementAttributes(value))) {
       output = element.find((value: any) => getElementAttributes(value).index === part)
     }
 
-    if(output === undefined && Array.isArray(element) && !stringIsNumber(part)) {
+    if(output === undefined && !stringIsNumber(part)) {
       output = element.slice(-1)[0]
       output = output === undefined ? null : output[part]
     }

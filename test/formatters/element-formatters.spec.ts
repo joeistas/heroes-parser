@@ -304,3 +304,64 @@ it("removeAttributeFromElement should remove the specified key from the returned
 
   expect(elementFormatters.removeAttributeFromElement('another')(formattedElement, {})).to.eql({ test: 'value' })
 })
+
+describe("computeTooltipFormulas", function() {
+  it("should return the original element if the attribute does not exist", function() {
+    const element = {}
+    const result = elementFormatters.computeTooltipFormulas()(element, {})
+    expect(result).to.equal(element)
+    expect(result).to.eql(element)
+  })
+
+  it("should set the computed values of formulas in the tooltip data", function() {
+    const element = {
+      'value': {
+        localeText: {
+          enus: "Increases the range of Symbiote's Spike Burst by {{ formula0 }}"
+        },
+        formulas: {
+          formula0: "-30 * 20"
+        },
+        references: {},
+        variables: {},
+      }
+    }
+
+    const result = elementFormatters.computeTooltipFormulas()(element, {})
+    console.log(result)
+    const tooltipData = result.value
+    expect(tooltipData).to.have.property('formulaResults')
+    expect(tooltipData.formulaResults.formula0).to.equal(-600)
+  })
+})
+
+describe("renderTooltip", function() {
+  it("should return the original element if the attribute does not exist", function() {
+    const element = {}
+    const result = elementFormatters.renderTooltip()(element, {})
+    expect(result).to.equal(element)
+    expect(result).to.eql(element)
+  })
+
+  it("should set the attritube to the rendered tooltip text", function() {
+    const element = {
+      'value': {
+        localeText: {
+          enus: "Increases the range of Symbiote's Spike Burst by {{ formula0 }}"
+        },
+        formulas: {
+          formula0: "-30 * 20"
+        },
+        formulaResults: {
+          formula0: -600
+        },
+        references: {},
+        variables: {},
+      }
+    }
+
+    const result = elementFormatters.renderTooltip()(element, {})
+    const tooltip = result.value.enus
+    expect(tooltip).to.eql("Increases the range of Symbiote's Spike Burst by -600")
+  })
+})

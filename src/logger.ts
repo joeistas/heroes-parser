@@ -1,5 +1,3 @@
-import { ParseOptions } from './parse-options'
-
 export interface Logger {
   info: (...args: any[]) => void
   debug: (...args: any[]) => void

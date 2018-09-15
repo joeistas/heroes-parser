@@ -4,6 +4,7 @@ import * as cheerio from 'cheerio'
 
 import { buildElement } from '../src/element'
 import {
+  TooltipData,
   handleBarsTemplateReplacement,
   toSpanElement,
   renderTooltipWithHandlebars,
@@ -13,35 +14,41 @@ import {
   parseVariableToken,
   parseVariableReference,
   parseReference,
+  computeTooltipDataFormulas,
   renderTooltipData,
 } from '../src/tooltip'
 import { ParseData } from '../src/parse-data'
+import { buildLogger } from '../src/logger'
 
 describe("parseTooltipLocaleText", function() {
   const localeText = {
     "enus": "Increases the range of Symbiote's Spike Burst by <c val=\"#TooltipNumbers\"><d ref=\"(Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray[0].Modifications[0].Value/Effect,AbathurSymbioteSpikeBurstDamageSearch,AreaArray[0].Radius*100)\" player=\"0\"/>%</c> and decreases the cooldown by <c val=\"#TooltipNumbers\"><d ref=\"-Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray[0].Modifications[4].Value\" player=\"0\"/></c> second."
   }
 
+  const parseData = {
+    elements: new Map()
+  } as ParseData
+
   it("should call 'templateElement' function for every 'c' element in the tooltip text", function() {
     const templateSpy = sinon.spy(toSpanElement)
-    parseTooltipLocaleText(localeText, {} as ParseData, handleBarsTemplateReplacement, templateSpy)
+    parseTooltipLocaleText(localeText, parseData, handleBarsTemplateReplacement, templateSpy)
     expect(templateSpy).to.have.been.calledTwice
   })
 
   it("should call 'formulaElement' function for every 'd' element in the tooltip text", function() {
     const formulaSpy = sinon.spy(handleBarsTemplateReplacement)
-    parseTooltipLocaleText(localeText, {} as ParseData, formulaSpy)
+    parseTooltipLocaleText(localeText, parseData, formulaSpy)
     expect(formulaSpy).to.have.been.calledTwice
   })
 
   it("should replace every 'c' element with the result of 'templateElement' function", function() {
-    const result = parseTooltipLocaleText(localeText, {} as ParseData)
+    const result = parseTooltipLocaleText(localeText, parseData)
     const $ = cheerio.load(result.localeText.enus)
     expect($('span')).to.have.length(2)
   })
 
   it("should replace every 'd' element with the result of 'formulaElement' function", function() {
-    const result = parseTooltipLocaleText(localeText, {} as ParseData)
+    const result = parseTooltipLocaleText(localeText, parseData)
     expect(result.localeText.enus).to.match(/{{ formula0 }}/)
     expect(result.localeText.enus).to.match(/{{ formula1 }}/)
   })
@@ -51,7 +58,7 @@ describe("parseTooltipLocaleText", function() {
       "enus": "Increases <n/><n>stuff <c>things</c><n/>"
     }
 
-    const result = parseTooltipLocaleText(localeText, {} as ParseData)
+    const result = parseTooltipLocaleText(localeText, parseData)
     expect(result.localeText.enus).to.eql("Increases <br /><br />stuff <span>things</span><br />")
   })
 
@@ -60,18 +67,18 @@ describe("parseTooltipLocaleText", function() {
       "enus": "Increases </n></n>stuff <c>things</c></n>"
     }
 
-    const result = parseTooltipLocaleText(localeText, {} as ParseData)
+    const result = parseTooltipLocaleText(localeText, parseData)
     expect(result.localeText.enus).to.eql("Increases <br /><br />stuff <span>things</span><br />")
   })
 
   it("should set a formula for every 'd' element in the tooltip text", function() {
-    const result = parseTooltipLocaleText(localeText, {} as ParseData)
+    const result = parseTooltipLocaleText(localeText, parseData)
     const formulas = result.formulas
     expect(Object.keys(formulas)).to.have.length(2)
   })
 
   it("every formula value should be pulled from the 'd' element 'ref' attribute", function() {
-    const result = parseTooltipLocaleText(localeText, {} as ParseData)
+    const result = parseTooltipLocaleText(localeText, parseData)
     const formulas = result.formulas
 
     expect(formulas.formula0).to.eql("(ref0/ref1*100)")
@@ -83,7 +90,7 @@ describe("parseTooltipLocaleText", function() {
       "enus": "대지파괴자"
     }
 
-    const result = parseTooltipLocaleText(localeText, {} as ParseData)
+    const result = parseTooltipLocaleText(localeText, parseData)
     expect(result.localeText.enus).to.eql("대지파괴자")
   })
 
@@ -92,8 +99,137 @@ describe("parseTooltipLocaleText", function() {
       "enus": "&amp; &lt;"
     }
 
-    const result = parseTooltipLocaleText(localeText, {} as ParseData)
+    const result = parseTooltipLocaleText(localeText, parseData)
     expect(result.localeText.enus).to.eql("&amp; &lt;")
+  })
+})
+
+describe("computeTooltipDataFormulas", function() {
+  buildLogger()
+
+  it("should compute the value of each formula and place the result in 'formulaResults'", function() {
+    const tooltipData = {
+      localeText: {},
+      formulas: {
+        formula0: "20 - 4 / 2"
+      },
+      references: {},
+      variables: {}
+    }
+
+    const result = computeTooltipDataFormulas(tooltipData)
+    expect(result).to.have.property('formulaResults')
+    expect(result.formulaResults).to.have.property("formula0").and.to.equal(18)
+  })
+
+  it("should replace references with the value in the TooltipReference data", function() {
+    const tooltipData = {
+      localeText: {},
+      formulas: {
+        formula0: "20 - ref0 / 2"
+      },
+      references: {
+        ref0: {
+          catalog: '',
+          entry: '',
+          field: '',
+          value: 12
+        }
+      },
+      variables: {}
+    }
+
+    const result = computeTooltipDataFormulas(tooltipData)
+    expect(result).to.have.property('formulaResults')
+    expect(result.formulaResults).to.have.property("formula0").and.to.equal(14)
+  })
+
+  it("should set formulaResult to 'NaN' if a reference value is null or undefined", function() {
+    const tooltipData: Partial<TooltipData> = {
+      localeText: {},
+      formulas: {
+        formula0: "20 - ref0 / 2"
+      },
+      references: {
+        ref0: {
+          catalog: '',
+          entry: '',
+          field: '',
+          value: null,
+        }
+      },
+      variables: {}
+    }
+
+    const result = computeTooltipDataFormulas(tooltipData)
+    expect(result).to.have.property('formulaResults')
+    expect(result.formulaResults).to.have.property("formula0").and.to.equal('NaN')
+  })
+
+  it("should set formulaResult to 'NaN' if the formula is invalid", function() {
+    const tooltipData: Partial<TooltipData> = {
+      localeText: {},
+      formulas: {
+        formula0: "20 - ref0 /"
+      },
+      references: {
+        ref0: {
+          catalog: '',
+          entry: '',
+          field: '',
+          value: 12,
+        }
+      },
+      variables: {}
+    }
+
+    const result = computeTooltipDataFormulas(tooltipData)
+    expect(result).to.have.property('formulaResults')
+    expect(result.formulaResults).to.have.property("formula0").and.to.equal('NaN')
+  })
+
+  it("should default a variable to it's min value if it is not set in variableValues", function() {
+    const tooltipData = {
+      localeText: {},
+      formulas: {
+        formula0: "0 + var0 * 2"
+      },
+      references: {},
+      variables: {
+        var0: {
+          counter: 'SymbioteBehavior',
+          min: 5,
+          max: 35,
+          scale: 2,
+        }
+      }
+    }
+
+    const result = computeTooltipDataFormulas(tooltipData)
+    expect(result).to.have.property('formulaResults')
+    expect(result.formulaResults).to.have.property("formula0").and.to.equal(10)
+  })
+
+  it("should set a variable to the value set in variableValues", function() {
+    const tooltipData = {
+      localeText: {},
+      formulas: {
+        formula0: "0 + var0 * 2"
+      },
+      references: {},
+      variables: {
+        var0: {
+          counter: 'SymbioteBehavior',
+          min: 5,
+          max: 35,
+          scale: 2,
+        }
+      }
+    }
+
+    const result = computeTooltipDataFormulas(tooltipData, { var0: 35 })
+    expect(result).to.have.property('formulaResults')
+    expect(result.formulaResults).to.have.property("formula0").and.to.equal(70)
   })
 })
 
@@ -104,13 +240,14 @@ describe("renderTooltipData", function() {
         enus: "Increases the range of Symbiote's Spike Burst"
       },
       formulas: {},
+      formulaResults: {},
       references: {},
       variables: {},
     }
 
     const renderSpy = sinon.spy(renderTooltipWithHandlebars)
 
-    renderTooltipData(tooltipData, {} as ParseData, renderSpy)
+    renderTooltipData(tooltipData, renderSpy)
 
     expect(renderSpy).to.have.been.calledOnce
   })
@@ -121,11 +258,12 @@ describe("renderTooltipData", function() {
         enus: "대지파괴자"
       },
       formulas: {},
+      formulaResults: {},
       references: {},
       variables: {},
     }
 
-    const result = renderTooltipData(tooltipData, {} as ParseData)
+    const result = renderTooltipData(tooltipData)
     expect(result.enus).to.eql("대지파괴자")
   })
 
@@ -135,111 +273,41 @@ describe("renderTooltipData", function() {
         enus: "&amp; &lt;"
       },
       formulas: {},
+      formulaResults: {},
       references: {},
       variables: {},
     }
 
-    const result = renderTooltipData(tooltipData, {} as ParseData)
+    const result = renderTooltipData(tooltipData)
     expect(result.enus).to.eql("&amp; &lt;")
   })
 
-  it("should replace each reference with the values found in the element map", function() {
-    const elements = new Map([
-      [
-        'CEffectDamage',
-        new Map([
-          [
-            'symbioterange',
-            [
-              {
-                ...buildElement('CEffectDamage', { id: 'SymbioteRange' }),
-                Value: [
-                  buildElement(null, { value: '60' })
-                ]
-              }
-            ]
-          ]
-        ])
-      ]
-    ])
-
-    const functions = {
-      default: {
-        merge: (parent: any[], child: any[]) => parent.concat(child)
-      }
-    }
-
+  it("should replace any formula references with the correct value in 'formulaResults'", function() {
     const tooltipData = {
       localeText: {
-        enus: "Increases the range of Symbiote's Spike Burst by {{ formula0 }}"
+        enus: "Start text {{ formula0 }} some text {{ formula1 }}"
       },
-      formulas: {
-        formula0: "0 + ref0 * 2"
-      },
-      references: {
-        ref0: {
-          catalog: 'Effect',
-          entry: 'SymbioteRange',
-          field: 'Value'
-        }
-      },
-      variables: {}
-    }
-
-    const result = renderTooltipData(tooltipData, { elements, functions } as any)
-    expect(result.enus).to.eql("Increases the range of Symbiote's Spike Burst by 120")
-  })
-
-  it("should default a variable to it's min value if it is not set in variableValues", function() {
-    const tooltipData = {
-      localeText: {
-        enus: "Increases the range of Symbiote's Spike Burst by {{ formula0 }}"
-      },
-      formulas: {
-        formula0: "0 + var0 * 2"
+      formulas: {},
+      formulaResults: {
+        formula0: 12,
+        formula1: '4%'
       },
       references: {},
-      variables: {
-        var0: {
-          counter: 'SymbioteBehavior',
-          min: 5,
-          max: 35,
-          scale: 2,
-        }
-      }
+      variables: {},
     }
 
-    const result = renderTooltipData(tooltipData, {} as any)
-    expect(result.enus).to.eql("Increases the range of Symbiote's Spike Burst by 10")
-  })
-
-  it("should set a variable to the value set in variableValues", function() {
-    const tooltipData = {
-      localeText: {
-        enus: "Increases the range of Symbiote's Spike Burst by {{ formula0 }}"
-      },
-      formulas: {
-        formula0: "0 + var0 * 2"
-      },
-      references: {},
-      variables: {
-        var0: {
-          counter: 'SymbioteBehavior',
-          min: 5,
-          max: 35,
-          scale: 2,
-        }
-      }
-    }
-
-    const result = renderTooltipData(tooltipData, {} as any, undefined, { var0: 35 })
-    expect(result.enus).to.eql("Increases the range of Symbiote's Spike Burst by 70")
+    const result = renderTooltipData(tooltipData)
+    expect(result.enus).to.eql("Start text 12 some text 4%")
   })
 })
 
 describe("parseFormula", function() {
+  const parseData = {
+    elements: new Map()
+  } as ParseData
+
   it("should return '0' if formula is not defined", function() {
-    const result = parseFormula(undefined, new Map(), new Map(), {} as ParseData)
+    const result = parseFormula(undefined, new Map(), new Map(), parseData)
     expect(result).to.equal('0')
   })
 
@@ -247,13 +315,13 @@ describe("parseFormula", function() {
     const formula = "Effect,RaynorAdrenalineRushHealer,RechargeVitalRate.Value[0]"
     const references = new Map()
 
-    parseFormula(formula, references, new Map(), {} as ParseData)
+    parseFormula(formula, references, new Map(), parseData)
     expect(references.has("Effect,RaynorAdrenalineRushHealer,RechargeVitalRate.Value[0]")).to.be.true
   })
 
   it("should replace references with 'ref' identifiers", function() {
     const formula = "Effect,RaynorAdrenalineRushHealer,RechargeVitalRate.Value[0]"
-    const result = parseFormula(formula, new Map(), new Map(), {} as ParseData)
+    const result = parseFormula(formula, new Map(), new Map(), parseData)
     expect(result).to.eql("ref0")
   })
 
@@ -339,7 +407,7 @@ describe("parseFormula", function() {
     const formula = `Effect,RaynorAdrenalineRushHealer,RechargeVitalRate * [d ref='Effect,RaynorAdrenalineRushPersistent,PeriodCount' player='0'/]`
     const references = new Map()
 
-    const result = parseFormula(formula, references, new Map(), {} as ParseData)
+    const result = parseFormula(formula, references, new Map(), parseData)
     expect(result).to.not.be.null
     expect(result).to.equal("ref0 * ref1")
     expect(references.has('Effect,RaynorAdrenalineRushPersistent,PeriodCount')).to.be.true
@@ -347,43 +415,44 @@ describe("parseFormula", function() {
       catalog: "Effect",
       entry: "RaynorAdrenalineRushPersistent",
       field: "PeriodCount",
-      name: 'ref1'
+      name: 'ref1',
+      value: null,
     })
   })
 
   it("should remove unmatched open parentheses", function() {
     const formula = "(100 * ((30 + 2)"
-    const result = parseFormula(formula, new Map(), new Map(), {} as ParseData)
+    const result = parseFormula(formula, new Map(), new Map(), parseData)
     expect(result).to.eql("100 * (30 + 2)")
   })
 
   it("should remove unmatched close parentheses", function() {
     const formula = "(30 + 2)) * 100)"
-    const result = parseFormula(formula, new Map(), new Map(), {} as ParseData)
+    const result = parseFormula(formula, new Map(), new Map(), parseData)
     expect(result).to.eql("(30 + 2) * 100")
   })
 
   it("should remove trailing '/' operators", function() {
     const formula = "30 * 100/"
-    const result = parseFormula(formula, new Map(), new Map(), {} as ParseData)
+    const result = parseFormula(formula, new Map(), new Map(), parseData)
     expect(result).to.eql("30 * 100")
   })
 
   it("should remove trailing '*' operators", function() {
     const formula = "30 * 100*"
-    const result = parseFormula(formula, new Map(), new Map(), {} as ParseData)
+    const result = parseFormula(formula, new Map(), new Map(), parseData)
     expect(result).to.eql("30 * 100")
   })
 
   it("should remove trailing '-' operators", function() {
     const formula = "30 * 100-"
-    const result = parseFormula(formula, new Map(), new Map(), {} as ParseData)
+    const result = parseFormula(formula, new Map(), new Map(), parseData)
     expect(result).to.eql("30 * 100")
   })
 
   it("should remove trailing '+' operators", function() {
     const formula = "30 * 100+"
-    const result = parseFormula(formula, new Map(), new Map(), {} as ParseData)
+    const result = parseFormula(formula, new Map(), new Map(), parseData)
     expect(result).to.eql("30 * 100")
   })
 })
@@ -816,15 +885,42 @@ describe("parseVariableToken", function() {
 
 describe("parseReference", function() {
   beforeEach(function() {
-    this.element = buildElement('tooltip', {
-      'value': {
-        "enus": "Increases the range of Symbiote's Spike Burst by <c val=\"#TooltipNumbers\"><d ref=\"\" player=\"0\"/>%</c> and decreases the cooldown by <c val=\"#TooltipNumbers\"><d ref=\"-Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray[0].Modifications[0].Value\" player=\"0\"/></c> second."
+    const elements = new Map([
+      [
+        'CTalent',
+        new Map([
+          [
+            'abathurmasterypressurizedglands',
+            [
+              {
+                ...buildElement('CTalent', { id: 'AbathurMasteryPressurizedGlands' }),
+                AbilityModificationArray: [
+                  {
+                    ...buildElement(),
+                    Modifications: [
+                      {
+                        ...buildElement(),
+                        Value: buildElement(null, { value: '60.6' })
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          ]
+        ])
+      ]
+    ])
+
+    const functions = {
+      default: {
+        merge: (parent: any[], child: any[]) => parent.concat(child)
       }
-    })
+    }
 
     this.reference = "Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray[0].Modifications[0].Value"
     this.references = new Map()
-    this.result = parseReference(this.reference, this.references)
+    parseReference(this.reference, this.references, { elements, functions } as any)
     this.ref0 = this.references.get(this.reference)
   })
 
@@ -846,6 +942,14 @@ describe("parseReference", function() {
 
   it("should set the field to the third comma separated value in the reference in the tooltip text", function() {
     expect(this.ref0).to.have.property('field').and.equal("AbilityModificationArray.0.Modifications.0.Value")
+  })
+
+  it("should set the value of the reference in 'value'", function() {
+    expect(this.ref0).to.have.property('value')
+  })
+
+  it("should set value set for the reference should be a number", function() {
+    expect(this.ref0.value).to.equal(60.6)
   })
 
   it("should replace all '[' characters with a period from 'field'", function() {

@@ -7,7 +7,6 @@ import {
   attributeValueReplacement,
   replaceWithLocaleText,
   parseTooltip,
-  renderTooltip,
 } from '../../src/parsers/text-parsers'
 import { ParseContext } from '../../src/parsers/'
 import { ParseData } from '../../src/parse-data'
@@ -137,39 +136,11 @@ describe("parseTooltip", function() {
 
   it("should return the original element if the attribute is not set", function() {
     const element = buildElement()
-    expect(parseTooltip()(element, buildElement(), {} as ParseData, {} as ParseContext)).to.equal(element)
+    expect(parseTooltip()(element, buildElement(), { elements: new Map() } as ParseData, {} as ParseContext)).to.equal(element)
   })
 
   it("should set the attribute to a TooltipData object", function() {
-    const result = parseTooltip()(this.element, buildElement(), {} as ParseData, {} as ParseContext)
+    const result = parseTooltip()(this.element, buildElement(), { elements: new Map() } as ParseData, {} as ParseContext)
     expect(result[ELEMENT_ATTRIBUTE_KEY].value).to.have.keys('localeText', 'formulas', 'references')
-  })
-})
-
-describe("renderTooltip", function() {
-  it("should return the original element if the attribute does not exist", function() {
-    const element = buildElement()
-    const result = renderTooltip()(element, buildElement(), {} as ParseData, {} as ParseContext)
-    expect(element).to.equal(element)
-    expect(element).to.eql(element)
-  })
-
-  it("should set the attritube to the rendered tooltip text", function() {
-    const element = buildElement('tooltip', {
-      'value': {
-        localeText: {
-          enus: "Increases the range of Symbiote's Spike Burst by {{ formula0 }}"
-        },
-        formulas: {
-          formula0: "-30 * 20"
-        },
-        references: {},
-        variables: {},
-      }
-    })
-
-    const result = renderTooltip()(element, buildElement(), {} as ParseData, {} as ParseContext)
-    const tooltip = result[ELEMENT_ATTRIBUTE_KEY].value.enus
-    expect(tooltip).to.eql("Increases the range of Symbiote's Spike Burst by -600")
   })
 })

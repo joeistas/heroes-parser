@@ -21,6 +21,7 @@ export interface TooltipReference {
   catalog: string
   entry: string
   field: string
+  value: number
 }
 
 export interface TooltipVariable {
@@ -34,6 +35,7 @@ export interface TooltipVariable {
 export interface TooltipData {
   localeText: { [locale: string]: string }
   formulas: { [formulaName: string]: string }
+  formulaResults: { [formulaName: string]: number | string }
   references: { [referenceName: string]: TooltipReference }
   variables: { [variableName: string]: TooltipVariable }
 }
@@ -117,19 +119,20 @@ export function parseTooltipLocaleText(
   return tooltipData
 }
 
-export function renderTooltipData(
-  tooltipData: TooltipData,
-  parseData: ParseData,
-  render: TooltipRenderFunction = renderTooltipWithHandlebars,
+export function computeTooltipDataFormulas(
+  tooltipData: Partial<TooltipData>,
   variableValues: { [variableName: string]: number } = {},
-): { [locale: string]: string } {
+): TooltipData {
   if(!tooltipData.formulas) {
-    return tooltipData.localeText || {}
+    return tooltipData as TooltipData
   }
 
   const calculationContext = Object.entries(tooltipData.references || {}).reduce((values, [ refName, ref ]) => {
-    const value = getValueForReference(ref, parseData)
-    values[refName] = value ? parseFloat(value) : value
+    if(ref.value === null || ref.value === undefined) {
+      return values
+    }
+
+    values[refName] = ref.value
     return values
   }, {} as any)
 
@@ -152,11 +155,21 @@ export function renderTooltipData(
     }
   }
 
+  return {
+    ...tooltipData,
+    formulaResults
+  } as TooltipData
+}
+
+export function renderTooltipData(
+  tooltipData: TooltipData,
+  render: TooltipRenderFunction = renderTooltipWithHandlebars,
+): { [locale: string]: string } {
   const localeText = tooltipData.localeText
 
   const renderedTooltips: { [locale: string]: string } = {}
   for(const locale of Object.keys(localeText)) {
-    renderedTooltips[locale] = render(localeText[locale], formulaResults, tooltipData)
+    renderedTooltips[locale] = render(localeText[locale], tooltipData.formulaResults, tooltipData)
   }
 
   return renderedTooltips
@@ -199,7 +212,7 @@ export function parseFormula(formula: string, references: Map<string, TooltipRef
     }
     else {
       const reference = match[3]
-      parseReference(reference, references)
+      parseReference(reference, references, parseData)
 
       const referenceName = references.get(reference).name
       replacements.unshift([ match.index, reference, referenceName ])
@@ -295,18 +308,21 @@ function getValue(element: any, field: string, defaultValue: number = 0): number
 }
 
 /** @hidden */
-export function parseReference(reference: string, references: Map<string, TooltipReference>) {
+export function parseReference(reference: string, references: Map<string, TooltipReference>, parseData: ParseData) {
   if(references.has(reference)) {
     return
   }
 
-  const [ catalog, entry, field ] = reference.split(',')
+  let [ catalog, entry, field ] = reference.split(',')
+  field = field.replace(/\[/g, '.').replace(/\]/g, '')
 
+  const value = getValueForReference(catalog, entry, field, parseData)
   references.set(reference, {
     name: `ref${ references.size }`,
     catalog,
     entry,
-    field: field.replace(/\[/g, '.').replace(/\]/g, ''),
+    field,
+    value: value ? parseFloat(value) : null
   })
 }
 
@@ -321,13 +337,13 @@ function getEntry(catalog: string, entry: string, parseData: ParseData): any {
   return mergeWithParent(element, elementName, parseData)
 }
 
-function getValueForReference(ref: TooltipReference, parseData: ParseData): any {
-  const element = getEntry(ref.catalog, ref.entry, parseData)
+function getValueForReference(catalog: string, entry: string, field: string, parseData: ParseData): string {
+  const element = getEntry(catalog, entry, parseData)
   if(!element) {
     return null
   }
 
-  return getValueAtPath(element, ref.field)
+  return getValueAtPath(element, field)
 }
 
 function replaceNWithBrElements($: CheerioStatic, element: CheerioElement): string {

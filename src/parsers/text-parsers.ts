@@ -1,24 +1,14 @@
-
 import {
   ELEMENT_ATTRIBUTE_KEY,
   getElementAttributes,
-  mergeAttributes,
-  findElementNameForId,
-  joinElements,
-  mergeWithParent,
-  getElement,
 } from '../element'
 import { ParseData } from '../parse-data'
 import {
   TooltipElementReplaceFunction,
   TooltipFormulaReplaceFunction,
-  TooltipRenderFunction,
-  TooltipData,
   parseTooltipLocaleText,
-  renderTooltipData,
   handleBarsTemplateReplacement,
   toSpanElement,
-  renderTooltipWithHandlebars,
 } from '../tooltip'
 import { ElementParser, ParseContext } from './'
 
@@ -79,23 +69,6 @@ export function parseTooltip(
     }
 
     elementAttributes[attribute] = parseTooltipLocaleText(elementAttributes[attribute], parseData, formulaElement, templateElement)
-
-    return element
-  }
-}
-
-export function renderTooltip(
-  attribute: string = 'value',
-  render: TooltipRenderFunction = renderTooltipWithHandlebars
-) {
-  return (element: any, outerElement: any, parseData: ParseData, context: ParseContext): any => {
-    const elementAttributes = getElementAttributes(element)
-    if(!elementAttributes[attribute]) {
-      return element
-    }
-
-    const value = elementAttributes[attribute]
-    elementAttributes[attribute] = renderTooltipData(value as TooltipData, parseData, render)
 
     return element
   }
