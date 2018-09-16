@@ -81,8 +81,8 @@ describe("parseTooltipLocaleText", function() {
     const result = parseTooltipLocaleText(localeText, parseData)
     const formulas = result.formulas
 
-    expect(formulas.formula0).to.eql("(ref0/ref1*100)")
-    expect(formulas.formula1).to.eql("-ref2")
+    expect(formulas.formula0.formula).to.equal("(ref0/ref1*100)")
+    expect(formulas.formula1.formula).to.equal("-ref2")
   })
 
   it("should not convert unicode characters to html entities", function() {
@@ -112,8 +112,8 @@ describe("parseTooltipLocaleText", function() {
     const result = parseTooltipLocaleText(localeText, parseData)
     expect(result.localeText.enus).to.equal("<span>{{ formula0 }}</span><span>{{ formula1 }}</span>")
     expect(result.localeText.frfr).to.equal("<span>{{ formula1 }}</span><span>{{ formula0 }}</span>")
-    expect(result.formulas.formula0).to.equal("ref0/ref1")
-    expect(result.formulas.formula1).to.equal("-ref0")
+    expect(result.formulas.formula0.formula).to.eql("ref0/ref1")
+    expect(result.formulas.formula1.formula).to.equal("-ref0")
   })
 
   it("should not remove '%' characters inside 'c' elements", function() {
@@ -133,6 +133,26 @@ describe("parseTooltipLocaleText", function() {
     const result = parseTooltipLocaleText(localeText, parseData)
     expect(result.localeText.enus).to.equal("<span>{{ formula0 }} text</span>")
   })
+
+  it("should set precision for a formula to zero if the attribute is not set on the 'd' element", function() {
+    const localeText = {
+      "enus": "<c><d ref='Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray/Effect,AbathurSymbioteSpikeBurstDamageSearch,AreaArray' />%</c>",
+    }
+
+    const result = parseTooltipLocaleText(localeText, parseData)
+
+    expect(result.formulas.formula0.precision).to.equal(0)
+  })
+
+  it("should set precision for a formula to the value of the precision attribute is set on the 'd' element", function() {
+    const localeText = {
+      "enus": "<c><d ref='Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray/Effect,AbathurSymbioteSpikeBurstDamageSearch,AreaArray' precision='2' />%</c>",
+    }
+
+    const result = parseTooltipLocaleText(localeText, parseData)
+
+    expect(result.formulas.formula0.precision).to.equal(2)
+  })
 })
 
 describe("computeTooltipDataFormulas", function() {
@@ -142,22 +162,24 @@ describe("computeTooltipDataFormulas", function() {
     const tooltipData = {
       localeText: {},
       formulas: {
-        formula0: "20 - 4 / 2"
+        formula0: { formula: "20 - 4 / 2", precision: 0 }
       },
       references: {},
       variables: {}
     }
 
     const result = computeTooltipDataFormulas(tooltipData)
-    expect(result).to.have.property('formulaResults')
-    expect(result.formulaResults).to.have.property("formula0").and.to.equal(18)
+    expect(result.formulas.formula0).to.have.property("result").and.to.equal("18")
   })
 
   it("should replace references with the value in the TooltipReference data", function() {
     const tooltipData = {
       localeText: {},
       formulas: {
-        formula0: "20 - ref0 / 2"
+        formula0: {
+          formula: "20 - ref0 / 2",
+          precision: 0
+        }
       },
       references: {
         ref0: {
@@ -171,15 +193,17 @@ describe("computeTooltipDataFormulas", function() {
     }
 
     const result = computeTooltipDataFormulas(tooltipData)
-    expect(result).to.have.property('formulaResults')
-    expect(result.formulaResults).to.have.property("formula0").and.to.equal(14)
+    expect(result.formulas.formula0).to.have.property("result").and.to.equal("14")
   })
 
   it("should set formulaResult to 'NaN' if a reference value is null or undefined", function() {
     const tooltipData: Partial<TooltipData> = {
       localeText: {},
       formulas: {
-        formula0: "20 - ref0 / 2"
+        formula0: {
+          formula: "20 - ref0 / 2",
+          precision: 0,
+        }
       },
       references: {
         ref0: {
@@ -193,15 +217,17 @@ describe("computeTooltipDataFormulas", function() {
     }
 
     const result = computeTooltipDataFormulas(tooltipData)
-    expect(result).to.have.property('formulaResults')
-    expect(result.formulaResults).to.have.property("formula0").and.to.equal('NaN')
+    expect(result.formulas.formula0).to.have.property("result").and.to.equal('NaN')
   })
 
   it("should set formulaResult to 'NaN' if the formula is invalid", function() {
     const tooltipData: Partial<TooltipData> = {
       localeText: {},
       formulas: {
-        formula0: "20 - ref0 /"
+        formula0: {
+          formula: "20 - ref0 /",
+          precision: 0
+        }
       },
       references: {
         ref0: {
@@ -215,15 +241,17 @@ describe("computeTooltipDataFormulas", function() {
     }
 
     const result = computeTooltipDataFormulas(tooltipData)
-    expect(result).to.have.property('formulaResults')
-    expect(result.formulaResults).to.have.property("formula0").and.to.equal('NaN')
+    expect(result.formulas.formula0).to.have.property("result").and.to.equal('NaN')
   })
 
   it("should default a variable to it's min value if it is not set in variableValues", function() {
     const tooltipData = {
       localeText: {},
       formulas: {
-        formula0: "0 + var0 * 2"
+        formula0: {
+          formula: "0 + var0 * 2",
+          precision: 0,
+        }
       },
       references: {},
       variables: {
@@ -237,15 +265,17 @@ describe("computeTooltipDataFormulas", function() {
     }
 
     const result = computeTooltipDataFormulas(tooltipData)
-    expect(result).to.have.property('formulaResults')
-    expect(result.formulaResults).to.have.property("formula0").and.to.equal(10)
+    expect(result.formulas.formula0).to.have.property("result").and.to.equal("10")
   })
 
   it("should set a variable to the value set in variableValues", function() {
     const tooltipData = {
       localeText: {},
       formulas: {
-        formula0: "0 + var0 * 2"
+        formula0: {
+          formula: "0 + var0 * 2",
+          precision: 0,
+        }
       },
       references: {},
       variables: {
@@ -259,8 +289,31 @@ describe("computeTooltipDataFormulas", function() {
     }
 
     const result = computeTooltipDataFormulas(tooltipData, { var0: 35 })
-    expect(result).to.have.property('formulaResults')
-    expect(result.formulaResults).to.have.property("formula0").and.to.equal(70)
+    expect(result.formulas.formula0).to.have.property("result").and.to.equal("70")
+  })
+
+  it("should round the result to the number of decimal places specifed in the formula 'precision' field", function() {
+    const tooltipData: Partial<TooltipData> = {
+      localeText: {},
+      formulas: {
+        formula0: {
+          formula: "18.24567 - ref0 / 2",
+          precision: 3
+        }
+      },
+      references: {
+        ref0: {
+          catalog: '',
+          entry: '',
+          field: '',
+          value: 12,
+        }
+      },
+      variables: {}
+    }
+
+    const result = computeTooltipDataFormulas(tooltipData, {})
+    expect(result.formulas.formula0.result).to.equal("12.246")
   })
 })
 
@@ -289,7 +342,6 @@ describe("renderTooltipData", function() {
         enus: "대지파괴자"
       },
       formulas: {},
-      formulaResults: {},
       references: {},
       variables: {},
     }
@@ -304,7 +356,6 @@ describe("renderTooltipData", function() {
         enus: "&amp; &lt;"
       },
       formulas: {},
-      formulaResults: {},
       references: {},
       variables: {},
     }
@@ -318,10 +369,17 @@ describe("renderTooltipData", function() {
       localeText: {
         enus: "Start text {{ formula0 }} some text {{ formula1 }}"
       },
-      formulas: {},
-      formulaResults: {
-        formula0: 12,
-        formula1: '4%'
+      formulas: {
+        formula0: {
+          formula: '',
+          precision: 0,
+          result: "12"
+        },
+        formula1: {
+          formula: '',
+          precision: 0,
+          result: '4%'
+        },
       },
       references: {},
       variables: {},

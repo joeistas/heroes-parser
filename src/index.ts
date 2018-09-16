@@ -35,6 +35,7 @@ export {
 export namespace tooltips {
   export type TooltipReference = tooltipBase.TooltipReference
   export type TooltipVariable = tooltipBase.TooltipVariable
+  export type TooltipFormula = tooltipBase.TooltipFormula
   export type TooltipData = tooltipBase.TooltipData
   export type TooltipFormulaReplaceFunction = tooltipBase.TooltipFormulaReplaceFunction
   export type TooltipElementReplaceFunction = tooltipBase.TooltipElementReplaceFunction
@@ -50,7 +51,7 @@ export namespace tooltips {
 export namespace parsers {
   export type ElementParser = baseParsers.ElementParser
   export type ParseContext = baseParsers.ParseContext
-  
+
   export const join = baseParsers.join
   export const defaultPreParser = baseParsers.defaultPreParser
 

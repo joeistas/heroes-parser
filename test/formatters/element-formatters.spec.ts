@@ -320,7 +320,7 @@ describe("computeTooltipFormulas", function() {
           enus: "Increases the range of Symbiote's Spike Burst by {{ formula0 }}"
         },
         formulas: {
-          formula0: "-30 * 20"
+          formula0: { formula: "-30 * 20", precision: 0 }
         },
         references: {},
         variables: {},
@@ -328,10 +328,9 @@ describe("computeTooltipFormulas", function() {
     }
 
     const result = elementFormatters.computeTooltipFormulas()(element, {})
-    console.log(result)
+
     const tooltipData = result.value
-    expect(tooltipData).to.have.property('formulaResults')
-    expect(tooltipData.formulaResults.formula0).to.equal(-600)
+    expect(tooltipData.formulas.formula0.result).to.equal("-600")
   })
 })
 
@@ -350,10 +349,7 @@ describe("renderTooltip", function() {
           enus: "Increases the range of Symbiote's Spike Burst by {{ formula0 }}"
         },
         formulas: {
-          formula0: "-30 * 20"
-        },
-        formulaResults: {
-          formula0: -600
+          formula0: { formula: "-30 * 20", precision: 0, result: "-600" }
         },
         references: {},
         variables: {},
@@ -362,6 +358,6 @@ describe("renderTooltip", function() {
 
     const result = elementFormatters.renderTooltip()(element, {})
     const tooltip = result.value.enus
-    expect(tooltip).to.eql("Increases the range of Symbiote's Spike Burst by -600")
+    expect(tooltip).to.equal("Increases the range of Symbiote's Spike Burst by -600")
   })
 })

@@ -32,10 +32,15 @@ export interface TooltipVariable {
   scale: number
 }
 
+export interface TooltipFormula {
+  formula: string,
+  precision: number,
+  result?: string,
+}
+
 export interface TooltipData {
   localeText: { [locale: string]: string }
-  formulas: { [formulaName: string]: string }
-  formulaResults: { [formulaName: string]: number | string }
+  formulas: { [formulaName: string]: TooltipFormula }
   references: { [referenceName: string]: TooltipReference }
   variables: { [variableName: string]: TooltipVariable }
 }
@@ -57,7 +62,7 @@ export function parseTooltipLocaleText(
   const parsedTooltips: { [locale: string]: string } = {}
   const references = new Map()
   const variables = new Map()
-  const formulas: { [index: string]: string } = {}
+  const formulas: { [index: string]: TooltipFormula } = {}
 
   for(const locale of Object.keys(localeText)) {
     if(!locale) {
@@ -68,7 +73,6 @@ export function parseTooltipLocaleText(
     const localeTextString = localeText[locale].replace(/<\/n>/g, '<n/>');
 
     const $ = cheerio.load(localeTextString)
-    console.log($("body").html())
 
     $("n").each((index, element) => {
       $(element).replaceWith(replaceNWithBrElements($, element))
@@ -76,16 +80,15 @@ export function parseTooltipLocaleText(
 
     $("d").each((index, element) => {
       const formula = parseFormula($(element).attr('ref'), references, variables, parseData)
-      const formulaName = Object.keys(formulas).find(f => formulas[f] === formula) || 'formula' + Object.keys(formulas).length
+      const precision = $(element).attr('precision') || '0'
+      const formulaName = Object.keys(formulas).find(f => formulas[f].formula === formula) || 'formula' + Object.keys(formulas).length
 
       $(element).replaceWith(formulaElement(formulaName) + $(element).html())
-      formulas[formulaName] = formula
+      formulas[formulaName] = { formula, precision: parseInt(precision) }
     })
 
     $("c").each((index, element) => {
-      console.log($("body").html())
       $(element).replaceWith(templateElement($, element))
-      console.log($("body").html())
     })
 
     // Added sanitize-html to fix issue with cherrio converting non-latin text to html entities
@@ -145,24 +148,21 @@ export function computeTooltipDataFormulas(
     return values
   }, calculationContext)
 
-  const formulaResults: { [formulaName: string]: string } = {}
   for(const [ formulaName, formula ] of Object.entries(tooltipData.formulas)) {
-    const evalText = `exports.result = ${ formula }`
+    const evalText = `exports.result = ${ formula.formula }`
+    const precision = tooltipData.formulas[formulaName].precision || 0
 
     try{
-      formulaResults[formulaName] = _eval(evalText, calculationContext).result
+      tooltipData.formulas[formulaName].result = _eval(evalText, calculationContext).result.toFixed(precision)
     }
     catch(e) {
       const logger = getLogger()
       logger.error(e)
-      formulaResults[formulaName] = 'NaN'
+      tooltipData.formulas[formulaName].result = 'NaN'
     }
   }
 
-  return {
-    ...tooltipData,
-    formulaResults
-  } as TooltipData
+  return tooltipData as TooltipData
 }
 
 export function renderTooltipData(
@@ -173,7 +173,11 @@ export function renderTooltipData(
 
   const renderedTooltips: { [locale: string]: string } = {}
   for(const locale of Object.keys(localeText)) {
-    renderedTooltips[locale] = render(localeText[locale], tooltipData.formulaResults, tooltipData)
+    const formulaResults = Object.keys(tooltipData.formulas).reduce((results, formulaName) => {
+      results[formulaName] = tooltipData.formulas[formulaName].result
+      return results
+    }, {} as any)
+    renderedTooltips[locale] = render(localeText[locale], formulaResults, tooltipData)
   }
 
   return renderedTooltips
