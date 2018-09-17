@@ -16,6 +16,7 @@ import {
   parseReference,
   computeTooltipDataFormulas,
   renderTooltipData,
+  convertFormulaToStandardPrecedence
 } from '../src/tooltip'
 import { ParseData } from '../src/parse-data'
 import { buildLogger } from '../src/logger'
@@ -318,6 +319,16 @@ describe("computeTooltipDataFormulas", function() {
 })
 
 describe("renderTooltipData", function() {
+  it("should return an empty object if 'tooltipData' is empty", function() {
+    const result = renderTooltipData({} as TooltipData)
+    expect(result).to.eql({})
+  })
+
+  it("should return render a tooltip if there are no formulas", function() {
+    const result = renderTooltipData({ localeText: { enus: "This is a tooltip!" } } as any)
+    expect(result).to.eql({ enus: "This is a tooltip!" })
+  })
+
   it("should call 'render'", function() {
     const tooltipData = {
       localeText: {
@@ -543,6 +554,12 @@ describe("parseFormula", function() {
     const formula = "30 * 100+"
     const result = parseFormula(formula, new Map(), new Map(), parseData)
     expect(result).to.eql("30 * 100")
+  })
+
+  it("should add parentheses so the formula works with standard precedence rules", function() {
+    const formula = "30 + 5 / 6"
+    const result = parseFormula(formula, new Map(), new Map(), parseData)
+    expect(result).to.eql("(30 + 5 )/ 6")
   })
 })
 
@@ -1047,5 +1064,105 @@ describe("parseReference", function() {
 
   it("should remove all ']' characters from 'field'", function() {
     expect(this.ref0.field).to.not.match(/\]/)
+  })
+})
+
+describe("convertFormulaToStandardPrecedence", function() {
+  it("should return the original formula if there are no operators and parentheses in the formula", function() {
+    const formula = "30"
+
+    const result = convertFormulaToStandardPrecedence(formula)
+
+    expect(result).to.eql(formula)
+  })
+
+  it("should return the original formula if there is only a single operator", function() {
+    const formula = "30 + 5"
+
+    const result = convertFormulaToStandardPrecedence(formula)
+
+    expect(result).to.eql(formula)
+  })
+
+  it("should not add a set of parentheses if two operators in order have the same precedence", function() {
+    const formula = "30 + 5 + 4"
+
+    const result = convertFormulaToStandardPrecedence(formula)
+
+    expect(result).to.eql(formula)
+  })
+
+  it("should add a set of parentheses starting at the beginning of the formula and at the opererator where it's precedence is different than the previous operator", function() {
+    const formula = "30 + 5 * 4"
+
+    const result = convertFormulaToStandardPrecedence(formula)
+
+    expect(result).to.eql("(30 + 5 )* 4")
+  })
+
+  it("should add a set of parentheses if two operators of different precedence are within the same set of parentheses", function() {
+    const formula = "30 + (5 * 4 + 2)"
+
+    const result = convertFormulaToStandardPrecedence(formula)
+
+    expect(result).to.eql("30 + ((5 * 4 )+ 2)")
+  })
+
+  it("should consider a minus sign an unary operator if it is at the start of the formula", function() {
+    const formula = "-30 * 5"
+
+    const result = convertFormulaToStandardPrecedence(formula)
+
+    expect(result).to.eql(formula)
+  })
+
+  it("should consider a minus sign an unary operator if it is preceded by a operator", function() {
+    let formula = "30*-5"
+    let result = convertFormulaToStandardPrecedence(formula)
+    expect(result).to.eql(formula)
+
+    formula = "30+-5"
+    result = convertFormulaToStandardPrecedence(formula)
+    expect(result).to.eql(formula)
+
+    formula = "30/-5"
+    result = convertFormulaToStandardPrecedence(formula)
+    expect(result).to.eql(formula)
+
+    formula = "30--5"
+    result = convertFormulaToStandardPrecedence(formula)
+    expect(result).to.eql(formula)
+  })
+
+  it("should consider a minus sign an unary operator if it is preceded by a operator with whitespace in between", function() {
+    const formula = "30*  \t-5"
+
+    const result = convertFormulaToStandardPrecedence(formula)
+
+    expect(result).to.eql(formula)
+  })
+
+  it("should consider a '+' and '-' the same precedence", function() {
+    const formula = "30 + 5 - 4"
+
+    const result = convertFormulaToStandardPrecedence(formula)
+
+    expect(result).to.eql(formula)
+  })
+
+  it("should consider a '*' and '/' the same precedence", function() {
+    const formula = "30 / 5 * 4"
+
+    const result = convertFormulaToStandardPrecedence(formula)
+
+    expect(result).to.eql(formula)
+  })
+
+  it("should concider a '+' or '-' a different precedence than '*' or '/'", function() {
+    const formula = "30 + 5 / 4"
+
+    const result = convertFormulaToStandardPrecedence(formula)
+
+    expect(result).to.eql("(30 + 5 )/ 4")
   })
 })

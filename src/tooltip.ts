@@ -148,17 +148,18 @@ export function computeTooltipDataFormulas(
     return values
   }, calculationContext)
 
-  for(const [ formulaName, formula ] of Object.entries(tooltipData.formulas)) {
+  for(const formula of Object.values(tooltipData.formulas)) {
     const evalText = `exports.result = ${ formula.formula }`
-    const precision = tooltipData.formulas[formulaName].precision || 0
+    const precision = formula.precision || 0
 
     try{
-      tooltipData.formulas[formulaName].result = _eval(evalText, calculationContext).result.toFixed(precision)
+      formula.result = _eval(evalText, calculationContext).result.toFixed(precision)
     }
     catch(e) {
       const logger = getLogger()
       logger.error(e)
-      tooltipData.formulas[formulaName].result = 'NaN'
+
+      formula.result = 'NaN'
     }
   }
 
@@ -169,11 +170,11 @@ export function renderTooltipData(
   tooltipData: TooltipData,
   render: TooltipRenderFunction = renderTooltipWithHandlebars,
 ): { [locale: string]: string } {
-  const localeText = tooltipData.localeText
+  const localeText = tooltipData.localeText || {}
 
   const renderedTooltips: { [locale: string]: string } = {}
   for(const locale of Object.keys(localeText)) {
-    const formulaResults = Object.keys(tooltipData.formulas).reduce((results, formulaName) => {
+    const formulaResults = Object.keys(tooltipData.formulas || {}).reduce((results, formulaName) => {
       results[formulaName] = tooltipData.formulas[formulaName].result
       return results
     }, {} as any)
@@ -231,7 +232,7 @@ export function parseFormula(formula: string, references: Map<string, TooltipRef
     formula = formula.slice(0, index) + replacement + formula.slice(index + replace.length)
   }
 
-  return removeUnmatchedParens(formula)
+  return convertFormulaToStandardPrecedence(removeUnmatchedParens(formula))
 }
 
 /** @hidden */
@@ -385,6 +386,74 @@ function removeUnmatchedParens(formula: string): string {
   const remove = unmatchedOpenParens.concat(unmatchedCloseParens).sort((a, b) => b - a)
   for(const i of remove) {
     formula = formula.slice(0, i) + formula.slice(i + 1)
+  }
+
+  return formula
+}
+
+/** @hidden */
+export function convertFormulaToStandardPrecedence(formula: string): string {
+  const operators: [ number, number ][] = []
+  const changes: [ number, number, string ][] = []
+  const unmatchedOpenParens: number[] = []
+
+  for(let i = 0; i < formula.length; i++) {
+    const char = formula[i]
+    switch(char) {
+      case '(':
+        unmatchedOpenParens.push(i)
+        break;
+
+      case ')':
+        const start = unmatchedOpenParens.pop()
+        changes.push([ start + 1, i - start - 1, convertFormulaToStandardPrecedence(formula.substring(start + 1, i)) ])
+        break;
+
+      case '+':
+      case '-':
+        if(unmatchedOpenParens.length > 0) {
+          break;
+        }
+
+        // if unary subtract continue
+        if(char === '-' && (i === 0 || formula.slice(0, i).match(/[+\-*/]\s*$/))) {
+          break;
+        }
+
+        operators.push([ 0, i ])
+        break;
+
+      case '*':
+      case '/':
+        if(unmatchedOpenParens.length > 0) {
+          break;
+        }
+
+        operators.push([ 1, i ])
+        break;
+    }
+  }
+
+
+  if(operators.length > 1) {
+    let [ prev, ] = operators.shift()
+    for(const [ precedence, index ] of operators) {
+      if(prev === precedence) {
+        continue
+      }
+
+      changes.push([ 0, 0, '(' ])
+      changes.push([ index, 0, ')' ])
+      prev = precedence
+    }
+  }
+
+  if(changes.length === 0) {
+    return formula
+  }
+
+  for(const [ start, length, replacement ] of changes.sort((a, b) => b[0] - a[0])) {
+    formula = formula.slice(0, start) + replacement + formula.slice(start + length)
   }
 
   return formula
