@@ -516,7 +516,7 @@ describe("parseFormula", function() {
       entry: "RaynorAdrenalineRushPersistent",
       field: "PeriodCount",
       name: 'ref1',
-      value: null,
+      value: 0,
     })
   })
 
@@ -991,7 +991,7 @@ describe("parseVariableToken", function() {
 
 describe("parseReference", function() {
   beforeEach(function() {
-    const elements = new Map([
+    this.elements = new Map([
       [
         'CTalent',
         new Map([
@@ -1018,7 +1018,7 @@ describe("parseReference", function() {
       ]
     ])
 
-    const functions = {
+    this.functions = {
       default: {
         merge: (parent: any[], child: any[]) => parent.concat(child)
       }
@@ -1026,7 +1026,7 @@ describe("parseReference", function() {
 
     this.reference = "Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray[0].Modifications[0].Value"
     this.references = new Map()
-    parseReference(this.reference, this.references, { elements, functions } as any)
+    parseReference(this.reference, this.references, { elements: this.elements, functions: this.functions } as any)
     this.ref0 = this.references.get(this.reference)
   })
 
@@ -1064,6 +1064,14 @@ describe("parseReference", function() {
 
   it("should remove all ']' characters from 'field'", function() {
     expect(this.ref0.field).to.not.match(/\]/)
+  })
+
+  it("should set value to 0 for references that are not found", function() {
+    const reference = "Talent,AbathurMasteryPressurizedGlands,AbilityModificationArray[0].Value"
+    const references = new Map()
+
+    parseReference(reference, references, { elements: this.elements, functions: this.functions } as any)
+    expect(references.get(reference).value).to.equal(0)
   })
 })
 

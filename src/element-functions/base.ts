@@ -374,6 +374,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "Crit": functionTemplates.booleanValue(),
   "CritStep": functionTemplates.numberValue(),
   "CritValidatorArray": functionTemplates.mergeElement(VALIDATOR_TYPE_FILTER),
+  "Cost": functionTemplates.singleElement,
   "CursorEffect": singleEffect,
   "CursorRangeFlags": functionTemplates.flags(),
   "CursorRangeMode": functionTemplates.singleElement,
@@ -565,6 +566,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   "ExcludeOriginPlayer": returnEffectOrRemove,
   "ExecuteUnitAutoQueueId": functionTemplates.removeFromOutput,
   "Exhausted": singleEffect,
+  "ExpireCost": functionTemplates.singleElement,
   "ExpireDelay": functionTemplates.numberValue(),
   "ExpireEffect": singleEffect,
   "Face": {
@@ -810,9 +812,7 @@ export const BASE_FUNCTIONS: { [elementName: string]: ElementFunctions } = {
   },
   "Negate": functionTemplates.booleanValue(),
   "OccludeHeight": functionTemplates.numberValue(),
-  "OffCost": {
-    formatArray: arrayFormatters.reduceToSingleObject(),
-  },
+  "OffCost": functionTemplates.singleElement,
   "OffsetFacingFallback": functionTemplates.removeFromOutput,
   "Offsets": functionTemplates.removeFromOutput,
   "OffsetVectorEndLocation": functionTemplates.removeFromOutput,

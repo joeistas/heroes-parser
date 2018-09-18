@@ -651,10 +651,16 @@ describe("getElementAtPath", function() {
     expect(value).to.be.null
   })
 
-  it("should return null if array index does not exist", function() {
-    const path = 'Element.30'
+  it("should treat an empty part of the path as '0'", function() {
+    const path = 'Element.0.Element.'
     const value = getElementAtPath(this.element, path)
-    expect(value).to.be.null
+    expect(value).to.eql(this.element.Element[0].Element[0])
+  })
+
+  it("should get the last element in an array if the element is an array and part is a number that is larget than the length of the array", function() {
+    const path = 'Element.5.Element'
+    const value = getElementAtPath(this.element, path)
+    expect(value).to.eql(this.element.Element[2].Element)
   })
 })
 
@@ -682,6 +688,12 @@ describe("getValueAtPath", function() {
 
   it("should return the correct value if the last part in the path is an attribute", function() {
     const path = 'Element.0.Element.0.thing'
+    const value = getValueAtPath(this.element, path)
+    expect(value).to.eql('5')
+  })
+
+  it("should return the correct value if the path referrs to an attribute in the middle of the path", function() {
+    const path = 'Element.0.Element.0.thing.0'
     const value = getValueAtPath(this.element, path)
     expect(value).to.eql('5')
   })

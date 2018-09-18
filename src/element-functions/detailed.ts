@@ -251,7 +251,10 @@ export const DETAILED_FUNCTIONS = {
   "CValidatorIsUnitTracked": functionTemplates.removeFromOutput,
   "CValidatorLocationGroundPathingNearWall": functionTemplates.removeFromOutput,
   "DamageDealtXP": functionTemplates.removeFromOutput,
-  "DamageResponse": functionTemplates.removeFromOutput,
+  "DamageResponse": {
+    ...functionTemplates.removeFromOutput,
+    ...functionTemplates.singleElement,
+  },
   "DamageTakenXP": functionTemplates.removeFromOutput,
   "DeathTime": functionTemplates.removeFromOutput,
   "DisableValidatorArray": functionTemplates.removeFromOutput,

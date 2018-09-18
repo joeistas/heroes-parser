@@ -265,9 +265,13 @@ export function getElementAtPath(element: any, path: string, parts: string[] = n
   if(parts === null) {
     parts = path.split('.')
   }
-  const part = parts.shift()
+  let part =  parts.shift()
+  if(part === "") {
+    part = "0"
+  }
+
   let output
-  
+
   if(Array.isArray(element)) {
     if(element.every(value => 'index' in getElementAttributes(value))) {
       output = element.find((value: any) => getElementAttributes(value).index === part)
@@ -276,6 +280,10 @@ export function getElementAtPath(element: any, path: string, parts: string[] = n
     if(output === undefined && !stringIsNumber(part)) {
       output = element.slice(-1)[0]
       output = output === undefined ? null : output[part]
+    }
+
+    if(stringIsNumber(part) && element.length < parseInt(part)) {
+      output = element[element.length - 1]
     }
   }
 
@@ -303,16 +311,22 @@ export function getElementAtPath(element: any, path: string, parts: string[] = n
   @returns value at path or `null` if path is not valid
  */
 export function getValueAtPath(element: any, path: string): any {
-  let attribute = 'value'
-  let value = getElementAtPath(element, path)
-
-  if(value === null) {
-    const parts = path.split('.')
-    attribute = parts.pop()
-    value = getElementAtPath(element, path, parts)
+  const value = getElementAtPath(element, path)
+  if(value !== null) {
+    return getValueFromElement(value, 'value')
   }
 
-  return getValueFromElement(value, attribute)
+  const parts = path.split('.')
+  while(parts.length > 0) {
+    const attribute = parts.pop()
+    const value = getElementAtPath(element, path, [ ...parts ])
+
+    if(value !== null) {
+      return getValueFromElement(value, attribute)
+    }
+  }
+
+  return null;
 }
 
 /**
