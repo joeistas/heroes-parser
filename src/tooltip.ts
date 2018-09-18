@@ -328,7 +328,7 @@ export function parseReference(reference: string, references: Map<string, Toolti
   const value = getValueForReference(catalog, entry, field, parseData)
   if(!value) {
     const logger = getLogger()
-    logger.debug(`Warning: Unable to file value for reference: ${ catalog }, ${ entry }, ${ field } defaulting to 0`)
+    logger.debug(`Warning: Unable to find value for reference: ${ catalog }, ${ entry }, ${ field } defaulting to 0`)
   }
 
   references.set(reference, {

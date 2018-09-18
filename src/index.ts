@@ -42,6 +42,7 @@ export namespace tooltips {
   export type TooltipRenderFunction = tooltipBase.TooltipRenderFunction
 
   export const parseTooltipText = tooltipBase.parseTooltipLocaleText
+  export const computeTooltipFormulas = tooltipBase.computeTooltipDataFormulas
   export const renderTooltipData = tooltipBase.renderTooltipData
   export const handleBarsTemplateReplacement = tooltipBase.handleBarsTemplateReplacement
   export const toSpanElement = tooltipBase.toSpanElement
