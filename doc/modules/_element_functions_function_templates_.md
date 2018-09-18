@@ -42,7 +42,7 @@
 
 ▸ **addAttribute**(attribute: *`string`*, attributeValue: *`any`*): [ElementFunctions](../interfaces/_element_.elementfunctions.md)
 
-*Defined in [element-functions/function-templates.ts:42](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L42)*
+*Defined in [element-functions/function-templates.ts:41](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L41)*
 
 **Parameters:**
 
@@ -60,7 +60,7 @@ ___
 
 ▸ **arrayOfNumberValues**(attribute?: *`string`*): [ElementFunctions](../interfaces/_element_.elementfunctions.md)
 
-*Defined in [element-functions/function-templates.ts:206](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L206)*
+*Defined in [element-functions/function-templates.ts:208](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L208)*
 
 **Parameters:**
 
@@ -77,7 +77,7 @@ ___
 
 ▸ **arrayOfSingleValues**(attribute?: *`string`*): [ElementFunctions](../interfaces/_element_.elementfunctions.md)
 
-*Defined in [element-functions/function-templates.ts:200](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L200)*
+*Defined in [element-functions/function-templates.ts:202](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L202)*
 
 **Parameters:**
 
@@ -94,7 +94,7 @@ ___
 
 ▸ **assetArrayToSingleObject**(keyAttribute?: *`string`*, valueAttribute?: *`string`*): [ElementFunctions](../interfaces/_element_.elementfunctions.md)
 
-*Defined in [element-functions/function-templates.ts:193](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L193)*
+*Defined in [element-functions/function-templates.ts:195](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L195)*
 
 **Parameters:**
 
@@ -112,7 +112,7 @@ ___
 
 ▸ **assets**(attribute?: *`string`*): [ElementFunctions](../interfaces/_element_.elementfunctions.md)
 
-*Defined in [element-functions/function-templates.ts:183](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L183)*
+*Defined in [element-functions/function-templates.ts:185](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L185)*
 
 **Parameters:**
 
@@ -129,7 +129,7 @@ ___
 
 ▸ **booleanValue**(attribute?: *`string`*, trueValue?: *`string`*, falseValue?: *`string`*): [ElementFunctions](../interfaces/_element_.elementfunctions.md)
 
-*Defined in [element-functions/function-templates.ts:51](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L51)*
+*Defined in [element-functions/function-templates.ts:50](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L50)*
 
 **Parameters:**
 
@@ -148,7 +148,7 @@ ___
 
 ▸ **filters**(attribute?: *`string`*, index?: *`string`*): [ElementFunctions](../interfaces/_element_.elementfunctions.md)
 
-*Defined in [element-functions/function-templates.ts:215](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L215)*
+*Defined in [element-functions/function-templates.ts:217](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L217)*
 
 **Parameters:**
 
@@ -166,7 +166,7 @@ ___
 
 ▸ **flags**(mergeOntoOuterElement?: *`boolean`*, keyAttribute?: *`string`*, valueAttribute?: *`string`*): [ElementFunctions](../interfaces/_element_.elementfunctions.md)
 
-*Defined in [element-functions/function-templates.ts:103](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L103)*
+*Defined in [element-functions/function-templates.ts:102](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L102)*
 
 **Parameters:**
 
@@ -185,7 +185,7 @@ ___
 
 ▸ **localeText**(attribute?: *`string`*): [ElementFunctions](../interfaces/_element_.elementfunctions.md)
 
-*Defined in [element-functions/function-templates.ts:119](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L119)*
+*Defined in [element-functions/function-templates.ts:118](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L118)*
 
 **Parameters:**
 
@@ -202,7 +202,7 @@ ___
 
 ▸ **localeTextToSingleObject**(keyAttribute?: *`string`*, valueAttribute?: *`string`*): [ElementFunctions](../interfaces/_element_.elementfunctions.md)
 
-*Defined in [element-functions/function-templates.ts:160](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L160)*
+*Defined in [element-functions/function-templates.ts:162](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L162)*
 
 **Parameters:**
 
@@ -220,7 +220,7 @@ ___
 
 ▸ **mergeElement**(elementNameOrFilter: * [ElementNameFilter](_parsers_element_name_filters_.md#elementnamefilter) &#124; `string`*, attribute?: *`string`*): `object`
 
-*Defined in [element-functions/function-templates.ts:236](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L236)*
+*Defined in [element-functions/function-templates.ts:238](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L238)*
 
 **Parameters:**
 
@@ -238,7 +238,7 @@ ___
 
 ▸ **numberValue**(attribute?: *`string`*): [ElementFunctions](../interfaces/_element_.elementfunctions.md)
 
-*Defined in [element-functions/function-templates.ts:61](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L61)*
+*Defined in [element-functions/function-templates.ts:60](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L60)*
 
 **Parameters:**
 
@@ -255,7 +255,7 @@ ___
 
 ▸ **parseTooltip**(attribute?: *`string`*): [ElementFunctions](../interfaces/_element_.elementfunctions.md)
 
-*Defined in [element-functions/function-templates.ts:139](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L139)*
+*Defined in [element-functions/function-templates.ts:138](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L138)*
 
 **Parameters:**
 
@@ -272,7 +272,7 @@ ___
 
 ▸ **removeIfValue**(attributeValue: *`string`*, attribute?: *`string`*): `object`
 
-*Defined in [element-functions/function-templates.ts:71](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L71)*
+*Defined in [element-functions/function-templates.ts:70](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L70)*
 
 **Parameters:**
 
@@ -290,7 +290,7 @@ ___
 
 ▸ **renderTooltip**(attribute?: *`string`*): [ElementFunctions](../interfaces/_element_.elementfunctions.md)
 
-*Defined in [element-functions/function-templates.ts:149](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L149)*
+*Defined in [element-functions/function-templates.ts:148](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L148)*
 
 **Parameters:**
 
@@ -307,7 +307,7 @@ ___
 
 ▸ **singleAsset**(attribute?: *`string`*): [ElementFunctions](../interfaces/_element_.elementfunctions.md)
 
-*Defined in [element-functions/function-templates.ts:172](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L172)*
+*Defined in [element-functions/function-templates.ts:174](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L174)*
 
 **Parameters:**
 
@@ -324,7 +324,7 @@ ___
 
 ▸ **singleElementWithReplacement**(attribute?: *`string`*): [ElementFunctions](../interfaces/_element_.elementfunctions.md)
 
-*Defined in [element-functions/function-templates.ts:22](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L22)*
+*Defined in [element-functions/function-templates.ts:21](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L21)*
 
 **Parameters:**
 
@@ -341,7 +341,7 @@ ___
 
 ▸ **valueFromAttributeIfOnlyHasKeys**(attribute?: *`string`*, ...keys: *`string`[]*): [ElementFunctions](../interfaces/_element_.elementfunctions.md)
 
-*Defined in [element-functions/function-templates.ts:32](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L32)*
+*Defined in [element-functions/function-templates.ts:31](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L31)*
 
 **Parameters:**
 
@@ -359,7 +359,7 @@ ___
 
 ▸ **valuesToSingleObject**(keyAttribute?: *`string`*, valueAttribute?: *`string`*): [ElementFunctions](../interfaces/_element_.elementfunctions.md)
 
-*Defined in [element-functions/function-templates.ts:82](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L82)*
+*Defined in [element-functions/function-templates.ts:81](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L81)*
 
 **Parameters:**
 
@@ -377,7 +377,7 @@ ___
 
 ▸ **valuesToSingleObjectOfNumbers**(keyAttribute?: *`string`*, valueAttribute?: *`string`*): [ElementFunctions](../interfaces/_element_.elementfunctions.md)
 
-*Defined in [element-functions/function-templates.ts:92](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L92)*
+*Defined in [element-functions/function-templates.ts:91](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L91)*
 
 **Parameters:**
 
@@ -398,7 +398,7 @@ ___
 
 **removeFromOutput**: *`object`*
 
-*Defined in [element-functions/function-templates.ts:14](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L14)*
+*Defined in [element-functions/function-templates.ts:13](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L13)*
 
 <a id="removefromoutput.formatelement"></a>
 
@@ -406,7 +406,7 @@ ___
 
 **● formatElement**: *[removeFromOutput](_formatters_element_formatters_.md#removefromoutput)* =  elementFormatters.removeFromOutput
 
-*Defined in [element-functions/function-templates.ts:15](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L15)*
+*Defined in [element-functions/function-templates.ts:14](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L14)*
 
 ___
 
@@ -417,7 +417,7 @@ ___
 
 **singleElement**: *`object`*
 
-*Defined in [element-functions/function-templates.ts:18](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L18)*
+*Defined in [element-functions/function-templates.ts:17](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L17)*
 
 <a id="singleelement.merge"></a>
 
@@ -425,7 +425,7 @@ ___
 
 **● merge**: *`singleElement`* =  elementMergers.singleElement
 
-*Defined in [element-functions/function-templates.ts:19](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-functions/function-templates.ts#L19)*
+*Defined in [element-functions/function-templates.ts:18](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-functions/function-templates.ts#L18)*
 
 ___
 

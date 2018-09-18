@@ -27,7 +27,7 @@ XML and text data extracted from game directory or file data
 
 **● XML**: *[`string`, `Buffer`][]*
 
-*Defined in [parse-data.ts:47](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parse-data.ts#L47)*
+*Defined in [parse-data.ts:47](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-data.ts#L47)*
 
 ___
 <a id="assets"></a>
@@ -36,7 +36,7 @@ ___
 
 **● assets**: *`string`[]*
 
-*Defined in [parse-data.ts:49](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parse-data.ts#L49)*
+*Defined in [parse-data.ts:49](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-data.ts#L49)*
 
 ___
 <a id="buildnumber"></a>
@@ -45,7 +45,7 @@ ___
 
 **● buildNumber**: *`number`*
 
-*Defined in [parse-data.ts:50](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parse-data.ts#L50)*
+*Defined in [parse-data.ts:50](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-data.ts#L50)*
 
 ___
 <a id="text"></a>
@@ -54,7 +54,7 @@ ___
 
 **● text**: *[`string`, `Buffer`][]*
 
-*Defined in [parse-data.ts:48](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parse-data.ts#L48)*
+*Defined in [parse-data.ts:48](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-data.ts#L48)*
 
 ___
 

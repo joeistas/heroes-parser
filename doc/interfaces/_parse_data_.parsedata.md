@@ -30,7 +30,7 @@ Data to be used during element parsing and formating
 
 **● assetfindCache**: *[AssetFindCache](../modules/_parsers_asset_parsers_.md#assetfindcache)*
 
-*Defined in [parse-data.ts:37](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parse-data.ts#L37)*
+*Defined in [parse-data.ts:37](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-data.ts#L37)*
 
 ___
 <a id="assets"></a>
@@ -39,7 +39,7 @@ ___
 
 **● assets**: *`string`[]*
 
-*Defined in [parse-data.ts:38](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parse-data.ts#L38)*
+*Defined in [parse-data.ts:38](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-data.ts#L38)*
 
 ___
 <a id="buildnumber"></a>
@@ -48,7 +48,7 @@ ___
 
 **● buildNumber**: *`number`*
 
-*Defined in [parse-data.ts:34](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parse-data.ts#L34)*
+*Defined in [parse-data.ts:34](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-data.ts#L34)*
 
 ___
 <a id="elements"></a>
@@ -57,7 +57,7 @@ ___
 
 **● elements**: *[ElementMap](../modules/_element_map_.md#elementmap)*
 
-*Defined in [parse-data.ts:36](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parse-data.ts#L36)*
+*Defined in [parse-data.ts:36](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-data.ts#L36)*
 
 ___
 <a id="functions"></a>
@@ -66,7 +66,7 @@ ___
 
 **● functions**: *[ElementFunctionsMap](../modules/_element_.md#elementfunctionsmap)*
 
-*Defined in [parse-data.ts:35](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parse-data.ts#L35)*
+*Defined in [parse-data.ts:35](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-data.ts#L35)*
 
 ___
 <a id="options"></a>
@@ -75,7 +75,7 @@ ___
 
 **● options**: *[ParseOptions](_parse_options_.parseoptions.md)*
 
-*Defined in [parse-data.ts:40](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parse-data.ts#L40)*
+*Defined in [parse-data.ts:40](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-data.ts#L40)*
 
 ___
 <a id="text"></a>
@@ -84,7 +84,7 @@ ___
 
 **● text**: *[TextMap](../modules/_text_.md#textmap)*
 
-*Defined in [parse-data.ts:39](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parse-data.ts#L39)*
+*Defined in [parse-data.ts:39](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-data.ts#L39)*
 
 ___
 

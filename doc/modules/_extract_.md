@@ -22,7 +22,7 @@
 
 ▸ **extractAssets**(storageHandle: *`any`*, options: *[ExtractOptions](../interfaces/_extract_.extractoptions.md)*): `Promise`<`void`[]>
 
-*Defined in [extract.ts:28](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/extract.ts#L28)*
+*Defined in [extract.ts:28](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/extract.ts#L28)*
 
 Extracts and saves assets from Heroes of the Storm game storage to disk.
 

@@ -29,7 +29,7 @@ Functions used to parse and format the output of an element type
 
 **● formatArray**: *[ElementArrayFormatter](../modules/_formatters_index_.md#elementarrayformatter)*
 
-*Defined in [element.ts:28](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element.ts#L28)*
+*Defined in [element.ts:28](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L28)*
 
 format array of elements
 
@@ -40,7 +40,7 @@ ___
 
 **● formatElement**: *[ElementFormatter](../modules/_formatters_index_.md#elementformatter)*
 
-*Defined in [element.ts:24](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element.ts#L24)*
+*Defined in [element.ts:24](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L24)*
 
 used to format the elmement. Run after attributes and inner elements are formatted
 
@@ -52,7 +52,7 @@ ___
 **● formatKey**: * [ElementKeyFormatter](../modules/_formatters_index_.md#elementkeyformatter) &#124; `string`
 *
 
-*Defined in [element.ts:26](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element.ts#L26)*
+*Defined in [element.ts:26](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L26)*
 
 format the key to be set on outer element
 
@@ -63,7 +63,7 @@ ___
 
 **● merge**: *`ElementMerger`*
 
-*Defined in [element.ts:18](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element.ts#L18)*
+*Defined in [element.ts:18](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L18)*
 
 used to merge parent and child inner elements
 
@@ -74,7 +74,7 @@ ___
 
 **● postParse**: *[ElementParser](../modules/_parsers_index_.md#elementparser)*
 
-*Defined in [element.ts:22](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element.ts#L22)*
+*Defined in [element.ts:22](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L22)*
 
 run at the end of element parsing, after inner elements are parsed
 
@@ -85,7 +85,7 @@ ___
 
 **● preParse**: *[ElementParser](../modules/_parsers_index_.md#elementparser)*
 
-*Defined in [element.ts:20](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element.ts#L20)*
+*Defined in [element.ts:20](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L20)*
 
 run at the start of element parsing, before inner elements are parsed
 

@@ -26,7 +26,7 @@
 
 **● counter**: *`string`*
 
-*Defined in [tooltip.ts:30](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/tooltip.ts#L30)*
+*Defined in [tooltip.ts:29](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L29)*
 
 ___
 <a id="max"></a>
@@ -35,7 +35,7 @@ ___
 
 **● max**: *`number`*
 
-*Defined in [tooltip.ts:32](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/tooltip.ts#L32)*
+*Defined in [tooltip.ts:31](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L31)*
 
 ___
 <a id="min"></a>
@@ -44,7 +44,7 @@ ___
 
 **● min**: *`number`*
 
-*Defined in [tooltip.ts:31](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/tooltip.ts#L31)*
+*Defined in [tooltip.ts:30](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L30)*
 
 ___
 <a id="name"></a>
@@ -53,7 +53,7 @@ ___
 
 **● name**: *`string`*
 
-*Defined in [tooltip.ts:29](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/tooltip.ts#L29)*
+*Defined in [tooltip.ts:28](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L28)*
 
 ___
 <a id="scale"></a>
@@ -62,7 +62,7 @@ ___
 
 **● scale**: *`number`*
 
-*Defined in [tooltip.ts:33](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/tooltip.ts#L33)*
+*Defined in [tooltip.ts:32](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L32)*
 
 ___
 

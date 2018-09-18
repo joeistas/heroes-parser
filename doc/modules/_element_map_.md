@@ -19,7 +19,7 @@
 
 **ΤElementMap**: *`Map`<`string`, [ElementTypeMap](_element_map_.md#elementtypemap)>*
 
-*Defined in [element-map.ts:14](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-map.ts#L14)*
+*Defined in [element-map.ts:14](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-map.ts#L14)*
 
 Map containing all of the elements from parsed XML files.
 
@@ -36,7 +36,7 @@ ___
 
 **ΤElementTypeMap**: *`Map`<`string`, `any`[]>*
 
-*Defined in [element-map.ts:3](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/element-map.ts#L3)*
+*Defined in [element-map.ts:3](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element-map.ts#L3)*
 
 ___
 

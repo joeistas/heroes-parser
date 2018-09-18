@@ -28,7 +28,7 @@
   lowerCaseFirstCharacter,
 )
 
-*Defined in [formatters/key-formatters.ts:8](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/key-formatters.ts#L8)*
+*Defined in [formatters/key-formatters.ts:8](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/key-formatters.ts#L8)*
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 ▸ **join**(...formatters: *[ElementKeyFormatter](_formatters_index_.md#elementkeyformatter)[]*): [ElementKeyFormatter](_formatters_index_.md#elementkeyformatter)
 
-*Defined in [formatters/key-formatters.ts:25](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/key-formatters.ts#L25)*
+*Defined in [formatters/key-formatters.ts:25](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/key-formatters.ts#L25)*
 
 **Parameters:**
 
@@ -57,7 +57,7 @@ ___
 
 ▸ **lowerCaseFirstCharacter**(key: *`string`*): `string`
 
-*Defined in [formatters/key-formatters.ts:17](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/key-formatters.ts#L17)*
+*Defined in [formatters/key-formatters.ts:17](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/key-formatters.ts#L17)*
 
 **Parameters:**
 
@@ -74,7 +74,7 @@ ___
 
 ▸ **pluralizeKey**(key: *`string`*): `string`
 
-*Defined in [formatters/key-formatters.ts:21](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/key-formatters.ts#L21)*
+*Defined in [formatters/key-formatters.ts:21](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/key-formatters.ts#L21)*
 
 **Parameters:**
 
@@ -91,7 +91,7 @@ ___
 
 ▸ **removeArrayFromKey**(key: *`string`*): `string`
 
-*Defined in [formatters/key-formatters.ts:13](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/key-formatters.ts#L13)*
+*Defined in [formatters/key-formatters.ts:13](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/key-formatters.ts#L13)*
 
 **Parameters:**
 

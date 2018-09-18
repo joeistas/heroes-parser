@@ -25,7 +25,7 @@
 
 **● attributes**: *`object`*
 
-*Defined in [parsers/index.ts:22](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/index.ts#L22)*
+*Defined in [parsers/index.ts:22](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/index.ts#L22)*
 
 #### Type declaration
 

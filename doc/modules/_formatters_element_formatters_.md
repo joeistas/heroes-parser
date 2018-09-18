@@ -22,7 +22,9 @@
 * [attributeToBoolean](_formatters_element_formatters_.md#attributetoboolean)
 * [attributeToNumber](_formatters_element_formatters_.md#attributetonumber)
 * [combineAttributes](_formatters_element_formatters_.md#combineattributes)
+* [computeTooltipFormulas](_formatters_element_formatters_.md#computetooltipformulas)
 * [conditionallyFormatElement](_formatters_element_formatters_.md#conditionallyformatelement)
+* [every](_formatters_element_formatters_.md#every)
 * [formatAttributeWithKeyFormatter](_formatters_element_formatters_.md#formatattributewithkeyformatter)
 * [formatCompareOperator](_formatters_element_formatters_.md#formatcompareoperator)
 * [hasKeys](_formatters_element_formatters_.md#haskeys)
@@ -38,6 +40,7 @@
 * [removeFromOutput](_formatters_element_formatters_.md#removefromoutput)
 * [removeFromStart](_formatters_element_formatters_.md#removefromstart)
 * [removeFromStartOfAttribute](_formatters_element_formatters_.md#removefromstartofattribute)
+* [renderTooltip](_formatters_element_formatters_.md#rendertooltip)
 * [selectAttributes](_formatters_element_formatters_.md#selectattributes)
 * [some](_formatters_element_formatters_.md#some)
 * [splitOnCaps](_formatters_element_formatters_.md#splitoncaps)
@@ -57,7 +60,7 @@
 
 **ΤElementConditional**: *`function`*
 
-*Defined in [formatters/element-formatters.ts:9](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L9)*
+*Defined in [formatters/element-formatters.ts:16](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L16)*
 
 #### Type declaration
 ▸(formattedElement: *`any`*, element: *`any`*): `boolean`
@@ -89,7 +92,7 @@ ___
   removeIfEmptyObject
 )
 
-*Defined in [formatters/element-formatters.ts:13](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L13)*
+*Defined in [formatters/element-formatters.ts:20](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L20)*
 
 #### Type declaration
 ▸(formattedElement: *`any`*, element: *`any`*): `any`
@@ -110,7 +113,7 @@ ___
 
 **● removeIfEmptyObject**: *`function`* =  conditionallyFormatElement(isEmpty, removeFromOutput)
 
-*Defined in [formatters/element-formatters.ts:11](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L11)*
+*Defined in [formatters/element-formatters.ts:18](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L18)*
 
 #### Type declaration
 ▸(formattedElement: *`any`*, element: *`any`*): `any`
@@ -134,7 +137,7 @@ ___
 
 ▸ **applyFormatterToAttribute**(attribute?: *`string`*, formatter: *[ElementFormatter](_formatters_index_.md#elementformatter)*): `(Anonymous function)`
 
-*Defined in [formatters/element-formatters.ts:175](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L175)*
+*Defined in [formatters/element-formatters.ts:188](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L188)*
 
 **Parameters:**
 
@@ -152,7 +155,7 @@ ___
 
 ▸ **attributeHasValue**(attributeValue: *`string`*, attribute?: *`string`*): [ElementConditional](_formatters_element_formatters_.md#elementconditional)
 
-*Defined in [formatters/element-formatters.ts:92](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L92)*
+*Defined in [formatters/element-formatters.ts:99](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L99)*
 
 **Parameters:**
 
@@ -170,7 +173,7 @@ ___
 
 ▸ **attributeIsDefined**(attribute?: *`string`*): [ElementConditional](_formatters_element_formatters_.md#elementconditional)
 
-*Defined in [formatters/element-formatters.ts:62](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L62)*
+*Defined in [formatters/element-formatters.ts:69](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L69)*
 
 **Parameters:**
 
@@ -187,7 +190,7 @@ ___
 
 ▸ **attributeIsNotDefined**(attribute?: *`string`*): [ElementConditional](_formatters_element_formatters_.md#elementconditional)
 
-*Defined in [formatters/element-formatters.ts:68](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L68)*
+*Defined in [formatters/element-formatters.ts:75](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L75)*
 
 **Parameters:**
 
@@ -204,7 +207,7 @@ ___
 
 ▸ **attributeToBoolean**(attribute?: *`string`*, trueValue?: *`string`*, falseValue?: *`string`*): `(Anonymous function)`
 
-*Defined in [formatters/element-formatters.ts:186](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L186)*
+*Defined in [formatters/element-formatters.ts:199](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L199)*
 
 **Parameters:**
 
@@ -223,7 +226,7 @@ ___
 
 ▸ **attributeToNumber**(attribute?: *`string`*): `(Anonymous function)`
 
-*Defined in [formatters/element-formatters.ts:190](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L190)*
+*Defined in [formatters/element-formatters.ts:203](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L203)*
 
 **Parameters:**
 
@@ -240,7 +243,7 @@ ___
 
 ▸ **combineAttributes**(newAttribute: *`string`*, ...attributesToMerge: *`string`[]*): `(Anonymous function)`
 
-*Defined in [formatters/element-formatters.ts:239](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L239)*
+*Defined in [formatters/element-formatters.ts:252](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L252)*
 
 **Parameters:**
 
@@ -252,13 +255,31 @@ ___
 **Returns:** `(Anonymous function)`
 
 ___
+<a id="computetooltipformulas"></a>
+
+###  computeTooltipFormulas
+
+▸ **computeTooltipFormulas**(attribute?: *`string`*, variableValues?: *`object`*): `(Anonymous function)`
+
+*Defined in [formatters/element-formatters.ts:265](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L265)*
+
+**Parameters:**
+
+| Param | Type | Default value |
+| ------ | ------ | ------ |
+| `Default value` attribute | `string` | &quot;value&quot; |
+| `Default value` variableValues | `object` |  {} |
+
+**Returns:** `(Anonymous function)`
+
+___
 <a id="conditionallyformatelement"></a>
 
 ###  conditionallyFormatElement
 
 ▸ **conditionallyFormatElement**(condition: *[ElementConditional](_formatters_element_formatters_.md#elementconditional)*, whenTrue?: *[ElementFormatter](_formatters_index_.md#elementformatter)*, whenFalse?: *[ElementFormatter](_formatters_index_.md#elementformatter)*): [ElementFormatter](_formatters_index_.md#elementformatter)
 
-*Defined in [formatters/element-formatters.ts:36](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L36)*
+*Defined in [formatters/element-formatters.ts:43](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L43)*
 
 **Parameters:**
 
@@ -271,13 +292,30 @@ ___
 **Returns:** [ElementFormatter](_formatters_index_.md#elementformatter)
 
 ___
+<a id="every"></a>
+
+###  every
+
+▸ **every**(...conditionals: *[ElementConditional](_formatters_element_formatters_.md#elementconditional)[]*): `(Anonymous function)`
+
+*Defined in [formatters/element-formatters.ts:111](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L111)*
+
+**Parameters:**
+
+| Param | Type |
+| ------ | ------ |
+| `Rest` conditionals | [ElementConditional](_formatters_element_formatters_.md#elementconditional)[] |
+
+**Returns:** `(Anonymous function)`
+
+___
 <a id="formatattributewithkeyformatter"></a>
 
 ###  formatAttributeWithKeyFormatter
 
 ▸ **formatAttributeWithKeyFormatter**(formatter: *[ElementKeyFormatter](_formatters_index_.md#elementkeyformatter)*, attribute?: *`string`*): `(Anonymous function)`
 
-*Defined in [formatters/element-formatters.ts:198](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L198)*
+*Defined in [formatters/element-formatters.ts:211](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L211)*
 
 **Parameters:**
 
@@ -295,7 +333,7 @@ ___
 
 ▸ **formatCompareOperator**(formattedElement: *`any`*, element: *`any`*):  "&#x3D;&#x3D;" &#124; "!&#x3D;" &#124; "&gt;" &#124; "&gt;&#x3D;" &#124; "&lt;" &#124; "&lt;&#x3D;"
 
-*Defined in [formatters/element-formatters.ts:164](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L164)*
+*Defined in [formatters/element-formatters.ts:177](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L177)*
 
 **Parameters:**
 
@@ -313,7 +351,7 @@ ___
 
 ▸ **hasKeys**(...keys: *`string`[]*): [ElementConditional](_formatters_element_formatters_.md#elementconditional)
 
-*Defined in [formatters/element-formatters.ts:72](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L72)*
+*Defined in [formatters/element-formatters.ts:79](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L79)*
 
 **Parameters:**
 
@@ -330,7 +368,7 @@ ___
 
 ▸ **hasNumberOfKeys**(length: *`number`*): [ElementConditional](_formatters_element_formatters_.md#elementconditional)
 
-*Defined in [formatters/element-formatters.ts:79](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L79)*
+*Defined in [formatters/element-formatters.ts:86](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L86)*
 
 **Parameters:**
 
@@ -347,7 +385,7 @@ ___
 
 ▸ **isAttributeEmpty**(attribute?: *`string`*): `(Anonymous function)`
 
-*Defined in [formatters/element-formatters.ts:56](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L56)*
+*Defined in [formatters/element-formatters.ts:63](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L63)*
 
 **Parameters:**
 
@@ -364,7 +402,7 @@ ___
 
 ▸ **isEmpty**(formattedElement: *`any`*, element: *`any`*): `boolean`
 
-*Defined in [formatters/element-formatters.ts:52](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L52)*
+*Defined in [formatters/element-formatters.ts:59](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L59)*
 
 **Parameters:**
 
@@ -382,7 +420,7 @@ ___
 
 ▸ **join**(...formatters: *[ElementFormatter](_formatters_index_.md#elementformatter)[]*): [ElementFormatter](_formatters_index_.md#elementformatter)
 
-*Defined in [formatters/element-formatters.ts:23](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L23)*
+*Defined in [formatters/element-formatters.ts:30](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L30)*
 
 **Parameters:**
 
@@ -399,7 +437,7 @@ ___
 
 ▸ **not**(conditional: *[ElementConditional](_formatters_element_formatters_.md#elementconditional)*): [ElementConditional](_formatters_element_formatters_.md#elementconditional)
 
-*Defined in [formatters/element-formatters.ts:46](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L46)*
+*Defined in [formatters/element-formatters.ts:53](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L53)*
 
 **Parameters:**
 
@@ -416,7 +454,7 @@ ___
 
 ▸ **onlyHasKeys**(...keys: *`string`[]*): [ElementConditional](_formatters_element_formatters_.md#elementconditional)
 
-*Defined in [formatters/element-formatters.ts:85](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L85)*
+*Defined in [formatters/element-formatters.ts:92](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L92)*
 
 **Parameters:**
 
@@ -433,7 +471,7 @@ ___
 
 ▸ **parseFilterString**(formattedElement: *`any`*, element: *`any`*): `any`
 
-*Defined in [formatters/element-formatters.ts:210](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L210)*
+*Defined in [formatters/element-formatters.ts:223](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L223)*
 
 **Parameters:**
 
@@ -451,7 +489,7 @@ ___
 
 ▸ **passThrough**(formattedElement: *`any`*, element: *`any`*): `any`
 
-*Defined in [formatters/element-formatters.ts:108](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L108)*
+*Defined in [formatters/element-formatters.ts:121](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L121)*
 
 **Parameters:**
 
@@ -469,7 +507,7 @@ ___
 
 ▸ **removeAttributeFromElement**(key: *`string`*): [ElementFormatter](_formatters_index_.md#elementformatter)
 
-*Defined in [formatters/element-formatters.ts:232](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L232)*
+*Defined in [formatters/element-formatters.ts:245](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L245)*
 
 **Parameters:**
 
@@ -486,7 +524,7 @@ ___
 
 ▸ **removeFromOutput**(formattedElement: *`any`*, element: *`any`*): `null`
 
-*Defined in [formatters/element-formatters.ts:104](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L104)*
+*Defined in [formatters/element-formatters.ts:117](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L117)*
 
 **Parameters:**
 
@@ -504,7 +542,7 @@ ___
 
 ▸ **removeFromStart**(remove: *`string`*): `(Anonymous function)`
 
-*Defined in [formatters/element-formatters.ts:158](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L158)*
+*Defined in [formatters/element-formatters.ts:171](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L171)*
 
 **Parameters:**
 
@@ -521,7 +559,7 @@ ___
 
 ▸ **removeFromStartOfAttribute**(remove: *`string`*, attribute?: *`string`*): `(Anonymous function)`
 
-*Defined in [formatters/element-formatters.ts:194](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L194)*
+*Defined in [formatters/element-formatters.ts:207](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L207)*
 
 **Parameters:**
 
@@ -533,13 +571,31 @@ ___
 **Returns:** `(Anonymous function)`
 
 ___
+<a id="rendertooltip"></a>
+
+###  renderTooltip
+
+▸ **renderTooltip**(attribute?: *`string`*, render?: *[TooltipRenderFunction](_tooltip_.md#tooltiprenderfunction)*): `(Anonymous function)`
+
+*Defined in [formatters/element-formatters.ts:281](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L281)*
+
+**Parameters:**
+
+| Param | Type | Default value |
+| ------ | ------ | ------ |
+| `Default value` attribute | `string` | &quot;value&quot; |
+| `Default value` render | [TooltipRenderFunction](_tooltip_.md#tooltiprenderfunction) |  renderTooltipWithHandlebars |
+
+**Returns:** `(Anonymous function)`
+
+___
 <a id="selectattributes"></a>
 
 ###  selectAttributes
 
 ▸ **selectAttributes**(...attributes: *`string`[]*): [ElementFormatter](_formatters_index_.md#elementformatter)
 
-*Defined in [formatters/element-formatters.ts:112](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L112)*
+*Defined in [formatters/element-formatters.ts:125](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L125)*
 
 **Parameters:**
 
@@ -556,7 +612,7 @@ ___
 
 ▸ **some**(...conditionals: *[ElementConditional](_formatters_element_formatters_.md#elementconditional)[]*): `(Anonymous function)`
 
-*Defined in [formatters/element-formatters.ts:98](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L98)*
+*Defined in [formatters/element-formatters.ts:105](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L105)*
 
 **Parameters:**
 
@@ -573,7 +629,7 @@ ___
 
 ▸ **splitOnCaps**(formattedElement: *`any`*, element: *`any`*): `any`
 
-*Defined in [formatters/element-formatters.ts:154](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L154)*
+*Defined in [formatters/element-formatters.ts:167](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L167)*
 
 **Parameters:**
 
@@ -591,7 +647,7 @@ ___
 
 ▸ **toKeyValuePair**(keyAttribute?: *`string`*, valueAttribute?: *`string`*): [ElementFormatter](_formatters_index_.md#elementformatter)
 
-*Defined in [formatters/element-formatters.ts:202](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L202)*
+*Defined in [formatters/element-formatters.ts:215](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L215)*
 
 **Parameters:**
 
@@ -609,7 +665,7 @@ ___
 
 ▸ **valueFromAttribute**(attribute?: *`string`*): [ElementFormatter](_formatters_index_.md#elementformatter)
 
-*Defined in [formatters/element-formatters.ts:124](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L124)*
+*Defined in [formatters/element-formatters.ts:137](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L137)*
 
 **Parameters:**
 
@@ -626,7 +682,7 @@ ___
 
 ▸ **valueFromFirstKey**(formattedElement: *`any`*, element: *`any`*): `string`
 
-*Defined in [formatters/element-formatters.ts:130](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L130)*
+*Defined in [formatters/element-formatters.ts:143](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L143)*
 
 **Parameters:**
 
@@ -644,7 +700,7 @@ ___
 
 ▸ **valueToBoolean**(trueValue?: *`string`*, falseValue?: *`string`*): [ElementFormatter](_formatters_index_.md#elementformatter)
 
-*Defined in [formatters/element-formatters.ts:134](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L134)*
+*Defined in [formatters/element-formatters.ts:147](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L147)*
 
 **Parameters:**
 
@@ -662,7 +718,7 @@ ___
 
 ▸ **valueToNumber**(formattedElement: *`any`*, element: *`any`*): `any`
 
-*Defined in [formatters/element-formatters.ts:148](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/element-formatters.ts#L148)*
+*Defined in [formatters/element-formatters.ts:161](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/element-formatters.ts#L161)*
 
 **Parameters:**
 

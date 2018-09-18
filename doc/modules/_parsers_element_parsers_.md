@@ -22,7 +22,7 @@
 
 **● LEVEL_SCALING_ATTRIBUTE**: *"levelScaling"* = "levelScaling"
 
-*Defined in [parsers/element-parsers.ts:17](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/element-parsers.ts#L17)*
+*Defined in [parsers/element-parsers.ts:17](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/element-parsers.ts#L17)*
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 ▸ **levelScalingParser**(element: *`any`*, outerElement: *`any`*, parseData: *[ParseData](../interfaces/_parse_data_.parsedata.md)*, context: *[ParseContext](../interfaces/_parsers_index_.parsecontext.md)*): `any`
 
-*Defined in [parsers/element-parsers.ts:19](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/element-parsers.ts#L19)*
+*Defined in [parsers/element-parsers.ts:19](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/element-parsers.ts#L19)*
 
 **Parameters:**
 

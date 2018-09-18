@@ -8,7 +8,6 @@
 
 * [attributeValueReplacement](_parsers_text_parsers_.md#attributevaluereplacement)
 * [parseTooltip](_parsers_text_parsers_.md#parsetooltip)
-* [renderTooltip](_parsers_text_parsers_.md#rendertooltip)
 * [replaceWithLocaleText](_parsers_text_parsers_.md#replacewithlocaletext)
 
 ---
@@ -21,7 +20,7 @@
 
 ▸ **attributeValueReplacement**(attribute?: *`string`*): [ElementParser](_parsers_index_.md#elementparser)
 
-*Defined in [parsers/text-parsers.ts:27](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/text-parsers.ts#L27)*
+*Defined in [parsers/text-parsers.ts:17](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/text-parsers.ts#L17)*
 
 **Parameters:**
 
@@ -38,7 +37,7 @@ ___
 
 ▸ **parseTooltip**(attribute?: *`string`*, formulaElement?: *[TooltipFormulaReplaceFunction](_tooltip_.md#tooltipformulareplacefunction)*, templateElement?: *[TooltipElementReplaceFunction](_tooltip_.md#tooltipelementreplacefunction)*): [ElementParser](_parsers_index_.md#elementparser)
 
-*Defined in [parsers/text-parsers.ts:70](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/text-parsers.ts#L70)*
+*Defined in [parsers/text-parsers.ts:60](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/text-parsers.ts#L60)*
 
 **Parameters:**
 
@@ -51,31 +50,13 @@ ___
 **Returns:** [ElementParser](_parsers_index_.md#elementparser)
 
 ___
-<a id="rendertooltip"></a>
-
-###  renderTooltip
-
-▸ **renderTooltip**(attribute?: *`string`*, render?: *[TooltipRenderFunction](_tooltip_.md#tooltiprenderfunction)*): `(Anonymous function)`
-
-*Defined in [parsers/text-parsers.ts:87](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/text-parsers.ts#L87)*
-
-**Parameters:**
-
-| Param | Type | Default value |
-| ------ | ------ | ------ |
-| `Default value` attribute | `string` | &quot;value&quot; |
-| `Default value` render | [TooltipRenderFunction](_tooltip_.md#tooltiprenderfunction) |  renderTooltipWithHandlebars |
-
-**Returns:** `(Anonymous function)`
-
-___
 <a id="replacewithlocaletext"></a>
 
 ###  replaceWithLocaleText
 
 ▸ **replaceWithLocaleText**(attribute?: *`string`*): [ElementParser](_parsers_index_.md#elementparser)
 
-*Defined in [parsers/text-parsers.ts:48](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/text-parsers.ts#L48)*
+*Defined in [parsers/text-parsers.ts:38](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/text-parsers.ts#L38)*
 
 **Parameters:**
 

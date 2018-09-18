@@ -30,7 +30,7 @@
 
 **ΤElementParser**: *`function`*
 
-*Defined in [parsers/index.ts:20](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/index.ts#L20)*
+*Defined in [parsers/index.ts:20](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/index.ts#L20)*
 
 #### Type declaration
 ▸(element: *`any`*, outerElement: *`any`*, parseData: *[ParseData](../interfaces/_parse_data_.parsedata.md)*, context: *[ParseContext](../interfaces/_parsers_index_.parsecontext.md)*): `any`
@@ -56,7 +56,7 @@ ___
 
 **● defaultPreParser**: *`function`* =  attributesToInnerElements(/^[A-Z]/)
 
-*Defined in [parsers/index.ts:26](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/index.ts#L26)*
+*Defined in [parsers/index.ts:26](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/index.ts#L26)*
 
 #### Type declaration
 ▸(element: *`any`*, outerElement: *`any`*, parseData: *[ParseData](../interfaces/_parse_data_.parsedata.md)*, context: *[ParseContext](../interfaces/_parsers_index_.parsecontext.md)*): `any`
@@ -82,7 +82,7 @@ ___
 
 ▸ **join**(...processors: *[ElementParser](_parsers_index_.md#elementparser)[]*): `(Anonymous function)`
 
-*Defined in [parsers/index.ts:28](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/index.ts#L28)*
+*Defined in [parsers/index.ts:28](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/index.ts#L28)*
 
 **Parameters:**
 

@@ -23,7 +23,7 @@
 
 ▸ **buildLogger**(logger?: *[Logger](../interfaces/_logger_.logger.md)*, logLevel?: *`string`*): [Logger](../interfaces/_logger_.logger.md)
 
-*Defined in [logger.ts:16](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/logger.ts#L16)*
+*Defined in [logger.ts:14](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/logger.ts#L14)*
 
 Build heroes parser logger. Must be run at least once before [getLogger](_logger_.md#getlogger) is called
 
@@ -43,7 +43,7 @@ ___
 
 ▸ **getLogger**(): [Logger](../interfaces/_logger_.logger.md)
 
-*Defined in [logger.ts:43](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/logger.ts#L43)*
+*Defined in [logger.ts:41](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/logger.ts#L41)*
 
 Get heroes parser logger. [buildLogger](_logger_.md#buildlogger) must be run before this function can be used
 

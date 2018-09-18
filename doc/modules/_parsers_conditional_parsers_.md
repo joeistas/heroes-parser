@@ -25,7 +25,7 @@
 
 **ΤParserConditional**: *`function`*
 
-*Defined in [parsers/conditional-parsers.ts:8](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/conditional-parsers.ts#L8)*
+*Defined in [parsers/conditional-parsers.ts:8](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/conditional-parsers.ts#L8)*
 
 #### Type declaration
 ▸(element: *`any`*, outerElement: *`any`*, parseData: *[ParseData](../interfaces/_parse_data_.parsedata.md)*, context: *[ParseContext](../interfaces/_parsers_index_.parsecontext.md)*): `boolean`
@@ -51,7 +51,7 @@ ___
 
 ▸ **conditionallyParseElement**(conditional: *[ParserConditional](_parsers_conditional_parsers_.md#parserconditional)*, whenTrue?: *[ElementParser](_parsers_index_.md#elementparser)*, whenFalse?: *[ElementParser](_parsers_index_.md#elementparser)*): `(Anonymous function)`
 
-*Defined in [parsers/conditional-parsers.ts:10](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/conditional-parsers.ts#L10)*
+*Defined in [parsers/conditional-parsers.ts:10](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/conditional-parsers.ts#L10)*
 
 **Parameters:**
 
@@ -70,7 +70,7 @@ ___
 
 ▸ **outerElementHasName**(outerElementNameOrFilter: * [ElementNameFilter](_parsers_element_name_filters_.md#elementnamefilter) &#124; `string`*): `(Anonymous function)`
 
-*Defined in [parsers/conditional-parsers.ts:26](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/conditional-parsers.ts#L26)*
+*Defined in [parsers/conditional-parsers.ts:26](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/conditional-parsers.ts#L26)*
 
 **Parameters:**
 
@@ -87,7 +87,7 @@ ___
 
 ▸ **passThrough**(element: *`any`*, outerElement: *`any`*, parseData: *[ParseData](../interfaces/_parse_data_.parsedata.md)*, context: *[ParseContext](../interfaces/_parsers_index_.parsecontext.md)*): `any`
 
-*Defined in [parsers/conditional-parsers.ts:22](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/conditional-parsers.ts#L22)*
+*Defined in [parsers/conditional-parsers.ts:22](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/conditional-parsers.ts#L22)*
 
 **Parameters:**
 
@@ -107,7 +107,7 @@ ___
 
 ▸ **pathHasValue**(path: *`string`*, value: *`any`*): [ParserConditional](_parsers_conditional_parsers_.md#parserconditional)
 
-*Defined in [parsers/conditional-parsers.ts:38](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/conditional-parsers.ts#L38)*
+*Defined in [parsers/conditional-parsers.ts:38](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/conditional-parsers.ts#L38)*
 
 **Parameters:**
 

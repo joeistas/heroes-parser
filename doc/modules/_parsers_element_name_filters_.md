@@ -24,7 +24,7 @@
 
 **ΤElementNameFilter**: *`function`*
 
-*Defined in [parsers/element-name-filters.ts:3](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/element-name-filters.ts#L3)*
+*Defined in [parsers/element-name-filters.ts:3](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/element-name-filters.ts#L3)*
 
 #### Type declaration
 ▸(parseData: *[ParseData](../interfaces/_parse_data_.parsedata.md)*): `string`[]
@@ -47,7 +47,7 @@ ___
 
 ▸ **inList**(...list: *`string`[]*): [ElementNameFilter](_parsers_element_name_filters_.md#elementnamefilter)
 
-*Defined in [parsers/element-name-filters.ts:23](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/element-name-filters.ts#L23)*
+*Defined in [parsers/element-name-filters.ts:23](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/element-name-filters.ts#L23)*
 
 **Parameters:**
 
@@ -64,7 +64,7 @@ ___
 
 ▸ **join**(...filters: *[ElementNameFilter](_parsers_element_name_filters_.md#elementnamefilter)[]*): [ElementNameFilter](_parsers_element_name_filters_.md#elementnamefilter)
 
-*Defined in [parsers/element-name-filters.ts:5](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/element-name-filters.ts#L5)*
+*Defined in [parsers/element-name-filters.ts:5](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/element-name-filters.ts#L5)*
 
 **Parameters:**
 
@@ -81,7 +81,7 @@ ___
 
 ▸ **startsWith**(startsWith: *`string`*): [ElementNameFilter](_parsers_element_name_filters_.md#elementnamefilter)
 
-*Defined in [parsers/element-name-filters.ts:12](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/parsers/element-name-filters.ts#L12)*
+*Defined in [parsers/element-name-filters.ts:12](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/element-name-filters.ts#L12)*
 
 **Parameters:**
 

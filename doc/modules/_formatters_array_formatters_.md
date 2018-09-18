@@ -38,7 +38,7 @@
 
 **ΤElementArrayConditional**: *`function`*
 
-*Defined in [formatters/array-formatters.ts:5](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/array-formatters.ts#L5)*
+*Defined in [formatters/array-formatters.ts:5](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/array-formatters.ts#L5)*
 
 #### Type declaration
 ▸(elements: *`any`[]*): `boolean`
@@ -72,7 +72,7 @@ ___
   removeIfEmpty,
 )
 
-*Defined in [formatters/array-formatters.ts:10](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/array-formatters.ts#L10)*
+*Defined in [formatters/array-formatters.ts:10](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/array-formatters.ts#L10)*
 
 #### Type declaration
 ▸(elements: *`any`[]*): `any`
@@ -92,7 +92,7 @@ ___
 
 **● isEmpty**: *`function`* =  isLengthEqualTo(0)
 
-*Defined in [formatters/array-formatters.ts:7](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/array-formatters.ts#L7)*
+*Defined in [formatters/array-formatters.ts:7](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/array-formatters.ts#L7)*
 
 #### Type declaration
 ▸(elements: *`any`[]*): `boolean`
@@ -112,7 +112,7 @@ ___
 
 **● removeIfEmpty**: *`function`* =  conditionallyFormatArray(isEmpty, removeArray)
 
-*Defined in [formatters/array-formatters.ts:8](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/array-formatters.ts#L8)*
+*Defined in [formatters/array-formatters.ts:8](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/array-formatters.ts#L8)*
 
 #### Type declaration
 ▸(elements: *`any`[]*): `any`
@@ -135,7 +135,7 @@ ___
 
 ▸ **allHaveAttribute**(attribute?: *`string`*): `(Anonymous function)`
 
-*Defined in [formatters/array-formatters.ts:61](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/array-formatters.ts#L61)*
+*Defined in [formatters/array-formatters.ts:61](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/array-formatters.ts#L61)*
 
 **Parameters:**
 
@@ -152,7 +152,7 @@ ___
 
 ▸ **combineBy**(indexAttribute?: *`string`*, removeIndexAttribute?: *`boolean`*): `(Anonymous function)`
 
-*Defined in [formatters/array-formatters.ts:78](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/array-formatters.ts#L78)*
+*Defined in [formatters/array-formatters.ts:78](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/array-formatters.ts#L78)*
 
 **Parameters:**
 
@@ -170,7 +170,7 @@ ___
 
 ▸ **conditionallyFormatArray**(conditional: *[ElementArrayConditional](_formatters_array_formatters_.md#elementarrayconditional)*, whenTrue?: *[ElementArrayFormatter](_formatters_index_.md#elementarrayformatter)*, whenFalse?: *[ElementArrayFormatter](_formatters_index_.md#elementarrayformatter)*): [ElementArrayFormatter](_formatters_index_.md#elementarrayformatter)
 
-*Defined in [formatters/array-formatters.ts:41](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/array-formatters.ts#L41)*
+*Defined in [formatters/array-formatters.ts:41](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/array-formatters.ts#L41)*
 
 **Parameters:**
 
@@ -189,7 +189,7 @@ ___
 
 ▸ **elementsAreObjects**(elements: *`any`[]*): `boolean`
 
-*Defined in [formatters/array-formatters.ts:57](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/array-formatters.ts#L57)*
+*Defined in [formatters/array-formatters.ts:57](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/array-formatters.ts#L57)*
 
 **Parameters:**
 
@@ -206,7 +206,7 @@ ___
 
 ▸ **firstValue**(elements: *`any`[]*): `any`
 
-*Defined in [formatters/array-formatters.ts:91](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/array-formatters.ts#L91)*
+*Defined in [formatters/array-formatters.ts:91](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/array-formatters.ts#L91)*
 
 **Parameters:**
 
@@ -223,7 +223,7 @@ ___
 
 ▸ **isLengthEqualTo**(length: *`number`*): [ElementArrayConditional](_formatters_array_formatters_.md#elementarrayconditional)
 
-*Defined in [formatters/array-formatters.ts:51](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/array-formatters.ts#L51)*
+*Defined in [formatters/array-formatters.ts:51](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/array-formatters.ts#L51)*
 
 **Parameters:**
 
@@ -240,7 +240,7 @@ ___
 
 ▸ **join**(...formatters: *[ElementArrayFormatter](_formatters_index_.md#elementarrayformatter)[]*): [ElementArrayFormatter](_formatters_index_.md#elementarrayformatter)
 
-*Defined in [formatters/array-formatters.ts:23](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/array-formatters.ts#L23)*
+*Defined in [formatters/array-formatters.ts:23](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/array-formatters.ts#L23)*
 
 **Parameters:**
 
@@ -257,7 +257,7 @@ ___
 
 ▸ **lastValue**(elements: *`any`[]*): `any`
 
-*Defined in [formatters/array-formatters.ts:99](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/array-formatters.ts#L99)*
+*Defined in [formatters/array-formatters.ts:99](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/array-formatters.ts#L99)*
 
 **Parameters:**
 
@@ -274,7 +274,7 @@ ___
 
 ▸ **passThrough**(elements: *`any`[]*): `any`
 
-*Defined in [formatters/array-formatters.ts:37](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/array-formatters.ts#L37)*
+*Defined in [formatters/array-formatters.ts:37](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/array-formatters.ts#L37)*
 
 **Parameters:**
 
@@ -291,7 +291,7 @@ ___
 
 ▸ **reduceToSingleObject**(mergeOntoOuterElement?: *`boolean`*): [ElementArrayFormatter](_formatters_index_.md#elementarrayformatter)
 
-*Defined in [formatters/array-formatters.ts:67](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/array-formatters.ts#L67)*
+*Defined in [formatters/array-formatters.ts:67](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/array-formatters.ts#L67)*
 
 **Parameters:**
 
@@ -308,7 +308,7 @@ ___
 
 ▸ **removeArray**(elements: *`any`[]*): `null`
 
-*Defined in [formatters/array-formatters.ts:33](https://github.com/joeistas/heroes-parser/blob/ad5aa01/src/formatters/array-formatters.ts#L33)*
+*Defined in [formatters/array-formatters.ts:33](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/array-formatters.ts#L33)*
 
 **Parameters:**
 
