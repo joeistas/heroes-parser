@@ -51,7 +51,6 @@ export function replaceWithLocaleText(attribute: string = 'value'): ElementParse
       }, {})
     }
 
-    const keys = Object.keys(textObject)
     elementAttributes[attribute] = textObject
     return element
   }

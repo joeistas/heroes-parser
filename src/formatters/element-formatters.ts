@@ -76,6 +76,12 @@ export function attributeIsNotDefined(attribute = 'value'): ElementConditional {
   return not(attributeIsDefined(attribute))
 }
 
+export function attributeStartsWith(startsWith: string, attribute = 'value'): ElementConditional {
+  return (formattedElement: any, element: any): boolean => {
+    return formattedElement[attribute].startsWith(startsWith)
+  }
+}
+
 export function hasKeys(...keys: string[]): ElementConditional {
   return (formattedElement: any, element: any): boolean => {
     const keySet = new Set(Object.keys(formattedElement))

@@ -2,12 +2,9 @@ import {
   ELEMENT_NAME_KEY,
   ELEMENT_ATTRIBUTE_KEY,
   getElementAttributes,
-  getElement,
   getElementFunction,
-  findElementNameForId,
 } from '../element'
 import { ParseData } from '../parse-data'
-import { ElementNameFilter } from './element-name-filters'
 import { ElementParser, ParseContext } from './'
 import { attributeValueReplacement } from './text-parsers'
 import { ElementMerger } from '../merge'
