@@ -26,7 +26,7 @@
 
 **● catalog**: *`string`*
 
-*Defined in [tooltip.ts:21](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L21)*
+*Defined in [tooltip.ts:21](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L21)*
 
 ___
 <a id="entry"></a>
@@ -35,7 +35,7 @@ ___
 
 **● entry**: *`string`*
 
-*Defined in [tooltip.ts:22](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L22)*
+*Defined in [tooltip.ts:22](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L22)*
 
 ___
 <a id="field"></a>
@@ -44,7 +44,7 @@ ___
 
 **● field**: *`string`*
 
-*Defined in [tooltip.ts:23](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L23)*
+*Defined in [tooltip.ts:23](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L23)*
 
 ___
 <a id="name"></a>
@@ -53,7 +53,7 @@ ___
 
 **● name**: *`string`*
 
-*Defined in [tooltip.ts:20](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L20)*
+*Defined in [tooltip.ts:20](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L20)*
 
 ___
 <a id="value"></a>
@@ -62,7 +62,7 @@ ___
 
 **● value**: *`number`*
 
-*Defined in [tooltip.ts:24](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L24)*
+*Defined in [tooltip.ts:24](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L24)*
 
 ___
 

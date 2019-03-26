@@ -25,6 +25,7 @@
 * ["parsers/element-parsers"](modules/_parsers_element_parsers_.md)
 * ["parsers/index"](modules/_parsers_index_.md)
 * ["parsers/merge-parsers"](modules/_parsers_merge_parsers_.md)
+* ["parsers/replacement-parsers"](modules/_parsers_replacement_parsers_.md)
 * ["parsers/text-parsers"](modules/_parsers_text_parsers_.md)
 * ["text"](modules/_text_.md)
 * ["tooltip"](modules/_tooltip_.md)

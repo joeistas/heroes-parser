@@ -33,7 +33,7 @@
 
 **ΤTooltipData**: *[TooltipData](../interfaces/_tooltip_.tooltipdata.md)*
 
-*Defined in [index.ts:39](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L39)*
+*Defined in [index.ts:40](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L40)*
 
 ___
 <a id="tooltipelementreplacefunction"></a>
@@ -42,7 +42,7 @@ ___
 
 **ΤTooltipElementReplaceFunction**: *`tooltipBase.TooltipElementReplaceFunction`*
 
-*Defined in [index.ts:41](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L41)*
+*Defined in [index.ts:42](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L42)*
 
 ___
 <a id="tooltipformula"></a>
@@ -51,7 +51,7 @@ ___
 
 **ΤTooltipFormula**: *[TooltipFormula](../interfaces/_tooltip_.tooltipformula.md)*
 
-*Defined in [index.ts:38](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L38)*
+*Defined in [index.ts:39](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L39)*
 
 ___
 <a id="tooltipformulareplacefunction"></a>
@@ -60,7 +60,7 @@ ___
 
 **ΤTooltipFormulaReplaceFunction**: *`tooltipBase.TooltipFormulaReplaceFunction`*
 
-*Defined in [index.ts:40](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L40)*
+*Defined in [index.ts:41](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L41)*
 
 ___
 <a id="tooltipreference"></a>
@@ -69,7 +69,7 @@ ___
 
 **ΤTooltipReference**: *[TooltipReference](../interfaces/_tooltip_.tooltipreference.md)*
 
-*Defined in [index.ts:36](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L36)*
+*Defined in [index.ts:37](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L37)*
 
 ___
 <a id="tooltiprenderfunction"></a>
@@ -78,7 +78,7 @@ ___
 
 **ΤTooltipRenderFunction**: *`tooltipBase.TooltipRenderFunction`*
 
-*Defined in [index.ts:42](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L42)*
+*Defined in [index.ts:43](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L43)*
 
 ___
 <a id="tooltipvariable"></a>
@@ -87,7 +87,7 @@ ___
 
 **ΤTooltipVariable**: *[TooltipVariable](../interfaces/_tooltip_.tooltipvariable.md)*
 
-*Defined in [index.ts:37](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L37)*
+*Defined in [index.ts:38](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L38)*
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 **● computeTooltipFormulas**: *[computeTooltipDataFormulas](_tooltip_.md#computetooltipdataformulas)* =  tooltipBase.computeTooltipDataFormulas
 
-*Defined in [index.ts:45](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L45)*
+*Defined in [index.ts:46](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L46)*
 
 ___
 <a id="handlebarstemplatereplacement"></a>
@@ -108,7 +108,7 @@ ___
 
 **● handleBarsTemplateReplacement**: *[handleBarsTemplateReplacement](_tooltip_.md#handlebarstemplatereplacement)* =  tooltipBase.handleBarsTemplateReplacement
 
-*Defined in [index.ts:47](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L47)*
+*Defined in [index.ts:48](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L48)*
 
 ___
 <a id="parsetooltiptext"></a>
@@ -117,7 +117,7 @@ ___
 
 **● parseTooltipText**: *[parseTooltipLocaleText](_tooltip_.md#parsetooltiplocaletext)* =  tooltipBase.parseTooltipLocaleText
 
-*Defined in [index.ts:44](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L44)*
+*Defined in [index.ts:45](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L45)*
 
 ___
 <a id="rendertooltipdata"></a>
@@ -126,7 +126,7 @@ ___
 
 **● renderTooltipData**: *[renderTooltipData](_tooltip_.md#rendertooltipdata)* =  tooltipBase.renderTooltipData
 
-*Defined in [index.ts:46](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L46)*
+*Defined in [index.ts:47](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L47)*
 
 ___
 <a id="rendertooltipwithhandlebars"></a>
@@ -135,7 +135,7 @@ ___
 
 **● renderTooltipWithHandlebars**: *[renderTooltipWithHandlebars](_tooltip_.md#rendertooltipwithhandlebars)* =  tooltipBase.renderTooltipWithHandlebars
 
-*Defined in [index.ts:49](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L49)*
+*Defined in [index.ts:50](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L50)*
 
 ___
 <a id="tospanelement"></a>
@@ -144,7 +144,7 @@ ___
 
 **● toSpanElement**: *[toSpanElement](_tooltip_.md#tospanelement)* =  tooltipBase.toSpanElement
 
-*Defined in [index.ts:48](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L48)*
+*Defined in [index.ts:49](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L49)*
 
 ___
 

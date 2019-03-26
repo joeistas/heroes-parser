@@ -19,7 +19,7 @@
 
 ▸ **mergeElement**(elementNameOrFilter: * `string` &#124; [ElementNameFilter](_parsers_element_name_filters_.md#elementnamefilter)*, attribute?: *`string`*): [ElementParser](_parsers_index_.md#elementparser)
 
-*Defined in [parsers/merge-parsers.ts:14](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/merge-parsers.ts#L14)*
+*Defined in [parsers/merge-parsers.ts:12](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parsers/merge-parsers.ts#L12)*
 
 **Parameters:**
 
@@ -37,7 +37,7 @@ ___
 
 ▸ **mergeElementFromInnerElementValue**(elementNameOrFilter: * `string` &#124; [ElementNameFilter](_parsers_element_name_filters_.md#elementnamefilter)*, innerElementName: *`string`*, attribute?: *`string`*, removeInnerElements?: *`boolean`*): [ElementParser](_parsers_index_.md#elementparser)
 
-*Defined in [parsers/merge-parsers.ts:34](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/merge-parsers.ts#L34)*
+*Defined in [parsers/merge-parsers.ts:32](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parsers/merge-parsers.ts#L32)*
 
 **Parameters:**
 

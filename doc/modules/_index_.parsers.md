@@ -18,6 +18,7 @@
 * [join](_index_.parsers.md#join)
 * [merge](_index_.parsers.md#merge)
 * [nameFilters](_index_.parsers.md#namefilters)
+* [replacement](_index_.parsers.md#replacement)
 * [text](_index_.parsers.md#text)
 
 ---
@@ -30,7 +31,7 @@
 
 **ΤElementParser**: *`baseParsers.ElementParser`*
 
-*Defined in [index.ts:53](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L53)*
+*Defined in [index.ts:54](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L54)*
 
 ___
 <a id="parsecontext"></a>
@@ -39,7 +40,7 @@ ___
 
 **ΤParseContext**: *[ParseContext](../interfaces/_parsers_index_.parsecontext.md)*
 
-*Defined in [index.ts:54](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L54)*
+*Defined in [index.ts:55](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L55)*
 
 ___
 
@@ -51,7 +52,7 @@ ___
 
 **● add**: *[&quot;parsers/add-parsers&quot;](_parsers_add_parsers_.md)* =  addParsers
 
-*Defined in [index.ts:59](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L59)*
+*Defined in [index.ts:60](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L60)*
 
 ___
 <a id="assets"></a>
@@ -60,7 +61,7 @@ ___
 
 **● assets**: *[&quot;parsers/asset-parsers&quot;](_parsers_asset_parsers_.md)* =  assetParsers
 
-*Defined in [index.ts:60](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L60)*
+*Defined in [index.ts:61](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L61)*
 
 ___
 <a id="conditional"></a>
@@ -69,7 +70,7 @@ ___
 
 **● conditional**: *[&quot;parsers/conditional-parsers&quot;](_parsers_conditional_parsers_.md)* =  conditionalParsers
 
-*Defined in [index.ts:63](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L63)*
+*Defined in [index.ts:65](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L65)*
 
 ___
 <a id="defaultpreparser"></a>
@@ -78,7 +79,7 @@ ___
 
 **● defaultPreParser**: *`function`* =  baseParsers.defaultPreParser
 
-*Defined in [index.ts:57](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L57)*
+*Defined in [index.ts:58](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L58)*
 
 #### Type declaration
 ▸(element: *`any`*, outerElement: *`any`*, parseData: *[ParseData](../interfaces/_parse_data_.parsedata.md)*, context: *[ParseContext](../interfaces/_parsers_index_.parsecontext.md)*): `any`
@@ -101,7 +102,7 @@ ___
 
 **● join**: *[join](_parsers_index_.md#join)* =  baseParsers.join
 
-*Defined in [index.ts:56](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L56)*
+*Defined in [index.ts:57](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L57)*
 
 ___
 <a id="merge"></a>
@@ -110,7 +111,7 @@ ___
 
 **● merge**: *[&quot;parsers/merge-parsers&quot;](_parsers_merge_parsers_.md)* =  mergeParsers
 
-*Defined in [index.ts:61](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L61)*
+*Defined in [index.ts:62](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L62)*
 
 ___
 <a id="namefilters"></a>
@@ -119,7 +120,16 @@ ___
 
 **● nameFilters**: *[&quot;parsers/element-name-filters&quot;](_parsers_element_name_filters_.md)* =  elementNameFilters
 
-*Defined in [index.ts:64](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L64)*
+*Defined in [index.ts:66](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L66)*
+
+___
+<a id="replacement"></a>
+
+### `<Const>` replacement
+
+**● replacement**: *[&quot;parsers/replacement-parsers&quot;](_parsers_replacement_parsers_.md)* =  replacementParsers
+
+*Defined in [index.ts:64](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L64)*
 
 ___
 <a id="text"></a>
@@ -128,7 +138,7 @@ ___
 
 **● text**: *[&quot;parsers/text-parsers&quot;](_parsers_text_parsers_.md)* =  textParsers
 
-*Defined in [index.ts:62](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L62)*
+*Defined in [index.ts:63](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L63)*
 
 ___
 

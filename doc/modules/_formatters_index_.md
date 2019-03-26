@@ -20,7 +20,7 @@
 
 **ΤElementArrayFormatter**: *`function`*
 
-*Defined in [formatters/index.ts:16](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/index.ts#L16)*
+*Defined in [formatters/index.ts:16](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/formatters/index.ts#L16)*
 
 #### Type declaration
 ▸(elements: *`any`[]*): `any`
@@ -40,7 +40,7 @@ ___
 
 **ΤElementFormatter**: *`function`*
 
-*Defined in [formatters/index.ts:14](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/index.ts#L14)*
+*Defined in [formatters/index.ts:14](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/formatters/index.ts#L14)*
 
 #### Type declaration
 ▸(formattedElement: *`any`*, element: *`any`*): `any`
@@ -61,7 +61,7 @@ ___
 
 **ΤElementKeyFormatter**: *`function`*
 
-*Defined in [formatters/index.ts:15](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/formatters/index.ts#L15)*
+*Defined in [formatters/index.ts:15](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/formatters/index.ts#L15)*
 
 #### Type declaration
 ▸(key: *`string`*): `string`

@@ -19,7 +19,7 @@
 
 ▸ **initialElements**(parseData: *[ParseData](../interfaces/_parse_data_.parsedata.md)*): `any`
 
-*Defined in [parser.ts:14](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parser.ts#L14)*
+*Defined in [parser.ts:14](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parser.ts#L14)*
 
 get initial elements from `parseData`
 
@@ -39,7 +39,7 @@ ___
 
 ▸ **parseElements**(elementName: *`string`*, elementList: *`any`[]*, parseData: *[ParseData](../interfaces/_parse_data_.parsedata.md)*): `any`[]
 
-*Defined in [parser.ts:50](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parser.ts#L50)*
+*Defined in [parser.ts:50](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parser.ts#L50)*
 
 Parse and format elements in `elementList`
 

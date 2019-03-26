@@ -20,7 +20,7 @@
 
 ▸ **addAttribute**(name: *`string`*, value: *`string`*, override?: *`boolean`*): `(Anonymous function)`
 
-*Defined in [parsers/add-parsers.ts:15](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/add-parsers.ts#L15)*
+*Defined in [parsers/add-parsers.ts:12](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parsers/add-parsers.ts#L12)*
 
 **Parameters:**
 
@@ -39,7 +39,7 @@ ___
 
 ▸ **addInnerElement**(attribute: *`string`*, key: *`string`*, innerAttribute?: *`string`*, innerName?: *`string`*): [ElementParser](_parsers_index_.md#elementparser)
 
-*Defined in [parsers/add-parsers.ts:24](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/add-parsers.ts#L24)*
+*Defined in [parsers/add-parsers.ts:21](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parsers/add-parsers.ts#L21)*
 
 **Parameters:**
 
@@ -59,7 +59,7 @@ ___
 
 ▸ **attributesToInnerElements**(regexp: *`RegExp`*, innerAttribute?: *`string`*): [ElementParser](_parsers_index_.md#elementparser)
 
-*Defined in [parsers/add-parsers.ts:47](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/add-parsers.ts#L47)*
+*Defined in [parsers/add-parsers.ts:44](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parsers/add-parsers.ts#L44)*
 
 **Parameters:**
 

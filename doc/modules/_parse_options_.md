@@ -26,7 +26,7 @@
 
 ▸ **buildParseOptions**Options(options: *`Partial`<`Options`>*): [ParseOptions](../interfaces/_parse_options_.parseoptions.md)
 
-*Defined in [parse-options.ts:70](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L70)*
+*Defined in [parse-options.ts:70](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L70)*
 
 Build parse options. Merges `options` with [DEFAULT\_PARSE\_OPTIONS](_parse_options_.md#default_parse_options)
 
@@ -51,7 +51,7 @@ ___
 
 **DEFAULT_PARSE_OPTIONS**: *`object`*
 
-*Defined in [parse-options.ts:42](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L42)*
+*Defined in [parse-options.ts:42](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L42)*
 
 <a id="default_parse_options.assetsearchpatterns"></a>
 
@@ -62,7 +62,7 @@ ___
     "mods/heroes.stormmod/*.stormassets/*",
   ]
 
-*Defined in [parse-options.ts:55](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L55)*
+*Defined in [parse-options.ts:55](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L55)*
 
 ___
 <a id="default_parse_options.elementfunctions"></a>
@@ -71,7 +71,7 @@ ___
 
 **● elementFunctions**: *`object`* =  DETAILED_FUNCTIONS
 
-*Defined in [parse-options.ts:62](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L62)*
+*Defined in [parse-options.ts:62](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L62)*
 
 #### Type declaration
 
@@ -82,7 +82,7 @@ ___
 
 **● logLevel**: *"info"* = "info"
 
-*Defined in [parse-options.ts:63](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L63)*
+*Defined in [parse-options.ts:63](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L63)*
 
 ___
 <a id="default_parse_options.logger"></a>
@@ -91,7 +91,7 @@ ___
 
 **● logger**: *`Console`* =  console
 
-*Defined in [parse-options.ts:64](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L64)*
+*Defined in [parse-options.ts:64](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L64)*
 
 ___
 <a id="default_parse_options.parseelementname"></a>
@@ -100,7 +100,7 @@ ___
 
 **● parseElementName**: *`string`* = "HeroArray"
 
-*Defined in [parse-options.ts:61](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L61)*
+*Defined in [parse-options.ts:61](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L61)*
 
 ___
 <a id="default_parse_options.rootelementid"></a>
@@ -109,7 +109,7 @@ ___
 
 **● rootElementId**: *`string`* = "Config"
 
-*Defined in [parse-options.ts:60](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L60)*
+*Defined in [parse-options.ts:60](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L60)*
 
 ___
 <a id="default_parse_options.rootelementname"></a>
@@ -118,7 +118,7 @@ ___
 
 **● rootElementName**: *`string`* = "CConfig"
 
-*Defined in [parse-options.ts:59](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L59)*
+*Defined in [parse-options.ts:59](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L59)*
 
 ___
 <a id="default_parse_options.sourcecascstorage"></a>
@@ -127,7 +127,7 @@ ___
 
 **● sourceCASCStorage**: *`true`* = true
 
-*Defined in [parse-options.ts:44](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L44)*
+*Defined in [parse-options.ts:44](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L44)*
 
 ___
 <a id="default_parse_options.sourcedir"></a>
@@ -136,7 +136,7 @@ ___
 
 **● sourceDir**: *`null`* =  null
 
-*Defined in [parse-options.ts:43](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L43)*
+*Defined in [parse-options.ts:43](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L43)*
 
 ___
 <a id="default_parse_options.textsearchpatterns"></a>
@@ -149,7 +149,7 @@ ___
     "mods/heromods/*/LocalizedData/*.txt",
   ]
 
-*Defined in [parse-options.ts:50](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L50)*
+*Defined in [parse-options.ts:50](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L50)*
 
 ___
 <a id="default_parse_options.xmlsearchpatterns"></a>
@@ -162,7 +162,7 @@ ___
     "mods/heromods/*.stormmod/base.stormdata/GameData/*.xml",
   ]
 
-*Defined in [parse-options.ts:45](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L45)*
+*Defined in [parse-options.ts:45](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L45)*
 
 ___
 

@@ -26,7 +26,7 @@
 
 **● debug**: *`function`*
 
-*Defined in [logger.ts:3](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/logger.ts#L3)*
+*Defined in [logger.ts:3](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/logger.ts#L3)*
 
 #### Type declaration
 ▸(...args: *`any`[]*): `void`
@@ -46,7 +46,7 @@ ___
 
 **● error**: *`function`*
 
-*Defined in [logger.ts:4](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/logger.ts#L4)*
+*Defined in [logger.ts:4](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/logger.ts#L4)*
 
 #### Type declaration
 ▸(...args: *`any`[]*): `void`
@@ -66,7 +66,7 @@ ___
 
 **● group**: *`function`*
 
-*Defined in [logger.ts:5](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/logger.ts#L5)*
+*Defined in [logger.ts:5](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/logger.ts#L5)*
 
 #### Type declaration
 ▸(level?: * "info" &#124; "debug"*): `void`
@@ -86,7 +86,7 @@ ___
 
 **● groupEnd**: *`function`*
 
-*Defined in [logger.ts:6](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/logger.ts#L6)*
+*Defined in [logger.ts:6](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/logger.ts#L6)*
 
 #### Type declaration
 ▸(level?: * "info" &#124; "debug"*): `void`
@@ -106,7 +106,7 @@ ___
 
 **● info**: *`function`*
 
-*Defined in [logger.ts:2](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/logger.ts#L2)*
+*Defined in [logger.ts:2](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/logger.ts#L2)*
 
 #### Type declaration
 ▸(...args: *`any`[]*): `void`

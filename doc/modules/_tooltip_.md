@@ -36,7 +36,7 @@
 
 **ΤTooltipElementReplaceFunction**: *`function`*
 
-*Defined in [tooltip.ts:49](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L49)*
+*Defined in [tooltip.ts:49](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L49)*
 
 #### Type declaration
 ▸($: *`CheerioStatic`*, element: *`CheerioElement`*): `string`
@@ -57,7 +57,7 @@ ___
 
 **ΤTooltipFormulaReplaceFunction**: *`function`*
 
-*Defined in [tooltip.ts:48](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L48)*
+*Defined in [tooltip.ts:48](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L48)*
 
 #### Type declaration
 ▸(variableName: *`string`*): `string`
@@ -77,7 +77,7 @@ ___
 
 **ΤTooltipRenderFunction**: *`function`*
 
-*Defined in [tooltip.ts:50](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L50)*
+*Defined in [tooltip.ts:50](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L50)*
 
 #### Type declaration
 ▸(text: *`string`*, formulaResults: *`object`*, tooltipData: *[TooltipData](../interfaces/_tooltip_.tooltipdata.md)*): `string`
@@ -102,7 +102,7 @@ ___
 
 ▸ **computeTooltipDataFormulas**(tooltipData: *`Partial`<[TooltipData](../interfaces/_tooltip_.tooltipdata.md)>*, variableValues?: *`object`*): [TooltipData](../interfaces/_tooltip_.tooltipdata.md)
 
-*Defined in [tooltip.ts:129](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L129)*
+*Defined in [tooltip.ts:129](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L129)*
 
 **Parameters:**
 
@@ -120,7 +120,7 @@ ___
 
 ▸ **handleBarsTemplateReplacement**(variable: *`string`*): `string`
 
-*Defined in [tooltip.ts:187](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L187)*
+*Defined in [tooltip.ts:187](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L187)*
 
 **Parameters:**
 
@@ -137,7 +137,7 @@ ___
 
 ▸ **parseTooltipLocaleText**(localeText: *`object`*, parseData: *[ParseData](../interfaces/_parse_data_.parsedata.md)*, formulaElement?: *[TooltipFormulaReplaceFunction](_tooltip_.md#tooltipformulareplacefunction)*, templateElement?: *[TooltipElementReplaceFunction](_tooltip_.md#tooltipelementreplacefunction)*): `Partial`<[TooltipData](../interfaces/_tooltip_.tooltipdata.md)>
 
-*Defined in [tooltip.ts:52](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L52)*
+*Defined in [tooltip.ts:52](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L52)*
 
 **Parameters:**
 
@@ -157,7 +157,7 @@ ___
 
 ▸ **renderTooltipData**(tooltipData: *[TooltipData](../interfaces/_tooltip_.tooltipdata.md)*, render?: *[TooltipRenderFunction](_tooltip_.md#tooltiprenderfunction)*): `object`
 
-*Defined in [tooltip.ts:169](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L169)*
+*Defined in [tooltip.ts:169](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L169)*
 
 **Parameters:**
 
@@ -175,7 +175,7 @@ ___
 
 ▸ **renderTooltipWithHandlebars**(text: *`string`*, formulaResults: *`object`*, tooltipData: *[TooltipData](../interfaces/_tooltip_.tooltipdata.md)*): `string`
 
-*Defined in [tooltip.ts:195](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L195)*
+*Defined in [tooltip.ts:195](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L195)*
 
 **Parameters:**
 
@@ -194,7 +194,7 @@ ___
 
 ▸ **toSpanElement**($: *`CheerioStatic`*, element: *`CheerioElement`*): `string`
 
-*Defined in [tooltip.ts:191](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L191)*
+*Defined in [tooltip.ts:191](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L191)*
 
 **Parameters:**
 

@@ -32,7 +32,7 @@
 
 **● assetSearchPatterns**: *`string`[]*
 
-*Defined in [parse-options.ts:15](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L15)*
+*Defined in [parse-options.ts:15](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L15)*
 
 patterns of asset files to load from CASC directory.
 
@@ -43,7 +43,7 @@ ___
 
 **● elementFunctions**: *`object`*
 
-*Defined in [parse-options.ts:36](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L36)*
+*Defined in [parse-options.ts:36](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L36)*
 
 Functions used to define how to parse elements.
 
@@ -61,7 +61,7 @@ ___
 **● logLevel**: * "none" &#124; "info" &#124; "debug"
 *
 
-*Defined in [parse-options.ts:38](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L38)*
+*Defined in [parse-options.ts:38](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L38)*
 
 set log level
 
@@ -72,7 +72,7 @@ ___
 
 **● logger**: *[Logger](_logger_.logger.md)*
 
-*Defined in [parse-options.ts:39](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L39)*
+*Defined in [parse-options.ts:39](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L39)*
 
 ___
 <a id="parseelementname"></a>
@@ -81,7 +81,7 @@ ___
 
 **● parseElementName**: *`string`*
 
-*Defined in [parse-options.ts:25](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L25)*
+*Defined in [parse-options.ts:25](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L25)*
 
 inner elmement name of elements to parse. Only used if elements to parse are inner elements of root element
 
@@ -92,7 +92,7 @@ ___
 
 **● rootElementId**: *`string`*
 
-*Defined in [parse-options.ts:21](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L21)*
+*Defined in [parse-options.ts:21](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L21)*
 
 element id of element to start parsing. Only used if elements to parse are inner elements of root element
 
@@ -103,7 +103,7 @@ ___
 
 **● rootElementName**: *`string`*
 
-*Defined in [parse-options.ts:17](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L17)*
+*Defined in [parse-options.ts:17](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L17)*
 
 element name of element to start parsing
 
@@ -114,7 +114,7 @@ ___
 
 **● sourceCASCStorage**: *`boolean`*
 
-*Defined in [parse-options.ts:9](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L9)*
+*Defined in [parse-options.ts:9](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L9)*
 
 true if [ParseOptions.sourceDir](_parse_options_.parseoptions.md#sourcedir) is a CASC directory
 
@@ -125,7 +125,7 @@ ___
 
 **● sourceDir**: *`string`*
 
-*Defined in [parse-options.ts:7](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L7)*
+*Defined in [parse-options.ts:7](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L7)*
 
 path to CASC directory or xml files
 
@@ -136,7 +136,7 @@ ___
 
 **● textSearchPatterns**: *`string`[]*
 
-*Defined in [parse-options.ts:13](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L13)*
+*Defined in [parse-options.ts:13](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L13)*
 
 patterns of text files to load from CASC directory.
 
@@ -147,7 +147,7 @@ ___
 
 **● xmlSearchPatterns**: *`string`[]*
 
-*Defined in [parse-options.ts:11](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parse-options.ts#L11)*
+*Defined in [parse-options.ts:11](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parse-options.ts#L11)*
 
 patterns of xml files to load from CASC directory.
 

@@ -53,7 +53,7 @@
 
 **ΤElementFunctionsMap**: *`object`*
 
-*Defined in [element.ts:34](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L34)*
+*Defined in [element.ts:34](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L34)*
 
 Map of element functions used for element parsing.
 
@@ -71,7 +71,7 @@ ___
 
 **● ATTRIBUTE_BLACKLIST**: *`string`[]* =  [ 'default' ]
 
-*Defined in [element.ts:8](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L8)*
+*Defined in [element.ts:8](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L8)*
 
 ___
 <a id="element_attribute_key"></a>
@@ -80,7 +80,7 @@ ___
 
 **● ELEMENT_ATTRIBUTE_KEY**: *`string`* = "$"
 
-*Defined in [element.ts:9](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L9)*
+*Defined in [element.ts:9](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L9)*
 
 ___
 <a id="element_name_key"></a>
@@ -89,7 +89,7 @@ ___
 
 **● ELEMENT_NAME_KEY**: *`string`* = "$elementName"
 
-*Defined in [element.ts:11](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L11)*
+*Defined in [element.ts:11](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L11)*
 
 ___
 <a id="element_text_key"></a>
@@ -98,7 +98,7 @@ ___
 
 **● ELEMENT_TEXT_KEY**: *`string`* = "_"
 
-*Defined in [element.ts:10](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L10)*
+*Defined in [element.ts:10](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L10)*
 
 ___
 
@@ -110,7 +110,7 @@ ___
 
 ▸ **buildElement**(elementName?: *`string`*, attributes?: *`object`*): `any`
 
-*Defined in [element.ts:39](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L39)*
+*Defined in [element.ts:39](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L39)*
 
 Build a new empty element.
 
@@ -130,7 +130,7 @@ ___
 
 ▸ **copyElement**(element: *`any`*): `any`
 
-*Defined in [element.ts:124](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L124)*
+*Defined in [element.ts:124](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L124)*
 
 **Parameters:**
 
@@ -147,7 +147,7 @@ ___
 
 ▸ **findElement**(elementNames: *`string`[]*, elementId: *`string`*, elementMap: *[ElementMap](_element_map_.md#elementmap)*): `any`
 
-*Defined in [element.ts:115](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L115)*
+*Defined in [element.ts:115](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L115)*
 
 Find the first element in `elementNames` that has `elementId`
 
@@ -169,7 +169,7 @@ ___
 
 ▸ **findElementNameForId**(elementNames: *`string`[]*, elementId: *`string`*, elementMap: *[ElementMap](_element_map_.md#elementmap)*): `string`
 
-*Defined in [element.ts:106](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L106)*
+*Defined in [element.ts:106](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L106)*
 
 Find the first element name in `elementNames` that has `elementId`
 
@@ -191,7 +191,7 @@ ___
 
 ▸ **findParentName**(elementName: *`string`*, parseData: *[ParseData](../interfaces/_parse_data_.parsedata.md)*): `string`
 
-*Defined in [element.ts:149](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L149)*
+*Defined in [element.ts:149](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L149)*
 
 Find the element name that `elementName` starts with. Used for finding parent class name.
 
@@ -224,7 +224,7 @@ ___
 
 ▸ **getElement**(elementId: *`string`*, elementName: *`string`*, elementMap: *[ElementMap](_element_map_.md#elementmap)*): `any`[]
 
-*Defined in [element.ts:92](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L92)*
+*Defined in [element.ts:92](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L92)*
 
 Get list of elements from element map.
 
@@ -245,7 +245,7 @@ ___
 
 ▸ **getElementAtPath**(element: *`any`*, path: *`string`*, parts?: *`string`[]*): `any`
 
-*Defined in [element.ts:260](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L260)*
+*Defined in [element.ts:260](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L260)*
 
 Get the element at path.
 
@@ -267,7 +267,7 @@ ___
 
 ▸ **getElementAttributes**(element: *`any`*): `any`
 
-*Defined in [element.ts:59](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L59)*
+*Defined in [element.ts:59](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L59)*
 
 **Parameters:**
 
@@ -284,7 +284,7 @@ ___
 
 ▸ **getElementFunction**(elementName: *`string`*, functions: *[ElementFunctionsMap](_element_.md#elementfunctionsmap)*, functionName: *`keyof ElementFunctions`*):  `string` &#124; `function` &#124; `function` &#124; `function` &#124; `function` &#124; `function`
 
-*Defined in [element.ts:51](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L51)*
+*Defined in [element.ts:51](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L51)*
 
 Get function for element name and function name. If the function doesn't exist falls back to the function in `default`
 
@@ -305,7 +305,7 @@ ___
 
 ▸ **getElementId**(element: *`any`*): `any`
 
-*Defined in [element.ts:63](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L63)*
+*Defined in [element.ts:63](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L63)*
 
 **Parameters:**
 
@@ -322,7 +322,7 @@ ___
 
 ▸ **getElementIndex**(element: *`any`*): `any`
 
-*Defined in [element.ts:67](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L67)*
+*Defined in [element.ts:67](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L67)*
 
 **Parameters:**
 
@@ -339,7 +339,7 @@ ___
 
 ▸ **getElementName**(element: *`any`*): `any`
 
-*Defined in [element.ts:71](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L71)*
+*Defined in [element.ts:71](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L71)*
 
 **Parameters:**
 
@@ -356,7 +356,7 @@ ___
 
 ▸ **getInnerElementKeys**(element: *`any`*): `string`[]
 
-*Defined in [element.ts:85](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L85)*
+*Defined in [element.ts:85](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L85)*
 
 Get all of the keys for inner elements of the element. Excludes [ELEMENT\_ATTRIBUTE\_KEY](_element_.md#element_attribute_key), [ELEMENT\_NAME\_KEY](_element_.md#element_name_key), [ELEMENT\_TEXT\_KEY](_element_.md#element_text_key).
 
@@ -375,7 +375,7 @@ ___
 
 ▸ **getValueAtPath**(element: *`any`*, path: *`string`*): `any`
 
-*Defined in [element.ts:313](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L313)*
+*Defined in [element.ts:313](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L313)*
 
 Get value at path. If the last part of the path is an attribute the function will return the value of the element. If the value at the end of the path is an element the value in the `value` attribute will be returned. If the value at the end of the path is an array the value from the first element in the array will be returned.
 
@@ -396,7 +396,7 @@ ___
 
 ▸ **getValueFromElement**(element: *`any`*, attribute?: *`string`*): `any`
 
-*Defined in [element.ts:339](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L339)*
+*Defined in [element.ts:339](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L339)*
 
 Get value in element. If element is an array with get value from the first element in the array.
 
@@ -417,7 +417,7 @@ ___
 
 ▸ **isCatalogElement**(elementName: *`string`*): `boolean`
 
-*Defined in [element.ts:78](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L78)*
+*Defined in [element.ts:78](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L78)*
 
 Returns true if the element is a base element. (Exists as a direct child of `Catalog` XML element)
 
@@ -436,7 +436,7 @@ ___
 
 ▸ **joinElements**(elements: *`any`[]*): `any`
 
-*Defined in [element.ts:208](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L208)*
+*Defined in [element.ts:208](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L208)*
 
 Joins `elements` into a single element. Inner elements are concatted together.
 
@@ -456,7 +456,7 @@ ___
 
 ▸ **mergeAttributes**(parent: *`any`*, child: *`any`*, filters?: *`string`[]*): `any`
 
-*Defined in [element.ts:195](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L195)*
+*Defined in [element.ts:195](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L195)*
 
 Merges `parent` with `child` attributes. `child` attributes with overrite `parent` attributes.
 
@@ -478,7 +478,7 @@ ___
 
 ▸ **mergeElements**(parent: *`any`*, child: *`any`*, parseData: *[ParseData](../interfaces/_parse_data_.parsedata.md)*, attributeFilters?: *`string`[]*): `any`
 
-*Defined in [element.ts:240](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L240)*
+*Defined in [element.ts:240](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L240)*
 
 Merges parent into child. Inner elements are merged with their `merge` functions
 
@@ -501,7 +501,7 @@ ___
 
 ▸ **mergeWithParent**(element: *`any`*, elementName: *`string`*, parseData: *[ParseData](../interfaces/_parse_data_.parsedata.md)*): `any`
 
-*Defined in [element.ts:167](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L167)*
+*Defined in [element.ts:167](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L167)*
 
 Merges element with all of its parent elements. First merges with element in `parent` attribute. Then checks for default element with no id. Then merges with any parent classes found with [findParentName](_element_.md#findparentname)
 
@@ -523,7 +523,7 @@ ___
 
 ▸ **reduceElements**(elements: *`any`[]*, parseData: *[ParseData](../interfaces/_parse_data_.parsedata.md)*): `any`
 
-*Defined in [element.ts:231](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/element.ts#L231)*
+*Defined in [element.ts:231](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/element.ts#L231)*
 
 Reduces `elements` into a single element by merging all elements.
 

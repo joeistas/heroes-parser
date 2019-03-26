@@ -24,7 +24,7 @@
 
 **● formula**: *`string`*
 
-*Defined in [tooltip.ts:36](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L36)*
+*Defined in [tooltip.ts:36](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L36)*
 
 ___
 <a id="precision"></a>
@@ -33,7 +33,7 @@ ___
 
 **● precision**: *`number`*
 
-*Defined in [tooltip.ts:37](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L37)*
+*Defined in [tooltip.ts:37](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L37)*
 
 ___
 <a id="result"></a>
@@ -42,7 +42,7 @@ ___
 
 **● result**: *`string`*
 
-*Defined in [tooltip.ts:38](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L38)*
+*Defined in [tooltip.ts:38](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L38)*
 
 ___
 

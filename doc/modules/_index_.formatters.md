@@ -20,7 +20,7 @@
 
 **● array**: *[&quot;formatters/array-formatters&quot;](_formatters_array_formatters_.md)* =  arrayFormatters
 
-*Defined in [index.ts:68](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L68)*
+*Defined in [index.ts:70](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L70)*
 
 ___
 <a id="element"></a>
@@ -29,7 +29,7 @@ ___
 
 **● element**: *[&quot;formatters/element-formatters&quot;](_formatters_element_formatters_.md)* =  elementFormatters
 
-*Defined in [index.ts:69](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L69)*
+*Defined in [index.ts:71](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L71)*
 
 ___
 <a id="key"></a>
@@ -38,7 +38,7 @@ ___
 
 **● key**: *[&quot;formatters/key-formatters&quot;](_formatters_key_formatters_.md)* =  keyFormatters
 
-*Defined in [index.ts:70](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/index.ts#L70)*
+*Defined in [index.ts:72](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/index.ts#L72)*
 
 ___
 

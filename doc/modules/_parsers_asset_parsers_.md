@@ -22,7 +22,7 @@
 
 **ΤAssetFindCache**: *`Map`<`string`, `string`[]>*
 
-*Defined in [parsers/asset-parsers.ts:11](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/asset-parsers.ts#L11)*
+*Defined in [parsers/asset-parsers.ts:11](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parsers/asset-parsers.ts#L11)*
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 ▸ **processAsset**(attribute?: *`string`*): [ElementParser](_parsers_index_.md#elementparser)
 
-*Defined in [parsers/asset-parsers.ts:22](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/asset-parsers.ts#L22)*
+*Defined in [parsers/asset-parsers.ts:22](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parsers/asset-parsers.ts#L22)*
 
 **Parameters:**
 

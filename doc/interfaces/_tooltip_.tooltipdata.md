@@ -25,7 +25,7 @@
 
 **● formulas**: *`object`*
 
-*Defined in [tooltip.ts:43](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L43)*
+*Defined in [tooltip.ts:43](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L43)*
 
 #### Type declaration
 
@@ -38,7 +38,7 @@ ___
 
 **● localeText**: *`object`*
 
-*Defined in [tooltip.ts:42](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L42)*
+*Defined in [tooltip.ts:42](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L42)*
 
 #### Type declaration
 
@@ -51,7 +51,7 @@ ___
 
 **● references**: *`object`*
 
-*Defined in [tooltip.ts:44](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L44)*
+*Defined in [tooltip.ts:44](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L44)*
 
 #### Type declaration
 
@@ -64,7 +64,7 @@ ___
 
 **● variables**: *`object`*
 
-*Defined in [tooltip.ts:45](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/tooltip.ts#L45)*
+*Defined in [tooltip.ts:45](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/tooltip.ts#L45)*
 
 #### Type declaration
 

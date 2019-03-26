@@ -20,7 +20,7 @@
 
 ▸ **attributeValueReplacement**(attribute?: *`string`*): [ElementParser](_parsers_index_.md#elementparser)
 
-*Defined in [parsers/text-parsers.ts:17](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/text-parsers.ts#L17)*
+*Defined in [parsers/text-parsers.ts:17](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parsers/text-parsers.ts#L17)*
 
 **Parameters:**
 
@@ -37,7 +37,7 @@ ___
 
 ▸ **parseTooltip**(attribute?: *`string`*, formulaElement?: *[TooltipFormulaReplaceFunction](_tooltip_.md#tooltipformulareplacefunction)*, templateElement?: *[TooltipElementReplaceFunction](_tooltip_.md#tooltipelementreplacefunction)*): [ElementParser](_parsers_index_.md#elementparser)
 
-*Defined in [parsers/text-parsers.ts:60](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/text-parsers.ts#L60)*
+*Defined in [parsers/text-parsers.ts:59](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parsers/text-parsers.ts#L59)*
 
 **Parameters:**
 
@@ -56,7 +56,7 @@ ___
 
 ▸ **replaceWithLocaleText**(attribute?: *`string`*): [ElementParser](_parsers_index_.md#elementparser)
 
-*Defined in [parsers/text-parsers.ts:38](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/text-parsers.ts#L38)*
+*Defined in [parsers/text-parsers.ts:38](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parsers/text-parsers.ts#L38)*
 
 **Parameters:**
 

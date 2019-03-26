@@ -18,6 +18,7 @@
 
 ### Functions
 
+* [findElementName](_parsers_index_.md#findelementname)
 * [join](_parsers_index_.md#join)
 
 ---
@@ -30,7 +31,7 @@
 
 **ΤElementParser**: *`function`*
 
-*Defined in [parsers/index.ts:20](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/index.ts#L20)*
+*Defined in [parsers/index.ts:18](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parsers/index.ts#L18)*
 
 #### Type declaration
 ▸(element: *`any`*, outerElement: *`any`*, parseData: *[ParseData](../interfaces/_parse_data_.parsedata.md)*, context: *[ParseContext](../interfaces/_parsers_index_.parsecontext.md)*): `any`
@@ -54,9 +55,12 @@ ___
 
 ### `<Const>` defaultPreParser
 
-**● defaultPreParser**: *`function`* =  attributesToInnerElements(/^[A-Z]/)
+**● defaultPreParser**: *`function`* =  join(
+  attributesToInnerElements(/^[A-Z]/),
+  replaceAttributesWithElementAttribute(/^\$.*/, 'const')
+)
 
-*Defined in [parsers/index.ts:26](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/index.ts#L26)*
+*Defined in [parsers/index.ts:24](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parsers/index.ts#L24)*
 
 #### Type declaration
 ▸(element: *`any`*, outerElement: *`any`*, parseData: *[ParseData](../interfaces/_parse_data_.parsedata.md)*, context: *[ParseContext](../interfaces/_parsers_index_.parsecontext.md)*): `any`
@@ -76,13 +80,32 @@ ___
 
 ## Functions
 
+<a id="findelementname"></a>
+
+###  findElementName
+
+▸ **findElementName**(elementNameOrFilter: * `string` &#124; [ElementNameFilter](_parsers_element_name_filters_.md#elementnamefilter)*, elementId: *`string`*, parseData: *[ParseData](../interfaces/_parse_data_.parsedata.md)*): `string`
+
+*Defined in [parsers/index.ts:46](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parsers/index.ts#L46)*
+
+**Parameters:**
+
+| Param | Type |
+| ------ | ------ |
+| elementNameOrFilter |  `string` &#124; [ElementNameFilter](_parsers_element_name_filters_.md#elementnamefilter)|
+| elementId | `string` |
+| parseData | [ParseData](../interfaces/_parse_data_.parsedata.md) |
+
+**Returns:** `string`
+
+___
 <a id="join"></a>
 
 ###  join
 
-▸ **join**(...processors: *[ElementParser](_parsers_index_.md#elementparser)[]*): `(Anonymous function)`
+▸ **join**(...processors: *[ElementParser](_parsers_index_.md#elementparser)[]*): [ElementParser](_parsers_index_.md#elementparser)
 
-*Defined in [parsers/index.ts:28](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/parsers/index.ts#L28)*
+*Defined in [parsers/index.ts:29](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/parsers/index.ts#L29)*
 
 **Parameters:**
 
@@ -90,7 +113,7 @@ ___
 | ------ | ------ |
 | `Rest` processors | [ElementParser](_parsers_index_.md#elementparser)[] |
 
-**Returns:** `(Anonymous function)`
+**Returns:** [ElementParser](_parsers_index_.md#elementparser)
 
 ___
 

@@ -27,7 +27,7 @@ Options used by [extractAssets](../modules/_extract_.md#extractassets)
 
 **● filePaths**: *`string`[]*
 
-*Defined in [extract.ts:16](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/extract.ts#L16)*
+*Defined in [extract.ts:16](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/extract.ts#L16)*
 
 file paths of assets to extract from game storage
 
@@ -38,7 +38,7 @@ ___
 
 **● jsonData**: *`any`*
 
-*Defined in [extract.ts:20](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/extract.ts#L20)*
+*Defined in [extract.ts:20](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/extract.ts#L20)*
 
 extract assets found in json data instead of [ExtractOptions.filePaths](_extract_.extractoptions.md#filepaths)
 
@@ -49,7 +49,7 @@ ___
 
 **● outputDir**: *`string`*
 
-*Defined in [extract.ts:14](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/extract.ts#L14)*
+*Defined in [extract.ts:14](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/extract.ts#L14)*
 
 directory where extracted assets will be saved.
 
@@ -61,7 +61,7 @@ ___
 **● type**: * "all" &#124; "audio" &#124; "images"
 *
 
-*Defined in [extract.ts:18](https://github.com/joeistas/heroes-parser/blob/3b278f6/src/extract.ts#L18)*
+*Defined in [extract.ts:18](https://github.com/joeistas/heroes-parser/blob/be29d1f/src/extract.ts#L18)*
 
 type of assets to extract
 
