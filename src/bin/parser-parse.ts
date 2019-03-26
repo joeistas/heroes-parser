@@ -175,7 +175,7 @@ async function parse(options: Partial<ParseCommandOptions>): Promise<any[]> {
     buildNumber = sourceData.buildNumber || options.buildNumber
 
     if(options.sourceCASCStorage && options.saveSourceFiles && options.archiveSourceFiles) {
-      saveSourceArchive(
+      await saveSourceArchive(
         [
           ...sourceData.XML,
           ...sourceData.text,
@@ -187,7 +187,7 @@ async function parse(options: Partial<ParseCommandOptions>): Promise<any[]> {
     }
 
     if(options.sourceCASCStorage && options.saveSourceFiles) {
-      saveSourceFiles(
+      await saveSourceFiles(
         [
           ...sourceData.XML,
           ...sourceData.text,
