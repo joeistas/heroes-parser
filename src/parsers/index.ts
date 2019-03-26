@@ -1,8 +1,4 @@
-import * as casclib from 'casclib'
-
-import { ElementMap } from '../element-map'
 import {
-  ELEMENT_ATTRIBUTE_KEY,
   ELEMENT_NAME_KEY,
   getElementId,
   getElementName,
@@ -10,11 +6,13 @@ import {
   getElementAttributes,
   copyElement,
   mergeWithParent,
-  getInnerElementKeys
+  getInnerElementKeys,
+  findElementNameForId,
 } from '../element'
 import { ParseData } from '../parse-data'
 import { ElementNameFilter } from './element-name-filters'
 import { attributesToInnerElements } from './add-parsers'
+import { replaceAttributesWithElementAttribute } from './replacement-parsers'
 import { getLogger } from '../logger'
 
 export type ElementParser = (element: any, outerElement: any, parseData: ParseData, context: ParseContext) => any
@@ -23,9 +21,12 @@ export interface ParseContext {
   [index: string]: any
 }
 
-export const defaultPreParser = attributesToInnerElements(/^[A-Z]/)
+export const defaultPreParser = join(
+  attributesToInnerElements(/^[A-Z]/),
+  replaceAttributesWithElementAttribute(/^\$.*/, 'const')
+)
 
-export function join(...processors: ElementParser[]) {
+export function join(...processors: ElementParser[]): ElementParser {
   return (element: any, outerElement: any, parseData: ParseData, context: ParseContext): any => {
     return processors.reduce((e, processor) => processor(e, outerElement, parseData, context), element)
   }
@@ -40,6 +41,11 @@ export function rebuildContext(context: ParseContext, element: any): ParseContex
       ...getElementAttributes(element),
     }
   }
+}
+
+export function findElementName(elementNameOrFilter: string | ElementNameFilter, elementId: string, parseData: ParseData): string {
+  const elementNames = typeof elementNameOrFilter === 'string' ? [ elementNameOrFilter ] : elementNameOrFilter(parseData)
+  return findElementNameForId(elementNames, elementId, parseData.elements)
 }
 
 function hasIdBeenSeen(element: any, idsSeen: Set<string>) {

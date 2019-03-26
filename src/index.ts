@@ -7,6 +7,7 @@ import * as addParsers from "./parsers/add-parsers"
 import * as assetParsers from "./parsers/asset-parsers"
 import * as mergeParsers from "./parsers/merge-parsers"
 import * as textParsers from "./parsers/text-parsers"
+import * as replacementParsers from "./parsers/replacement-parsers"
 import * as conditionalParsers from './parsers/conditional-parsers'
 import * as elementNameFilters from "./parsers/element-name-filters"
 import * as arrayFormatters from "./formatters/array-formatters"
@@ -60,6 +61,7 @@ export namespace parsers {
   export const assets = assetParsers
   export const merge = mergeParsers
   export const text = textParsers
+  export const replacement = replacementParsers
   export const conditional = conditionalParsers
   export const nameFilters = elementNameFilters
 }

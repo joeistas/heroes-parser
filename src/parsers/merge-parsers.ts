@@ -2,14 +2,12 @@ import {
   ATTRIBUTE_BLACKLIST,
   getElementAttributes,
   getElement,
-  findElementNameForId,
   joinElements,
   mergeElements,
 } from '../element'
 import { ParseData } from '../parse-data'
 import { ElementNameFilter } from './element-name-filters'
-import { preParseElement, ElementParser, ParseContext, rebuildContext } from './'
-import { getAtPath, setAtPath } from '../utils'
+import { preParseElement, ElementParser, ParseContext, rebuildContext, findElementName } from './'
 
 export function mergeElement(elementNameOrFilter: string | ElementNameFilter, attribute: string = 'value'): ElementParser {
   return (element: any, outerElement: any, parseData: ParseData, context: ParseContext): any => {
@@ -61,9 +59,4 @@ export function mergeElementFromInnerElementValue(
 
     return preParseElement(replacementElement, outerElement, elementName, parseData, context)
   }
-}
-
-function findElementName(elementNameOrFilter: string | ElementNameFilter, elementId: string, parseData: ParseData): string {
-  const elementNames = typeof elementNameOrFilter === 'string' ? [ elementNameOrFilter ] : elementNameOrFilter(parseData)
-  return findElementNameForId(elementNames, elementId, parseData.elements)
 }

@@ -1,8 +1,6 @@
 import { expect } from 'chai'
-import * as sinon from 'sinon'
-import * as cheerio from 'cheerio'
 
-import { ELEMENT_NAME_KEY, ELEMENT_ATTRIBUTE_KEY, buildElement } from '../../src/element'
+import {ELEMENT_ATTRIBUTE_KEY, buildElement } from '../../src/element'
 import {
   attributeValueReplacement,
   replaceWithLocaleText,

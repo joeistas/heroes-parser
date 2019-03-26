@@ -152,7 +152,7 @@ describe("addInnerElement", function() {
       }
     }
 
-    const result = addInnerElement('test', 'innerElement', 'thing', 'newElement')(element, {}, parseData, {} as any)
+    addInnerElement('test', 'innerElement', 'thing', 'newElement')(element, {}, parseData, {} as any)
     expect(parseData.functions.innerElement.merge).to.have.been.called
   })
 })
